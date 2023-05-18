@@ -1,38 +1,10 @@
 module Rowround
     (
-    getfirst,
-    getsecond, 
-    getthird,
-    getfourth,
     rowround
     ) where
 
---import Data.Bits
-import Data.Word
-
+import Utils (VectorType, MatrixType)
 import Quarterround
-
--- We define an alias for a 4-Tuple of Word32 objects.
-type VectorType = (Word32, Word32, Word32, Word32)
-
--- We define an alias for a 16-Tuple of Word32 objects.
-type MatrixType = (VectorType, VectorType, VectorType, VectorType)
-
--- Utility function to get the first 4-Tuple of a 16-Tuple.
-getfirst :: MatrixType -> VectorType
-getfirst (a, _, _, _) = a
-
--- Utility function to get the second 4-Tuple of a 16-Tuple.
-getsecond :: MatrixType -> VectorType
-getsecond (_, a, _, _) = a
-
--- Utility function to get the third 4-Tuple of a 16-Tuple.
-getthird :: MatrixType -> VectorType
-getthird (_, _, a, _) = a
-
--- Utility function to get the third 4-Tuple of a 16-Tuple.
-getfourth :: MatrixType -> VectorType
-getfourth (_, _, _, a) = a
 
 -- The endofunctor
 data ExprF a = Const VectorType | Quarterround a

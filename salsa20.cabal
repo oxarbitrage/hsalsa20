@@ -27,6 +27,7 @@ library
   exposed-modules:
       Quarterround
       Rowround
+      Utils
   other-modules:
       Paths_salsa20
   hs-source-dirs:

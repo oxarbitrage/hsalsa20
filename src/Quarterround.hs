@@ -1,33 +1,12 @@
 module Quarterround
     (
-    get0,
-    get1,
-    get2,
-    get3,
     quarterround
     ) where
 
 import Data.Bits
 import Data.Word
 
--- We define an alias for a 4-Tuple of Word32 
-type VectorType = (Word32, Word32, Word32, Word32)
-
--- Utility function to get the object in the first position of a 4-Tuple.
-get0 :: VectorType -> Word32
-get0 (a, _, _, _) = a
-
--- Utility function to get the object in the second position of a 4-Tuple.
-get1 :: VectorType -> Word32
-get1 (_, a, _, _) = a
-
--- Utility function to get the object in the third position of a 4-Tuple.
-get2 :: VectorType -> Word32
-get2 (_, _, a, _) = a
-
--- Utility function to get the object in the fourth position of a 4-Tuple.
-get3 :: VectorType -> Word32
-get3 (_, _, _, a) = a
+import Utils (VectorType)
 
 -- The endofunctor
 data ExprF a = Const Word32
