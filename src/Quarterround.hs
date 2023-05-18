@@ -10,20 +10,23 @@ module Quarterround
 import Data.Bits
 import Data.Word
 
--- Utility function to get the first positions of a 4-Tuple.
-get0 :: (Word32, Word32, Word32, Word32) -> Word32
+-- We define an alias for a 4-Tuple of Word32 
+type VectorType = (Word32, Word32, Word32, Word32)
+
+-- Utility function to get the object in the first position of a 4-Tuple.
+get0 :: VectorType -> Word32
 get0 (a, _, _, _) = a
 
--- Utility function to get the second positions of a 4-Tuple.
-get1 :: (Word32, Word32, Word32, Word32) -> Word32
+-- Utility function to get the object in the second position of a 4-Tuple.
+get1 :: VectorType -> Word32
 get1 (_, a, _, _) = a
 
--- Utility function to get the third positions of a 4-Tuple.
-get2 :: (Word32, Word32, Word32, Word32) -> Word32
+-- Utility function to get the object in the third position of a 4-Tuple.
+get2 :: VectorType -> Word32
 get2 (_, _, a, _) = a
 
--- Utility function to get the fourth positions of a 4-Tuple.
-get3 :: (Word32, Word32, Word32, Word32) -> Word32
+-- Utility function to get the object in the fourth position of a 4-Tuple.
+get3 :: VectorType -> Word32
 get3 (_, _, _, a) = a
 
 -- The endofunctor
@@ -69,46 +72,46 @@ eval :: Fix ExprF -> Word32
 eval = cata alg
 
 -- The right hand side of the `z1` expression as an expression. `((y0 + y3) <<< 7)`
-rhs1 :: (Word32, Word32, Word32, Word32) -> Fix ExprF
+rhs1 :: VectorType -> Fix ExprF
 rhs1 (y0, _, _, y3) = In $ 
     Rotl7 (In $ In (Const y0) `Mod` In (Const y3))
 
 -- The `z1` expression. `z1 = y1 ⊕ ((y0 + y3) <<< 7)`
-z1 :: (Word32, Word32, Word32, Word32) -> Fix ExprF
+z1 :: VectorType -> Fix ExprF
 z1 (y0, y1, y2, y3) = In $ 
   In (Const y1) `Xor2` rhs1 (y0, y1, y2, y3)
 
 -- The right hand side of the `z2` expression as an expression. `((z1 + y0) <<< 9)`
-rhs2 :: (Word32, Word32, Word32, Word32) -> Fix ExprF
+rhs2 :: VectorType -> Fix ExprF
 rhs2 (y0, y1, y2, y3) = In $ 
     Rotl9 (In $ z1 (y0, y1, y2, y3) `Mod` In (Const y0))
 
 -- The `z2` expression. `y2 ⊕ ((z1 + y0) <<< 9)`
-z2 :: (Word32, Word32, Word32, Word32) -> Fix ExprF
+z2 :: VectorType -> Fix ExprF
 z2 (y0, y1, y2, y3) = In $ 
     In (Const y2) `Xor2` rhs2 (y0, y1, y2, y3)
 
 -- The right hand side of the `z3` expression as an expression. `(z2 + z1) <<< 13)`
-rhs3 :: (Word32, Word32, Word32, Word32) -> Fix ExprF
+rhs3 :: VectorType -> Fix ExprF
 rhs3 (y0, y1, y2, y3) = In $ 
     Rotl13 (In $ z2 (y0, y1, y2, y3)  `Mod` z1 (y0, y1, y2, y3))
 
 -- The `z3` expression. `y3 ⊕ ((z2 + z1) <<< 13)`
-z3 :: (Word32, Word32, Word32, Word32) -> Fix ExprF
+z3 :: VectorType -> Fix ExprF
 z3 (y0, y1, y2, y3) = In $ 
     In (Const y3) `Xor2` rhs3 (y0, y1, y2, y3)
 
 -- The right hand side of the `z0` expression as an expression. `((z3 + z2) <<< 18)`
-rhs0 :: (Word32, Word32, Word32, Word32) -> Fix ExprF
+rhs0 :: VectorType -> Fix ExprF
 rhs0 (y0, y1, y2, y3) = In $ 
     Rotl18 (In $ z3 (y0, y1, y2, y3) `Mod` z2 (y0, y1, y2, y3))
 
 -- The `z0` expression. `y0 ⊕ ((z3 + z2) <<< 18)`
-z0 :: (Word32, Word32, Word32, Word32) -> Fix ExprF
+z0 :: VectorType -> Fix ExprF
 z0 (y0, y1, y2, y3) = In $ 
     In (Const y0) `Xor2` rhs0 (y0, y1, y2, y3)
 
 -- The quarterround expression. `quarterround(y) = (z0, z1, z2, z3)`
-quarterround :: (Word32, Word32, Word32, Word32) -> (Word32, Word32, Word32, Word32)
+quarterround :: VectorType -> VectorType
 quarterround (y0, y1, y2, y3) = (eval $ z0 (y0, y1, y2, y3), eval $ z1 (y0, y1, y2, y3), 
     eval $ z2 (y0, y1, y2, y3), eval $ z3 (y0, y1, y2, y3))
