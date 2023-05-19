@@ -27,6 +27,7 @@ library
   exposed-modules:
       Quarterround
       Rowround
+      Types
       Utils
   other-modules:
       Paths_salsa20

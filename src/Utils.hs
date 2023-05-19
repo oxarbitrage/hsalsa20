@@ -1,11 +1,9 @@
 module Utils
     (
-        VectorType,
         get0,
         get1,
         get2, 
         get3,
-        MatrixType,
         getfirst,
         getsecond,
         getthird,
@@ -14,8 +12,7 @@ module Utils
 
 import Data.Word
 
--- We define an alias for a 4-Tuple of Word32 
-type VectorType = (Word32, Word32, Word32, Word32)
+import Types (VectorType, MatrixType)
 
 -- Get the object in the first position of a 4-Tuple.
 get0 :: VectorType -> Word32
@@ -33,9 +30,6 @@ get2 (_, _, a, _) = a
 get3 :: VectorType -> Word32
 get3 (_, _, _, a) = a
 
--- We define an alias for a 16-Tuple of Word32 objects.
-type MatrixType = (VectorType, VectorType, VectorType, VectorType)
-
 -- Utility function to get the first 4-Tuple of a 16-Tuple.
 getfirst :: MatrixType -> VectorType
 getfirst (a, _, _, _) = a
@@ -51,7 +45,3 @@ getthird (_, _, a, _) = a
 -- Utility function to get the third 4-Tuple of a 16-Tuple.
 getfourth :: MatrixType -> VectorType
 getfourth (_, _, _, a) = a
-
-
-
-

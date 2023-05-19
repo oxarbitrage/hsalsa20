@@ -3,7 +3,7 @@ module Rowround
     rowround
     ) where
 
-import Utils (VectorType, MatrixType)
+import Types (VectorType, MatrixType)
 import Quarterround
 
 -- The endofunctor
@@ -42,7 +42,7 @@ quarterround2 :: MatrixType -> Fix ExprF
 quarterround2 (_, a, _, _) = In $ 
     Quarterround (In $ Const (sort2 a))
 
--- Utility function to sort a second input for rowround.
+-- Sort a second input for rowround.
 sort2 :: VectorType -> VectorType
 sort2 (y4, y5, y6, y7) = (y5, y6, y7, y4) 
 
@@ -55,7 +55,7 @@ quarterround3 :: MatrixType -> Fix ExprF
 quarterround3 (_, _, a, _) = In $ 
     Quarterround (In $ Const (sort3 a))
 
--- Utility function to sort a third input for rowround.
+-- Sort a third input for rowround.
 sort3 :: VectorType -> VectorType
 sort3 (y8, y9, y10, y11) = (y10, y11, y8, y9) 
 
@@ -68,7 +68,7 @@ quarterround4 :: MatrixType -> Fix ExprF
 quarterround4 (_, _, _, a) = In $ 
     Quarterround (In $ Const (sort4 a))
 
--- Utility function to sort a fourth input for rowround.
+-- Sort a fourth input for rowround.
 sort4 :: VectorType -> VectorType
 sort4 (y12, y13, y14, y15) = (y15, y12, y13, y14) 
 

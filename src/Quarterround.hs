@@ -6,7 +6,7 @@ module Quarterround
 import Data.Bits
 import Data.Word
 
-import Utils (VectorType)
+import Types (VectorType)
 
 -- The endofunctor
 data ExprF a = Const Word32
