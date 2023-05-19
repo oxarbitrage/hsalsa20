@@ -14,6 +14,6 @@ transpose_inv :: MatrixType -> MatrixType
 transpose_inv ((x0, x4, x8, x12), (x1, x5, x9, x13), (x2, x6, x10, x14), (x3, x7, x11, x15)) =
     ((x0, x1, x2, x3), (x4, x5, x6, x7), (x8, x9, x10, x11), (x12, x13, x14, x15))
 
--- The rowround expression.
+-- The columnround expression.
 columnround :: MatrixType -> MatrixType
 columnround input = transpose_inv (rowround (transpose input))
