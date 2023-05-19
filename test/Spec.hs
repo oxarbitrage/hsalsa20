@@ -1,5 +1,6 @@
 import Quarterround
 import Rowround
+import Columnround
 
 import Data.Word
 
@@ -47,7 +48,6 @@ quarterroundInput6 = (0xe7e8c006, 0xc4f9417d, 0x6479b4b2, 0x68c67137)
 quarterroundOutput6 :: VectorType
 quarterroundOutput6 = (0xe876d72b, 0x9361dfd5, 0xf1460244, 0x948541a3)
 
-
 -- Rowround
 
 rowroundInput1 :: MatrixType
@@ -70,6 +70,27 @@ rowroundOutput2 = (
     (0xa890d39d, 0x65d71596, 0xe9487daa, 0xc8ca6a86), (0x949d2192, 0x764b7754, 0xe408d9b9, 0x7a41b4d1),
     (0x3402e183, 0x3c3af432, 0x50669f96, 0xd89ef0a8), (0x0040ede5, 0xb545fbce, 0xd257ed4f, 0x1818882d))
 
+-- Columnround
+
+columnroundInput1 :: MatrixType
+columnroundInput1 = (
+    (1, 0, 0, 0), (1, 0, 0, 0), (1, 0, 0, 0), (1, 0, 0, 0))
+
+columnroundOutput1 :: MatrixType
+columnroundOutput1 = (
+    (0x10090288, 0x00000000, 0x00000000, 0x00000000), (0x00000101, 0x00000000, 0x00000000, 0x00000000),
+    (0x00020401, 0x00000000, 0x00000000, 0x00000000), (0x40a04001, 0x00000000, 0x00000000, 0x00000000))
+
+columnroundInput2 :: MatrixType
+columnroundInput2 = (
+    (0x08521bd6, 0x1fe88837, 0xbb2aa576, 0x3aa26365), (0xc54c6a5b, 0x2fc74c2f, 0x6dd39cc3, 0xda0a64f6),
+    (0x90a2f23d, 0x067f95a6, 0x06b35f61, 0x41e4732e), (0xe859c100, 0xea4d84b7, 0x0f619bff, 0xbc6e965a))
+
+columnroundOutput2 :: MatrixType
+columnroundOutput2 = (
+    (0x8c9d190a, 0xce8e4c90, 0x1ef8e9d3, 0x1326a71a), (0x90a20123, 0xead3c4f3, 0x63a091a0, 0xf0708d69),
+    (0x789b010c, 0xd195a681, 0xeb7d5504, 0xa774135c), (0x481c2027, 0x53a8e4b5, 0x4c1f89c5, 0x3f78c9c8))
+
 main :: IO ()
 main = do
     putStrLn "Quarterround tests:"
@@ -79,9 +100,16 @@ main = do
     putStrLn $ if quarterround quarterroundInput4 == quarterroundOutput4 then "OK" else "FAIL!"
     putStrLn $ if quarterround quarterroundInput5 == quarterroundOutput5 then "OK" else "FAIL!"
     putStrLn $ if quarterround quarterroundInput6 == quarterroundOutput6 then "OK" else "FAIL!"
+    putStrLn ""
 
     putStrLn "Rowround tests:"
     putStrLn $ if rowround rowroundInput1 == rowroundOutput1 then "OK" else "FAIL!"
     putStrLn $ if rowround rowroundInput2 == rowroundOutput2 then "OK" else "FAIL!"
-  
+    putStrLn ""
+
+    putStrLn "Columnround tests:"
+    putStrLn $ if columnround columnroundInput1 == columnroundOutput1 then "OK" else "FAIL!"
+    putStrLn $ if columnround columnroundInput2 == columnroundOutput2 then "OK" else "FAIL!"
+    putStrLn ""
+
     return ()
