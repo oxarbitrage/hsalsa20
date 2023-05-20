@@ -29,6 +29,7 @@ library
       Doubleround
       Quarterround
       Rowround
+      Salsa20
       Types
       Utils
   other-modules:

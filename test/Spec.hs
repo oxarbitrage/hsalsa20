@@ -2,14 +2,11 @@ import Quarterround
 import Rowround
 import Columnround
 import Doubleround
+import Salsa20
+import Utils
+import Types
 
 import Data.Word
-
--- We define an alias for a 4-Tuple of Word32 objects.
-type VectorType = (Word32, Word32, Word32, Word32)
-
--- We define an alias for a 16-Tuple of Word32 objects.
-type MatrixType = (VectorType, VectorType, VectorType, VectorType)
 
 -- Quarterround
 
@@ -113,6 +110,70 @@ doubleroundOutput2 = (
     (0xccaaf672, 0x23d960f7, 0x9153e63a, 0xcd9a60d0), (0x50440492, 0xf07cad19, 0xae344aa0, 0xdf4cfdfc),
     (0xca531c29, 0x8e7943db, 0xac1680cd, 0xd503ca00), (0xa74b2ad6, 0xbc331c5c, 0x1dda24c7, 0xee928277))
 
+-- Littleendian
+
+littleendianInput1 :: VectorType
+littleendianInput1 = (0, 0, 0, 0)
+
+littleendianOutput1 :: Word32
+littleendianOutput1 = 0
+
+littleendianInput2 :: VectorType
+littleendianInput2 = (86, 75, 30, 9)
+
+littleendianOutput2 :: Word32
+littleendianOutput2 = 0x091e4b56
+
+littleendianInput3 :: VectorType
+littleendianInput3 = (255, 255, 255, 250)
+
+littleendianOutput3 :: Word32
+littleendianOutput3 = 0xfaffffff
+
+-- Salsa20
+
+salsa20Input1 :: Matrix64Type
+salsa20Input1 = (
+    ((0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0)),
+    ((0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0)),
+    ((0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0)), 
+    ((0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0)))
+
+salsa20Output1 :: Matrix64Type
+salsa20Output1 = (
+    ((0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0)), 
+    ((0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0)),
+    ((0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0)), 
+    ((0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0), (0, 0, 0, 0)))
+
+salsa20Input2 :: Matrix64Type
+salsa20Input2 = (
+    ((211, 159, 13,115), (76, 55, 82, 183), (3, 117, 222, 37), (191, 187, 234, 136)),
+    ((49, 237, 179, 48), (1, 106, 178, 219), (175, 199, 166, 48), (86, 16, 179, 207)),
+    ((31, 240, 32, 63), (15, 83, 93, 161), (116, 147, 48, 113), (238, 55, 204, 36)), 
+    ((79, 201, 235, 79), (3, 81, 156, 47), (203, 26, 244, 243), (88, 118, 104, 54)))
+
+salsa20Output2 :: Matrix64Type
+salsa20Output2 = (
+    ((109, 42, 178, 168), (156, 240, 248, 238), (168, 196, 190, 203), (26, 110, 170, 154)), 
+    ((29, 29, 150, 26), (150, 30, 235, 249), (190, 163, 251, 48), (69, 144, 51, 57)),
+    ((118, 40, 152, 157), (180, 57, 27, 94), (107, 42, 236, 35), (27, 111, 114, 114)), 
+    ((219, 236, 232, 135), (111, 155, 110, 18), (24, 232, 95, 158), (179, 19, 48, 202)))
+
+salsa20Input3 :: Matrix64Type
+salsa20Input3 = (
+    ((88, 118, 104, 54), (79, 201, 235, 79), (3, 81, 156, 47), (203, 26, 244, 243)), 
+    ((191, 187, 234, 136), (211, 159, 13, 115), (76, 55, 82, 183), (3, 117, 222, 37)),
+    ((86, 16, 179, 207), (49, 237, 179, 48), (1, 106, 178, 219), (175, 199, 166, 48)), 
+    ((238, 55, 204, 36), (31, 240, 32, 63), (15, 83, 93, 161), (116, 147, 48, 113)))
+
+salsa20Output3 :: Matrix64Type
+salsa20Output3 = (
+    ((179, 19, 48, 202), (219, 236, 232, 135), (111, 155, 110, 18), (24, 232, 95, 158)), 
+    ((26, 110, 170, 154), (109, 42, 178, 168), (156, 240, 248, 238), (168, 196, 190, 203)),
+    ((69, 144, 51, 57), (29, 29, 150, 26), (150, 30, 235, 249), (190, 163, 251, 48)), 
+    ((27, 111, 114, 114), (118, 40, 152, 157), (180, 57, 27, 94), (107, 42, 236, 35)))
+
 main :: IO ()
 main = do
     putStrLn "Quarterround tests:"
@@ -139,5 +200,22 @@ main = do
     putStrLn $ if doubleround doubleroundInput2 == doubleroundOutput2 then "OK" else "FAIL!"
     putStrLn ""
 
+    putStrLn "Littleendian tests:"
+    putStrLn $ if littleendian littleendianInput1 == littleendianOutput1 then "OK" else "FAIL!"
+    putStrLn $ if littleendian littleendianInput2 == littleendianOutput2 then "OK" else "FAIL!"
+    putStrLn $ if littleendian littleendianInput3 == littleendianOutput3 then "OK" else "FAIL!"
+    putStrLn ""
+
+    putStrLn "Littleendian inverse tests:"
+    putStrLn $ if littleendianInv littleendianOutput1 == littleendianInput1 then "OK" else "FAIL!"
+    putStrLn $ if littleendianInv littleendianOutput2 == littleendianInput2 then "OK" else "FAIL!"
+    putStrLn $ if littleendianInv littleendianOutput3 == littleendianInput3 then "OK" else "FAIL!"
+    putStrLn ""
+
+    putStrLn "Salsa20 tests:"
+    putStrLn $ if salsa20 salsa20Input1 == salsa20Output1 then "OK" else "FAIL!"
+    putStrLn $ if salsa20 salsa20Input2 == salsa20Output2 then "OK" else "FAIL!"
+    putStrLn $ if salsa20 salsa20Input3 == salsa20Output3 then "OK" else "FAIL!"
+    putStrLn ""
 
     return ()
