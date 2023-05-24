@@ -35,6 +35,8 @@ ghc-options:
 
 library:
   source-dirs: src
+  dependencies:
+    - tuple
 
 executables:
   salsa20-exe:
@@ -46,6 +48,7 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - salsa20
+    - tuple
 
 tests:
   salsa20-test:
@@ -57,3 +60,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - salsa20
+    - tuple
