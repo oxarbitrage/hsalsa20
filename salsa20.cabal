@@ -55,13 +55,27 @@ executable salsa20-exe
     , tuple
   default-language: Haskell2010
 
-test-suite salsa20-test
+test-suite salsa20-fast-unit-tests
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
       Paths_salsa20
   hs-source-dirs:
-      test
+      test/unit/fast
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , salsa20
+    , tuple
+  default-language: Haskell2010
+
+test-suite salsa20-slow-unit-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_salsa20
+  hs-source-dirs:
+      test/unit/slow
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
