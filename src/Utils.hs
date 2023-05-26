@@ -1,3 +1,13 @@
+{-|
+Module      : Utils
+Description : Utilities
+Copyright   : (c) Alfredo Garcia, 2023
+License     : MIT
+Stability   : experimental
+Portability : POSIX
+
+General utility functions used to create the salsa20 cipher.
+-}
 module Utils
     (
         littleendian,
@@ -14,19 +24,19 @@ import Data.Tuple.Select
 
 import Types (VectorType, MatrixType, Matrix64Type)
 
---
+-- |Raise 2 to the power of `p`.
 power :: Word32 -> Word32
 power p = 2 ^ p 
 
---
+-- |Encode a vector as a word using protocol specified littleendian. 
 littleendian :: VectorType -> Word32
 littleendian (b0, b1, b2, b3) = b0 + power 8 * b1 + power 16 * b2 + power 24 * b3
 
--- https://crypto.stackexchange.com/a/22314
+-- |The inverse of `littleendian`. Implemented as specified in https://crypto.stackexchange.com/a/22314.
 littleendianInv ::  Word32 -> VectorType
 littleendianInv w = (w .&. 0xff, shiftR w 8 .&. 0xff, shiftR w 16 .&. 0xff, shiftR w 24 .&. 0xff)
 
---
+-- Reduce a matrix of 64 elements to a matrix of 32 elements by using `littleendian` encoding.
 reduce :: Matrix64Type -> MatrixType
 reduce input = (
     (
@@ -54,7 +64,7 @@ reduce input = (
         littleendian (sel4 (sel4 input))
     ))
 
---
+-- Aument a matrix of 32 elements to one of 64 elements by using `littleendianInv`.
 aument :: MatrixType -> Matrix64Type
 aument input = (
     (
@@ -82,7 +92,7 @@ aument input = (
         littleendianInv (sel4 (sel4 input))
     ))
 
---
+-- |Given two matrices, do mod addition on each of the elements.
 modMatrix :: MatrixType -> MatrixType -> MatrixType
 modMatrix inputL inputR = (
     (
