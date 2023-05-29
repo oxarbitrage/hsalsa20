@@ -37,7 +37,7 @@ cata algebra = algebra . fmap (cata algebra) . unFix
 -- |The algebra maps.
 alg :: ExprF VectorType -> VectorType
 alg (Const i)   = i
-alg (Quarterround a) = Quarterround.quarterround a
+alg (Quarterround a) = Quarterround.quarterroundCompute a
 
 -- |The rowround evaluator.
 eval :: Fix ExprF -> VectorType

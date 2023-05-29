@@ -7,6 +7,8 @@ import Utils
 import Types
 
 import Data.Word
+import Data.Tuple.Select
+import Text.Printf
 
 -- Quarterround
 
@@ -177,13 +179,19 @@ salsa20Output3 = (
 main :: IO ()
 main = do
     putStrLn "Quarterround tests:"
-    putStrLn $ if quarterround quarterroundInput1 == quarterroundOutput1 then "OK" else "FAIL!"
-    putStrLn $ if quarterround quarterroundInput2 == quarterroundOutput2 then "OK" else "FAIL!"
-    putStrLn $ if quarterround quarterroundInput3 == quarterroundOutput3 then "OK" else "FAIL!"
-    putStrLn $ if quarterround quarterroundInput4 == quarterroundOutput4 then "OK" else "FAIL!"
-    putStrLn $ if quarterround quarterroundInput5 == quarterroundOutput5 then "OK" else "FAIL!"
-    putStrLn $ if quarterround quarterroundInput6 == quarterroundOutput6 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute quarterroundInput1 == quarterroundOutput1 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute quarterroundInput2 == quarterroundOutput2 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute quarterroundInput3 == quarterroundOutput3 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute quarterroundInput4 == quarterroundOutput4 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute quarterroundInput5 == quarterroundOutput5 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute quarterroundInput6 == quarterroundOutput6 then "OK" else "FAIL!"
     putStrLn ""
+
+    putStrLn "Print a quarterround expression test:"
+    putStrLn $ printf "z1 = %s" (sel2 (quarterroundDisplay quarterroundInput6))
+    putStrLn $ printf "z2 = %s" (sel3 (quarterroundDisplay quarterroundInput6))
+    putStrLn $ printf "z3 = %s" (sel4 (quarterroundDisplay quarterroundInput6))
+    putStrLn $ printf "z0 = %s" (sel1 (quarterroundDisplay quarterroundInput6))
 
     putStrLn "Rowround tests:"
     putStrLn $ if rowround rowroundInput1 == rowroundOutput1 then "OK" else "FAIL!"
