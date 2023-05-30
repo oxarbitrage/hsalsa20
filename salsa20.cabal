@@ -27,6 +27,7 @@ library
   exposed-modules:
       Columnround
       Doubleround
+      Expansion
       Quarterround
       Rowround
       Salsa20
