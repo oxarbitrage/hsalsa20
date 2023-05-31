@@ -40,59 +40,59 @@ littleendianInv w = (w .&. 0xff, shiftR w 8 .&. 0xff, shiftR w 16 .&. 0xff, shif
 reduce :: Matrix64Type -> MatrixType
 reduce input = (
     (
-        littleendian (sel1 (sel1 input)),
-        littleendian (sel2 (sel1 input)),
-        littleendian (sel3 (sel1 input)),
-        littleendian (sel4 (sel1 input))
+        littleendian $ sel1 $ sel1 input,
+        littleendian $ sel2 $ sel1 input,
+        littleendian $ sel3 $ sel1 input,
+        littleendian $ sel4 $ sel1 input
     ),
     (
-        littleendian (sel1 (sel2 input)),
-        littleendian (sel2 (sel2 input)),
-        littleendian (sel3 (sel2 input)),
-        littleendian (sel4 (sel2 input))
+        littleendian $ sel1 $ sel2 input,
+        littleendian $ sel2 $ sel2 input,
+        littleendian $ sel3 $ sel2 input,
+        littleendian $ sel4 $ sel2 input
     ),
     (
-        littleendian (sel1 (sel3 input)),
-        littleendian (sel2 (sel3 input)),
-        littleendian (sel3 (sel3 input)),
-        littleendian (sel4 (sel3 input))
+        littleendian $ sel1 $ sel3 input,
+        littleendian $ sel2 $ sel3 input,
+        littleendian $ sel3 $ sel3 input,
+        littleendian $ sel4 $ sel3 input
     ),
     (
-        littleendian (sel1 (sel4 input)),
-        littleendian (sel2 (sel4 input)),
-        littleendian (sel3 (sel4 input)),
-        littleendian (sel4 (sel4 input))
+        littleendian $ sel1 $ sel4 input,
+        littleendian $ sel2 $ sel4 input,
+        littleendian $ sel3 $ sel4 input,
+        littleendian $ sel4 $ sel4 input
     ))
 
 -- Aument a matrix of 32 elements to one of 64 elements by using `littleendianInv`.
 aument :: MatrixType -> Matrix64Type
 aument input = (
     (
-        littleendianInv (sel1 (sel1 input)),
-        littleendianInv (sel2 (sel1 input)),
-        littleendianInv (sel3 (sel1 input)),
-        littleendianInv (sel4 (sel1 input))
+        littleendianInv $ sel1 $ sel1 input,
+        littleendianInv $ sel2 $ sel1 input,
+        littleendianInv $ sel3 $ sel1 input,
+        littleendianInv $ sel4 $ sel1 input
     ),
     (
-        littleendianInv (sel1 (sel2 input)),
-        littleendianInv (sel2 (sel2 input)),
-        littleendianInv (sel3 (sel2 input)),
-        littleendianInv (sel4 (sel2 input))
+        littleendianInv $ sel1 $ sel2 input,
+        littleendianInv $ sel2 $ sel2 input,
+        littleendianInv $ sel3 $ sel2 input,
+        littleendianInv $ sel4 $ sel2 input
     ),
     (
-        littleendianInv (sel1 (sel3 input)),
-        littleendianInv (sel2 (sel3 input)),
-        littleendianInv (sel3 (sel3 input)),
-        littleendianInv (sel4 (sel3 input))
+        littleendianInv $ sel1 $ sel3 input,
+        littleendianInv $ sel2 $ sel3 input,
+        littleendianInv $ sel3 $ sel3 input,
+        littleendianInv $ sel4 $ sel3 input
     ),
     (
-        littleendianInv (sel1 (sel4 input)),
-        littleendianInv (sel2 (sel4 input)),
-        littleendianInv (sel3 (sel4 input)),
-        littleendianInv (sel4 (sel4 input))
+        littleendianInv $ sel1 $ sel4 input,
+        littleendianInv $ sel2 $ sel4 input,
+        littleendianInv $ sel3 $ sel4 input,
+        littleendianInv $ sel4 $ sel4 input
     ))
 
--- |Given two matrices, do mod addition on each of the elements.
+-- |Given two matrices, do modulo addition on each of the elements.
 modMatrix :: MatrixType -> MatrixType -> MatrixType
 modMatrix inputL inputR = (
     (

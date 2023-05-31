@@ -53,7 +53,7 @@ t3 = (116, 101, 32, 107)
 
 -- |The expansion function where we have two 16 bytes k's (k0 and k1).
 expand32 :: MatrixType -> MatrixType -> MatrixType -> Matrix64Type
-expand32 k0 k1 n = salsa20 (sort32 k0 k1 n)
+expand32 k0 k1 n = salsa20 $ sort32 k0 k1 n
 
 -- |The order needed for the 32 bytes k version of the expansion function `expand32`.
 sort32 :: MatrixType -> MatrixType -> MatrixType -> Matrix64Type
@@ -66,7 +66,7 @@ sort32 k0 k1 n = (
 
 -- |The expansion function where we have one 16 bytes (k).
 expand16 :: MatrixType -> MatrixType -> Matrix64Type
-expand16 k n = salsa20 (sort16 k n)
+expand16 k n = salsa20 $ sort16 k n
 
 -- |The order needed for the 16 bytes k version of the expansion function `expand16`.
 sort16 :: MatrixType -> MatrixType -> Matrix64Type
