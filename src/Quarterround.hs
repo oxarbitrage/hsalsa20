@@ -16,6 +16,7 @@ module Quarterround
     ) where
 
 import Data.Bits
+import Data.Typeable
 import Data.Word
 import Text.Printf
 
@@ -61,7 +62,7 @@ algMapsCompute (a `Xor2` b) = xor a b
 
 -- |The F-algebra maps for a `String` evaluator. For expression displaying purposes.
 algMapsDisplay :: ExprF String -> String
-algMapsDisplay (Const i) = printf "%d" i
+algMapsDisplay (Const i) = printf "(%d : %s)" i (show (typeOf i))
 algMapsDisplay (a `Mod` b) = printf "(%s + %s)" a b
 algMapsDisplay (Rotl7 a) = printf "(%s <<< 7)" a
 algMapsDisplay (Rotl9 a) = printf "(%s <<< 9)" a

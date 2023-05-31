@@ -250,13 +250,11 @@ main = do
     putStrLn $ if salsa20 salsa20Input1 == salsa20Output1 then "OK" else "FAIL!"
     putStrLn $ if salsa20 salsa20Input2 == salsa20Output2 then "OK" else "FAIL!"
     putStrLn $ if salsa20 salsa20Input3 == salsa20Output3 then "OK" else "FAIL!"
-
     putStrLn ""
 
     putStrLn "Expanded Salsa20 tests:"
     putStrLn $ if expand32 expandedk0 expandedk1 expandedn == expandedOutput1 then "OK" else "FAIL!"
     putStrLn $ if expand16 expandedk0 expandedn == expandedOutput2 then "OK" else "FAIL!"
-
     putStrLn ""
 
     return ()
