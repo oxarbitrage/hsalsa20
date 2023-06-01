@@ -80,43 +80,35 @@ evalDisplay = cata algMapsDisplay
 
 -- |The right hand side of the `z1` expression as an expression. `((y0 + y3) <<< 7)`
 rhs1 :: VectorType -> Fix ExprF
-rhs1 (y0, _, _, y3) = In $ 
-    Rotl7 (In $ In (Const y0) `Mod` In (Const y3))
+rhs1 (y0, _, _, y3) = In $ Rotl7 (In $ In (Const y0) `Mod` In (Const y3))
 
 -- |The `z1` expression. `z1 = y1 ⊕ ((y0 + y3) <<< 7)`
 z1 :: VectorType -> Fix ExprF
-z1 (y0, y1, y2, y3) = In $ 
-  In (Const y1) `Xor2` rhs1 (y0, y1, y2, y3)
+z1 (y0, y1, y2, y3) = In $ In (Const y1) `Xor2` rhs1 (y0, y1, y2, y3)
 
 -- |The right hand side of the `z2` expression as an expression. `((z1 + y0) <<< 9)`
 rhs2 :: VectorType -> Fix ExprF
-rhs2 (y0, y1, y2, y3) = In $ 
-    Rotl9 (In $ z1 (y0, y1, y2, y3) `Mod` In (Const y0))
+rhs2 (y0, y1, y2, y3) = In $ Rotl9 (In $ z1 (y0, y1, y2, y3) `Mod` In (Const y0))
 
 -- |The `z2` expression. `y2 ⊕ ((z1 + y0) <<< 9)`
 z2 :: VectorType -> Fix ExprF
-z2 (y0, y1, y2, y3) = In $ 
-    In (Const y2) `Xor2` rhs2 (y0, y1, y2, y3)
+z2 (y0, y1, y2, y3) = In $ In (Const y2) `Xor2` rhs2 (y0, y1, y2, y3)
 
 -- |The right hand side of the `z3` expression as an expression. `(z2 + z1) <<< 13)`
 rhs3 :: VectorType -> Fix ExprF
-rhs3 (y0, y1, y2, y3) = In $ 
-    Rotl13 (In $ z2 (y0, y1, y2, y3)  `Mod` z1 (y0, y1, y2, y3))
+rhs3 (y0, y1, y2, y3) = In $ Rotl13 (In $ z2 (y0, y1, y2, y3)  `Mod` z1 (y0, y1, y2, y3))
 
 -- |The `z3` expression. `y3 ⊕ ((z2 + z1) <<< 13)`
 z3 :: VectorType -> Fix ExprF
-z3 (y0, y1, y2, y3) = In $ 
-    In (Const y3) `Xor2` rhs3 (y0, y1, y2, y3)
+z3 (y0, y1, y2, y3) = In $ In (Const y3) `Xor2` rhs3 (y0, y1, y2, y3)
 
 -- |The right hand side of the `z0` expression as an expression. `((z3 + z2) <<< 18)`
 rhs0 :: VectorType -> Fix ExprF
-rhs0 (y0, y1, y2, y3) = In $ 
-    Rotl18 (In $ z3 (y0, y1, y2, y3) `Mod` z2 (y0, y1, y2, y3))
+rhs0 (y0, y1, y2, y3) = In $ Rotl18 (In $ z3 (y0, y1, y2, y3) `Mod` z2 (y0, y1, y2, y3))
 
 -- |The `z0` expression. `y0 ⊕ ((z3 + z2) <<< 18)`
 z0 :: VectorType -> Fix ExprF
-z0 (y0, y1, y2, y3) = In $ 
-    In (Const y0) `Xor2` rhs0 (y0, y1, y2, y3)
+z0 (y0, y1, y2, y3) = In $ In (Const y0) `Xor2` rhs0 (y0, y1, y2, y3)
 
 -- |The quarterround expression computed. `quarterround(y) = (z0, z1, z2, z3)`
 quarterroundCompute :: VectorType -> VectorType
