@@ -60,19 +60,17 @@ vectorStringToVector (a, b, c, d) = (read a :: Word32, read b :: Word32, read c 
 evalCompute :: Fix ExprF -> VectorType
 evalCompute = cata algMapsCompute
 
--- |The rowround evaluator.
-evalDisplay :: Fix ExprF -> (String, String, String, String)
+-- |The rowround evaluator as a string.
+evalDisplay :: Fix ExprF -> VectorStringType
 evalDisplay = cata algMapsDisplay
 
 -- |The first quarterround expression.
 quarterround1 :: MatrixType -> Fix ExprF
-quarterround1 (a, _, _, _) = In $ 
-    Quarterround (In $ Const a)
+quarterround1 (a, _, _, _) = In $ Quarterround (In $ Const a)
 
 -- |The second quarterround expression.
 quarterround2 :: MatrixType -> Fix ExprF
-quarterround2 (_, a, _, _) = In $ 
-    Quarterround (In $ Const (sort2 a))
+quarterround2 (_, a, _, _) = In $ Quarterround (In $ Const (sort2 a))
 
 -- |Sort a second input for rowround.
 sort2 :: VectorType -> VectorType
@@ -88,8 +86,7 @@ sort2_inv' (z5, z6, z7, z4) = (z4, z5, z6, z7)
 
 -- |The third quarterround expression.
 quarterround3 :: MatrixType -> Fix ExprF
-quarterround3 (_, _, a, _) = In $ 
-    Quarterround (In $ Const (sort3 a))
+quarterround3 (_, _, a, _) = In $ Quarterround (In $ Const (sort3 a))
 
 -- |Sort a third input for rowround.
 sort3 :: VectorType -> VectorType
@@ -105,8 +102,7 @@ sort3_inv' (z10, z11, z8, z9) = (z8, z9, z10, z11)
 
 -- |The fourth quarterround expression.
 quarterround4 :: MatrixType -> Fix ExprF
-quarterround4 (_, _, _, a) = In $ 
-    Quarterround (In $ Const (sort4 a))
+quarterround4 (_, _, _, a) = In $ Quarterround (In $ Const (sort4 a))
 
 -- |Sort a fourth input for rowround.
 sort4 :: VectorType -> VectorType
