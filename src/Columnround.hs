@@ -14,7 +14,7 @@ module Columnround
     ) where
 
 import Types (MatrixType)
-import Rowround (rowround)
+import Rowround (rowroundCompute)
 
 -- |Transpose a salsa20 matrix type.
 transpose :: MatrixType -> MatrixType
@@ -23,4 +23,4 @@ transpose ((y0, y1, y2, y3), (y4, y5, y6, y7), (y8, y9, y10, y11), (y12, y13, y1
 
 -- |The columnround expression.
 columnround :: MatrixType -> MatrixType
-columnround = transpose . rowround . transpose
+columnround = transpose . rowroundCompute . transpose

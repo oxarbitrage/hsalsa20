@@ -17,12 +17,12 @@ module Doubleround
     ) where
 
 import Types (MatrixType)
-import Rowround (rowround)
+import Rowround (rowroundCompute)
 import Columnround (columnround)
 
 -- |The doubleround expression.
 doubleround :: MatrixType -> MatrixType
-doubleround = rowround . columnround
+doubleround = rowroundCompute . columnround
 
 -- |The doubleround10 expression.
 doubleround10 :: MatrixType -> MatrixType

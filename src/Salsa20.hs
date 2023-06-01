@@ -1,12 +1,12 @@
 {-|
 Module      : Salsa20
-Description : Salsa20 related code
+Description : Salsa20 hash function
 Copyright   : (c) Alfredo Garcia, 2023
 License     : MIT
 Stability   : experimental
 Portability : POSIX
 
-The salsa20 expression.
+The salsa20 hash expressions.
 -}
 module Salsa20
     (

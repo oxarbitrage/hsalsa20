@@ -220,9 +220,27 @@ main = do
     putStrLn $ printf "z0 = %s" (sel1 (quarterroundDisplay quarterroundInput6))
 
     putStrLn "Rowround tests:"
-    putStrLn $ if rowround rowroundInput1 == rowroundOutput1 then "OK" else "FAIL!"
-    putStrLn $ if rowround rowroundInput2 == rowroundOutput2 then "OK" else "FAIL!"
+    putStrLn $ if rowroundCompute rowroundInput1 == rowroundOutput1 then "OK" else "FAIL!"
+    putStrLn $ if rowroundCompute rowroundInput2 == rowroundOutput2 then "OK" else "FAIL!"
     putStrLn ""
+
+    putStrLn "Print a rowround expression test:"
+    putStrLn $ printf "z0 = %s" (sel1 (sel1 (rowroundDisplay rowroundInput2)))
+    putStrLn $ printf "z1 = %s" (sel1 (sel2 (rowroundDisplay rowroundInput2)))
+    putStrLn $ printf "z2 = %s" (sel1 (sel3 (rowroundDisplay rowroundInput2)))
+    putStrLn $ printf "z3 = %s" (sel1 (sel4 (rowroundDisplay rowroundInput2)))
+    putStrLn $ printf "z4 = %s" (sel2 (sel1 (rowroundDisplay rowroundInput2)))
+    putStrLn $ printf "z5 = %s" (sel2 (sel2 (rowroundDisplay rowroundInput2)))
+    putStrLn $ printf "z6 = %s" (sel2 (sel3 (rowroundDisplay rowroundInput2)))
+    putStrLn $ printf "z7 = %s" (sel2 (sel4 (rowroundDisplay rowroundInput2)))
+    putStrLn $ printf "z8 = %s" (sel3 (sel4 (rowroundDisplay rowroundInput2)))
+    putStrLn $ printf "z9 = %s" (sel3 (sel4 (rowroundDisplay rowroundInput2)))
+    putStrLn $ printf "z10 = %s" (sel3 (sel4 (rowroundDisplay rowroundInput2)))
+    putStrLn $ printf "z11 = %s" (sel3 (sel4 (rowroundDisplay rowroundInput2)))
+    putStrLn $ printf "z12 = %s" (sel4 (sel4 (rowroundDisplay rowroundInput2)))
+    putStrLn $ printf "z13 = %s" (sel4 (sel4 (rowroundDisplay rowroundInput2)))
+    putStrLn $ printf "z14 = %s" (sel4 (sel4 (rowroundDisplay rowroundInput2)))
+    putStrLn $ printf "z15 = %s" (sel4 (sel4 (rowroundDisplay rowroundInput2)))
 
     putStrLn "Columnround tests:"
     putStrLn $ if columnround columnroundInput1 == columnroundOutput1 then "OK" else "FAIL!"
