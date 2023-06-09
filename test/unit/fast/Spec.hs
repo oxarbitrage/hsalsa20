@@ -2,7 +2,7 @@ import Quarterround
 import Rowround
 import Columnround
 import Doubleround
-import Salsa20
+import Hash
 import Expansion
 import Utils
 import Types

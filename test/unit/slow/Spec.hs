@@ -1,4 +1,4 @@
-import Salsa20
+import Hash
 import Types
 
 -- Salsa20^n

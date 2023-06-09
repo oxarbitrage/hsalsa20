@@ -1,5 +1,5 @@
 {-|
-Module      : Salsa20
+Module      : Hash
 Description : Salsa20 hash function
 Copyright   : (c) Alfredo Garcia, 2023
 License     : MIT
@@ -8,7 +8,7 @@ Portability : POSIX
 
 The salsa20 hash expressions.
 -}
-module Salsa20
+module Hash
     (
     salsa20,
     salsa20power

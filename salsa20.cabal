@@ -29,9 +29,9 @@ library
       Crypt
       Doubleround
       Expansion
+      Hash
       Quarterround
       Rowround
-      Salsa20
       Types
       Utils
   other-modules:

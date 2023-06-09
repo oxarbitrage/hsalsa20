@@ -17,7 +17,7 @@ module Expansion
 import Types (MatrixType, Matrix64Type, VectorType)
 import Data.Tuple.Select
 
-import Salsa20 (salsa20)
+import Hash (salsa20)
 
 -- |`expa` in ascii. 
 o0 :: VectorType
