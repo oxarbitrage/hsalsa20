@@ -15,6 +15,7 @@ module Types
         Matrix64Type,
         VectorStringType,
         MatrixStringType,
+        Vector8Type,
     ) where
 
 import Data.Word
@@ -33,3 +34,6 @@ type MatrixStringType = (VectorStringType, VectorStringType, VectorStringType, V
 
 -- |We define an alias for a 64-Tuple of Word32 objects.
 type Matrix64Type = (MatrixType, MatrixType, MatrixType, MatrixType)
+
+-- vector8 ?
+type Vector8Type = (VectorType, VectorType)

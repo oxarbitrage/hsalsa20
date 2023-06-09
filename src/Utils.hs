@@ -15,6 +15,10 @@ module Utils
         reduce,
         aument,
         modMatrix,
+        littleendianInv2,
+        list2matrix,
+        halfmatrix2list,
+        matrix642list,
     ) where
 
 import Data.Bits
@@ -22,7 +26,7 @@ import Data.Bits
 import Data.Word
 import Data.Tuple.Select
 
-import Types (VectorType, MatrixType, Matrix64Type)
+import Types (VectorType, MatrixType, Matrix64Type, Vector8Type)
 
 -- |Raise 2 to the power of `p`.
 power :: Word32 -> Word32
@@ -119,3 +123,107 @@ modMatrix inputL inputR = (
         sel3 (sel4 inputL) + sel3 (sel4 inputR),
         sel4 (sel4 inputL) + sel4 (sel4 inputR)
     ))
+
+--
+littleendianInv2 ::  Word32 -> Vector8Type
+littleendianInv2 w = ((w .&. 0xff, shiftR w 8 .&. 0xff, shiftR w 16 .&. 0xff, shiftR w 24 .&. 0xff),
+    (shiftR w 32 .&. 0xff, shiftR 40 8 .&. 0xff, shiftR w 48 .&. 0xff, shiftR w 56 .&. 0xff))
+
+-- conversion functions from my types to list, this is a pain, i will probaby move everythign to list.
+
+list2matrix :: [Word32] -> MatrixType 
+list2matrix l = (
+    (head l, l!!1, l!!2, l!!3),
+    (l!!4, l!!5, l!!6, l!!7),
+    (l!!8, l!!9, l!!10, l!!11),
+    (l!!12, l!!13, l!!14, l!!15)
+    ) 
+
+halfmatrix2list :: Vector8Type -> [Word32] 
+halfmatrix2list v = [sel1 (sel1 v), sel2 (sel1 v), sel3 (sel1 v), sel4 (sel1 v),
+    sel1 (sel2 v), sel2 (sel2 v), sel3 (sel2 v), sel4 (sel2 v)]
+
+matrix642list :: Matrix64Type -> [Word32]
+matrix642list m = [
+    sel1 (sel1 (sel1 m)),
+    sel1 (sel1 (sel2 m)),
+    sel1 (sel1 (sel3 m)),
+    sel1 (sel1 (sel4 m)),
+
+    sel1 (sel2 (sel1 m)),
+    sel1 (sel2 (sel2 m)),
+    sel1 (sel2 (sel3 m)),
+    sel1 (sel2 (sel4 m)),
+
+    sel1 (sel3 (sel1 m)),
+    sel1 (sel3 (sel2 m)),
+    sel1 (sel3 (sel3 m)),
+    sel1 (sel3 (sel4 m)),
+
+    sel1 (sel4 (sel1 m)),
+    sel1 (sel4 (sel2 m)),
+    sel1 (sel4 (sel3 m)),
+    sel1 (sel4 (sel4 m)),
+
+    --
+    sel2 (sel1 (sel1 m)),
+    sel2 (sel1 (sel2 m)),
+    sel2 (sel1 (sel3 m)),
+    sel2 (sel1 (sel4 m)),
+
+    sel2 (sel2 (sel1 m)),
+    sel2 (sel2 (sel2 m)),
+    sel2 (sel2 (sel3 m)),
+    sel2 (sel2 (sel4 m)),
+
+    sel2 (sel3 (sel1 m)),
+    sel2 (sel3 (sel2 m)),
+    sel2 (sel3 (sel3 m)),
+    sel2 (sel3 (sel4 m)),
+
+    sel2 (sel4 (sel1 m)),
+    sel2 (sel4 (sel2 m)),
+    sel2 (sel4 (sel3 m)),
+    sel2 (sel4 (sel4 m)),
+
+    --
+    sel3 (sel1 (sel1 m)),
+    sel3 (sel1 (sel2 m)),
+    sel3 (sel1 (sel3 m)),
+    sel3 (sel1 (sel4 m)),
+
+    sel3 (sel2 (sel1 m)),
+    sel3 (sel2 (sel2 m)),
+    sel3 (sel2 (sel3 m)),
+    sel3 (sel2 (sel4 m)),
+
+    sel3 (sel3 (sel1 m)),
+    sel3 (sel3 (sel2 m)),
+    sel3 (sel3 (sel3 m)),
+    sel3 (sel3 (sel4 m)),
+
+    sel3 (sel4 (sel1 m)),
+    sel3 (sel4 (sel2 m)),
+    sel3 (sel4 (sel3 m)),
+    sel3 (sel4 (sel4 m)),
+
+    --
+    sel4 (sel1 (sel1 m)),
+    sel4 (sel1 (sel2 m)),
+    sel4 (sel1 (sel3 m)),
+    sel4 (sel1 (sel4 m)),
+
+    sel4 (sel2 (sel1 m)),
+    sel4 (sel2 (sel2 m)),
+    sel4 (sel2 (sel3 m)),
+    sel4 (sel2 (sel4 m)),
+
+    sel4 (sel3 (sel1 m)),
+    sel4 (sel3 (sel2 m)),
+    sel4 (sel3 (sel3 m)),
+    sel4 (sel3 (sel4 m)),
+
+    sel4 (sel4 (sel1 m)),
+    sel4 (sel4 (sel2 m)),
+    sel4 (sel4 (sel3 m)),
+    sel4 (sel4 (sel4 m))]
