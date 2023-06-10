@@ -20,7 +20,7 @@ import Data.Bits
 import Data.Word
 
 calculateI :: RealFrac a => a -> [Word32]
-calculateI i = littleendianInv2 (floor (i / 64))
+calculateI i = littleendianInv4Crypt (floor (i / 64))
 
 nonce_and_iover64 :: Integral a => [Word32] -> a -> [Word32]
 nonce_and_iover64 n i = n ++ calculateI (fromIntegral i)

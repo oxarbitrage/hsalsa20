@@ -30,4 +30,4 @@ core input = modMatrix (doubleround10 input) input
 -- |Execute `salsa20` a number of time, this is not part of the protocol and just used in a test case. 
 salsa20power :: [Word32] -> Int -> [Word32]
 salsa20power input 0 = input
-salsa20power input power =  salsa20power (salsa20 input) (power - 1)
+salsa20power input power = salsa20power (salsa20 input) (power - 1)
