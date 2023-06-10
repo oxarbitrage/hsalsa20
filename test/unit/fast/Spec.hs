@@ -9,6 +9,7 @@ import Doubleround
 import Hash
 import Expansion
 import Utils
+import Crypt
 
 -- Quarterround
 
@@ -335,6 +336,43 @@ expandedOutput2 = [
     171, 9, 122, 181,
     104, 182, 177, 193]
 
+-- Crypt
+
+message1 :: [Word32]
+message1 = [0]
+
+message2 :: [Word32]
+message2 = [0, 0, 0, 0]
+
+message3 :: [Word32]
+message3 = [
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0
+    ]
+
+nonce1 :: [Word32]
+nonce1 = [101, 102, 103, 104, 105, 106, 107, 108]
+
+key1 :: [Word32]
+key1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+
 main :: IO ()
 main = do
     putStrLn "Quarterround tests:"
@@ -408,4 +446,45 @@ main = do
     putStrLn $ if expand16 expandedk0 expandedn == expandedOutput2 then "OK" else "FAIL!"
     putStrLn ""
 
+    putStrLn "Encrypt/Decrypt tests:"
+
+    let encrypted1 = cryptBlock message1 key1 nonce1 0
+    let decrypted1 = cryptBlock encrypted1 key1 nonce1 0
+
+    putStrLn $ if length encrypted1 == length message1 then "OK" else "FAIL!"
+    putStrLn $ if encrypted1 /= message1 then "OK" else "FAIL!"
+    putStrLn $ if decrypted1 == message1 then "OK" else "FAIL!"
+
+    let encrypted2 = cryptBlock message2 key1 nonce1 0
+    let decrypted2 = cryptBlock encrypted2 key1 nonce1 0
+
+    putStrLn $ if length encrypted2 == length message2 then "OK" else "FAIL!"
+    putStrLn $ if encrypted2 /= message2 then "OK" else "FAIL!"
+    putStrLn $ if decrypted2 == message2 then "OK" else "FAIL!"
+    
+    let encrypted3 = cryptBlock message3 key1 nonce1 0
+    let decrypted3 = cryptBlock encrypted3 key1 nonce1 0
+
+    putStrLn $ if length encrypted3 == length message3 then "OK" else "FAIL!"
+    putStrLn $ if encrypted3 /= message3 then "OK" else "FAIL!"
+    putStrLn $ if decrypted3 == message3 then "OK" else "FAIL!"
+    
+    -- one more than 64
+    let message4 = message3 ++ [0]
+    let encrypted4 = cryptBlock message4 key1 nonce1 0
+    let decrypted4 = cryptBlock encrypted4 key1 nonce1 0
+
+    putStrLn $ if length encrypted4 == length message4 then "OK" else "FAIL!"
+    putStrLn $ if encrypted4 /= message4 then "OK" else "FAIL!"
+    putStrLn $ if decrypted4 == message4 then "OK" else "FAIL!"
+    
+    -- one more than 129
+    let message5 = message3 ++ message3 ++ [0]
+    let encrypted5 = cryptBlock message5 key1 nonce1 0
+    let decrypted5 = cryptBlock encrypted5 key1 nonce1 0
+
+    putStrLn $ if length encrypted5 == length message5 then "OK" else "FAIL!"
+    putStrLn $ if encrypted5 /= message5 then "OK" else "FAIL!"
+    putStrLn $ if decrypted5 == message5 then "OK" else "FAIL!"
+    
     return ()
