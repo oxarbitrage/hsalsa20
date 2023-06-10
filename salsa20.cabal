@@ -40,6 +40,7 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , split
   default-language: Haskell2010
 
 executable salsa20-exe
@@ -52,6 +53,7 @@ executable salsa20-exe
   build-depends:
       base >=4.7 && <5
     , salsa20
+    , split
   default-language: Haskell2010
 
 test-suite salsa20-fast-unit-tests
@@ -65,6 +67,7 @@ test-suite salsa20-fast-unit-tests
   build-depends:
       base >=4.7 && <5
     , salsa20
+    , split
   default-language: Haskell2010
 
 test-suite salsa20-slow-unit-test
@@ -78,4 +81,5 @@ test-suite salsa20-slow-unit-test
   build-depends:
       base >=4.7 && <5
     , salsa20
+    , split
   default-language: Haskell2010
