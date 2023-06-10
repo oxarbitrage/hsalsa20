@@ -35,9 +35,7 @@ ghc-options:
 
 library:
   source-dirs: src
-  dependencies:
-    - tuple
-
+  
 executables:
   salsa20-exe:
     main:                Main.hs
@@ -48,7 +46,6 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - salsa20
-    - tuple
 
 tests:
   salsa20-fast-unit-tests:
@@ -60,7 +57,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - salsa20
-    - tuple
   salsa20-slow-unit-test:
     main:                Spec.hs
     source-dirs:         test/unit/slow
@@ -70,4 +66,3 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - salsa20
-    - tuple

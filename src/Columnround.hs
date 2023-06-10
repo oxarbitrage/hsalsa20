@@ -13,14 +13,16 @@ module Columnround
     columnround
     ) where
 
-import Types (MatrixType)
 import Rowround (rowroundCompute)
 
+import Data.Word
+
 -- |Transpose a salsa20 matrix type.
-transpose :: MatrixType -> MatrixType
-transpose ((y0, y1, y2, y3), (y4, y5, y6, y7), (y8, y9, y10, y11), (y12, y13, y14, y15)) = 
-    ((y0, y4, y8, y12), (y1, y5, y9, y13), (y2, y6, y10, y14), (y3, y7, y11, y15)) 
+transpose :: [Word32] -> [Word32]
+transpose [y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, y13, y14, y15] = 
+    [y0, y4, y8, y12, y1, y5, y9, y13, y2, y6, y10, y14, y3, y7, y11, y15]
+transpose _ = []
 
 -- |The columnround expression.
-columnround :: MatrixType -> MatrixType
+columnround :: [Word32] -> [Word32]
 columnround = transpose . rowroundCompute . transpose

@@ -16,15 +16,16 @@ module Doubleround
     doubleround10
     ) where
 
-import Types (MatrixType)
+import Data.Word
+
 import Rowround (rowroundCompute)
 import Columnround (columnround)
 
 -- |The doubleround expression.
-doubleround :: MatrixType -> MatrixType
+doubleround :: [Word32] -> [Word32]
 doubleround = rowroundCompute . columnround
 
 -- |The doubleround10 expression.
-doubleround10 :: MatrixType -> MatrixType
+doubleround10 :: [Word32] -> [Word32]
 doubleround10 = doubleround . doubleround . doubleround . doubleround . doubleround
     . doubleround . doubleround . doubleround . doubleround . doubleround

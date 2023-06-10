@@ -14,21 +14,20 @@ module Hash
     salsa20power
     ) where
 
-import Doubleround
+import Data.Word
 
+import Doubleround
 import Utils
 
-import Types (MatrixType, Matrix64Type)
-
 -- |The salsa20 expression.
-salsa20 :: Matrix64Type -> Matrix64Type
+salsa20 :: [Word32] -> [Word32]
 salsa20 = aument . core . reduce
 
 -- |The core of the salsa20.
-core :: MatrixType -> MatrixType
+core :: [Word32] -> [Word32]
 core input = modMatrix (doubleround10 input) input
 
 -- |Execute `salsa20` a number of time, this is not part of the protocol and just used in a test case. 
-salsa20power :: Matrix64Type -> Int -> Matrix64Type
+salsa20power :: [Word32] -> Int -> [Word32]
 salsa20power input 0 = input
 salsa20power input power =  salsa20power (salsa20 input) (power - 1)
