@@ -58,7 +58,7 @@ algMapsCompute (Rotl13 a) = rotate a 13
 algMapsCompute (Rotl18 a) = rotate a 18
 algMapsCompute (a `Xor2` b) = xor a b
 
--- |The F-algebra maps for a `String` evaluator. For expression displaying purposes.
+-- |The F-algebra maps for a `String` evaluator.
 algMapsDisplay :: ExprF String -> String
 algMapsDisplay (Const i) = printf "(%d : %s)" i (show (typeOf i))
 algMapsDisplay (a `Mod` b) = printf "(%s + %s)" a b
@@ -118,12 +118,10 @@ z0 _ = In (Const 0)
 
 -- |The quarterround expression computed. `quarterround(y) = (z0, z1, z2, z3)`
 quarterroundCompute :: [Word32] -> [Word32]
-quarterroundCompute [y0, y1, y2, y3] = [evalCompute $ z0 [y0, y1, y2, y3], evalCompute $ z1 [y0, y1, y2, y3],
-    evalCompute $ z2 [y0, y1, y2, y3], evalCompute $ z3 [y0, y1, y2, y3]]
-quarterroundCompute _ = []
+quarterroundCompute input = [evalCompute $ z0 input, evalCompute $ z1 input,
+    evalCompute $ z2 input, evalCompute $ z3 input]
 
 -- |The quarterround expression as a `String` for displaying expression purposes.
 quarterroundDisplay :: [Word32] -> [String]
-quarterroundDisplay [y0, y1, y2, y3] = [evalDisplay $ z0 [y0, y1, y2, y3], evalDisplay $ z1 [y0, y1, y2, y3],
-    evalDisplay $ z2 [y0, y1, y2, y3], evalDisplay $ z3 [y0, y1, y2, y3]]
-quarterroundDisplay _ = []
+quarterroundDisplay input = [evalDisplay $ z0 input, evalDisplay $ z1 input,
+    evalDisplay $ z2 input, evalDisplay $ z3 input]

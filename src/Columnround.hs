@@ -18,7 +18,7 @@ import Rowround (rowroundCompute, rowroundDisplay)
 
 import Data.Word
 
--- |Transpose a salsa20 matrix type.
+-- |Transpose a 4x4 matrix type.
 transpose :: [a] -> [a]
 transpose [y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, y13, y14, y15] = 
     [y0, y4, y8, y12, y1, y5, y9, y13, y2, y6, y10, y14, y3, y7, y11, y15]
