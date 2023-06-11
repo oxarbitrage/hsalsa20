@@ -19,11 +19,11 @@ module Doubleround
 import Data.Word
 
 import Rowround (rowroundCompute)
-import Columnround (columnround)
+import Columnround (columnroundCompute)
 
 -- |The doubleround expression.
 doubleround :: [Word32] -> [Word32]
-doubleround = rowroundCompute . columnround
+doubleround = rowroundCompute . columnroundCompute
 
 -- |The doubleround10 expression.
 doubleround10 :: [Word32] -> [Word32]

@@ -385,10 +385,12 @@ main = do
     putStrLn ""
 
     putStrLn "Print a quarterround expression test:"
-    putStrLn $ printf "z1 = %s" (quarterroundDisplay quarterroundInput6 !! 1)
-    putStrLn $ printf "z2 = %s" (quarterroundDisplay quarterroundInput6 !! 2)
-    putStrLn $ printf "z3 = %s" (quarterroundDisplay quarterroundInput6 !! 3)
-    putStrLn $ printf "z0 = %s" (quarterroundDisplay quarterroundInput6 !! 0)
+    let quarterround_display = quarterroundDisplay quarterroundInput6
+    putStrLn $ printf "z1 = %s" (quarterround_display !! 1)
+    putStrLn $ printf "z2 = %s" (quarterround_display !! 2)
+    putStrLn $ printf "z3 = %s" (quarterround_display !! 3)
+    putStrLn $ printf "z0 = %s" (head quarterround_display)
+    putStrLn ""
 
     putStrLn "Rowround tests:"
     putStrLn $ if rowroundCompute rowroundInput1 == rowroundOutput1 then "OK" else "FAIL!"
@@ -396,26 +398,48 @@ main = do
     putStrLn ""
 
     putStrLn "Print a rowround expression test:"
-    putStrLn $ printf "z0 = %s" (rowroundDisplay rowroundInput2 !! 0)
-    putStrLn $ printf "z1 = %s" (rowroundDisplay rowroundInput2 !! 1)
-    putStrLn $ printf "z2 = %s" (rowroundDisplay rowroundInput2 !! 2)
-    putStrLn $ printf "z3 = %s" (rowroundDisplay rowroundInput2 !! 3)
-    putStrLn $ printf "z4 = %s" (rowroundDisplay rowroundInput2 !! 4)
-    putStrLn $ printf "z5 = %s" (rowroundDisplay rowroundInput2 !! 5)
-    putStrLn $ printf "z6 = %s" (rowroundDisplay rowroundInput2 !! 6)
-    putStrLn $ printf "z7 = %s" (rowroundDisplay rowroundInput2 !! 7)
-    putStrLn $ printf "z8 = %s" (rowroundDisplay rowroundInput2 !! 8)
-    putStrLn $ printf "z9 = %s" (rowroundDisplay rowroundInput2 !! 9)
-    putStrLn $ printf "z10 = %s" (rowroundDisplay rowroundInput2 !! 10)
-    putStrLn $ printf "z11 = %s" (rowroundDisplay rowroundInput2 !! 11)
-    putStrLn $ printf "z12 = %s" (rowroundDisplay rowroundInput2 !! 12)
-    putStrLn $ printf "z13 = %s" (rowroundDisplay rowroundInput2 !! 13)
-    putStrLn $ printf "z14 = %s" (rowroundDisplay rowroundInput2 !! 14)
-    putStrLn $ printf "z15 = %s" (rowroundDisplay rowroundInput2 !! 15)
+    let rowround_display = rowroundDisplay rowroundInput2
+    putStrLn $ printf "z0 = %s" $ head rowround_display
+    putStrLn $ printf "z1 = %s" (rowround_display !! 1)
+    putStrLn $ printf "z2 = %s" (rowround_display !! 2)
+    putStrLn $ printf "z3 = %s" (rowround_display !! 3)
+    putStrLn $ printf "z4 = %s" (rowround_display !! 4)
+    putStrLn $ printf "z5 = %s" (rowround_display !! 5)
+    putStrLn $ printf "z6 = %s" (rowround_display !! 6)
+    putStrLn $ printf "z7 = %s" (rowround_display !! 7)
+    putStrLn $ printf "z8 = %s" (rowround_display !! 8)
+    putStrLn $ printf "z9 = %s" (rowround_display !! 9)
+    putStrLn $ printf "z10 = %s" (rowround_display !! 10)
+    putStrLn $ printf "z11 = %s" (rowround_display !! 11)
+    putStrLn $ printf "z12 = %s" (rowround_display !! 12)
+    putStrLn $ printf "z13 = %s" (rowround_display !! 13)
+    putStrLn $ printf "z14 = %s" (rowround_display !! 14)
+    putStrLn $ printf "z15 = %s" (rowround_display !! 15)
+    putStrLn ""
 
     putStrLn "Columnround tests:"
-    putStrLn $ if columnround columnroundInput1 == columnroundOutput1 then "OK" else "FAIL!"
-    putStrLn $ if columnround columnroundInput2 == columnroundOutput2 then "OK" else "FAIL!"
+    putStrLn $ if columnroundCompute columnroundInput1 == columnroundOutput1 then "OK" else "FAIL!"
+    putStrLn $ if columnroundCompute columnroundInput2 == columnroundOutput2 then "OK" else "FAIL!"
+    putStrLn ""
+
+    putStrLn "Print a columnround expression test:"
+    let columnround_display = columnroundDisplay columnroundInput2
+    putStrLn $ printf "y0 = %s" $ head columnround_display
+    putStrLn $ printf "y1 = %s" (columnround_display !! 1)
+    putStrLn $ printf "y2 = %s" (columnround_display !! 2)
+    putStrLn $ printf "y3 = %s" (columnround_display !! 3)
+    putStrLn $ printf "y4 = %s" (columnround_display !! 4)
+    putStrLn $ printf "y5 = %s" (columnround_display !! 5)
+    putStrLn $ printf "y6 = %s" (columnround_display !! 6)
+    putStrLn $ printf "y7 = %s" (columnround_display !! 7)
+    putStrLn $ printf "y8 = %s" (columnround_display !! 8)
+    putStrLn $ printf "y9 = %s" (columnround_display !! 9)
+    putStrLn $ printf "y10 = %s" (columnround_display !! 10)
+    putStrLn $ printf "y11 = %s" (columnround_display !! 11)
+    putStrLn $ printf "y12 = %s" (columnround_display !! 12)
+    putStrLn $ printf "y13 = %s" (columnround_display !! 13)
+    putStrLn $ printf "y14 = %s" (columnround_display !! 14)
+    putStrLn $ printf "y15 = %s" (columnround_display !! 15)
     putStrLn ""
 
     putStrLn "Doubleround tests:"
