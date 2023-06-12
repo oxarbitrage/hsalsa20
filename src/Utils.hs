@@ -35,11 +35,11 @@ littleendian _ = 0
 littleendianInv :: Word32 -> [Word32]
 littleendianInv w = [w .&. 0xff, shiftR w 8 .&. 0xff, shiftR w 16 .&. 0xff, shiftR w 24 .&. 0xff]
 
--- Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendian` encoding.
+-- |Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendian` encoding.
 reduce :: [Word32] -> [Word32]
 reduce input = map littleendian $ chunksOf 4 input
 
--- Aument a matrix of 16 elements to one of 64 elements by using `littleendianInv`.
+-- |Aument a matrix of 16 elements to one of 64 elements by using `littleendianInv`.
 aument :: [Word32] -> [Word32]
 aument = concatMap littleendianInv
 
