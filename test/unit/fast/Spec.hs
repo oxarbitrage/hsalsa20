@@ -1,6 +1,7 @@
 
 import Data.Word
 import Text.Printf
+import qualified Data.Text as T
 
 import Quarterround
 import Rowround
@@ -18,6 +19,14 @@ quarterroundInput1 = [0, 0, 0, 0]
 
 quarterroundOutput1 :: [Word32]
 quarterroundOutput1 = [0, 0, 0, 0]
+
+quarterroundTypeCheckOutput1 :: [String]
+quarterroundTypeCheckOutput1 = [
+    "(0 : Word32) ⊕ (((0 : Word32) ⊕ (((0 : Word32) ⊕ (((0 : Word32) ⊕ (((0 : Word32) + (0 : Word32)) <<< 7) + (0 : Word32)) <<< 9) + (0 : Word32) ⊕ (((0 : Word32) + (0 : Word32)) <<< 7)) <<< 13) + (0 : Word32) ⊕ (((0 : Word32) ⊕ (((0 : Word32) + (0 : Word32)) <<< 7) + (0 : Word32)) <<< 9)) <<< 18)",
+    "(0 : Word32) ⊕ (((0 : Word32) + (0 : Word32)) <<< 7)",
+    "(0 : Word32) ⊕ (((0 : Word32) ⊕ (((0 : Word32) + (0 : Word32)) <<< 7) + (0 : Word32)) <<< 9)",
+    "(0 : Word32) ⊕ (((0 : Word32) ⊕ (((0 : Word32) ⊕ (((0 : Word32) + (0 : Word32)) <<< 7) + (0 : Word32)) <<< 9) + (0 : Word32) ⊕ (((0 : Word32) + (0 : Word32)) <<< 7)) <<< 13)"
+    ]
 
 quarterroundInput2 :: [Word32]
 quarterroundInput2 = [1, 0, 0, 0]
@@ -48,6 +57,34 @@ quarterroundInput6 = [0xe7e8c006, 0xc4f9417d, 0x6479b4b2, 0x68c67137]
 
 quarterroundOutput6 :: [Word32]
 quarterroundOutput6 = [0xe876d72b, 0x9361dfd5, 0xf1460244, 0x948541a3]
+
+quarterroundTypeCheckOutput6 :: [String]
+quarterroundTypeCheckOutput6 = [
+    "(3890790406 : Word32) ⊕ (((1757835575 : Word32) ⊕ (((1685697714 : Word32) ⊕ (((3304669565 : Word32) ⊕ (((3890790406 : Word32) + (1757835575 : Word32)) <<< 7) + (3890790406 : Word32)) <<< 9) + (3304669565 : Word32) ⊕ (((3890790406 : Word32) + (1757835575 : Word32)) <<< 7)) <<< 13) + (1685697714 : Word32) ⊕ (((3304669565 : Word32) ⊕ (((3890790406 : Word32) + (1757835575 : Word32)) <<< 7) + (3890790406 : Word32)) <<< 9)) <<< 18)",
+    "(3304669565 : Word32) ⊕ (((3890790406 : Word32) + (1757835575 : Word32)) <<< 7)",
+    "(1685697714 : Word32) ⊕ (((3304669565 : Word32) ⊕ (((3890790406 : Word32) + (1757835575 : Word32)) <<< 7) + (3890790406 : Word32)) <<< 9)",
+    "(1757835575 : Word32) ⊕ (((1685697714 : Word32) ⊕ (((3304669565 : Word32) ⊕ (((3890790406 : Word32) + (1757835575 : Word32)) <<< 7) + (3890790406 : Word32)) <<< 9) + (3304669565 : Word32) ⊕ (((3890790406 : Word32) + (1757835575 : Word32)) <<< 7)) <<< 13)"
+    ]
+
+quarterroundInputString1 :: [String]
+quarterroundInputString1 = ["y0", "y1", "y2", "y3"]
+
+quarterroundOutputString1 :: [T.Text]
+quarterroundOutputString1 = [
+    T.pack "y0 ⊕ ((z3 + z2) <<< 18)",
+    T.pack "y1 ⊕ ((y0 + y3) <<< 7)",
+    T.pack "y2 ⊕ ((z1 + y0) <<< 9)",
+    T.pack "y3 ⊕ ((z2 + z1) <<< 13)"]
+
+quarterroundInputString2 :: [String]
+quarterroundInputString2 = ["a", "b", "c", "d"]
+
+quarterroundOutputString2 :: [T.Text]
+quarterroundOutputString2 = [
+    T.pack "a ⊕ ((z3 + z2) <<< 18)",
+    T.pack "b ⊕ ((a + d) <<< 7)",
+    T.pack "c ⊕ ((z1 + a) <<< 9)",
+    T.pack "d ⊕ ((z2 + z1) <<< 13)"]
 
 -- Rowround
 
@@ -384,12 +421,14 @@ main = do
     putStrLn $ if quarterroundCompute quarterroundInput6 == quarterroundOutput6 then "OK" else "FAIL!"
     putStrLn ""
 
-    putStrLn "Print a quarterround expression test:"
-    let quarterround_display = quarterroundDisplay quarterroundInput6
-    putStrLn $ printf "z1 = %s" (quarterround_display !! 1)
-    putStrLn $ printf "z2 = %s" (quarterround_display !! 2)
-    putStrLn $ printf "z3 = %s" (quarterround_display !! 3)
-    putStrLn $ printf "z0 = %s" (head quarterround_display)
+    putStrLn "Quarterround type checker test:"
+    putStrLn $ if quarterroundDisplay quarterroundInput1 == quarterroundTypeCheckOutput1 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundDisplay quarterroundInput6 == quarterroundTypeCheckOutput6 then "OK" else "FAIL!"
+    putStrLn ""
+
+    putStrLn "Quarterround equation test:"
+    putStrLn $ if substitute quarterroundInputString1 == quarterroundOutputString1 then "OK" else "FAIL!"
+    putStrLn $ if substitute quarterroundInputString2 == quarterroundOutputString2 then "OK" else "FAIL!"
     putStrLn ""
 
     putStrLn "Rowround tests:"
@@ -512,3 +551,16 @@ main = do
     putStrLn $ if decrypted5 == message5 then "OK" else "FAIL!"
     
     return ()
+
+substitute :: [String] -> [T.Text]
+substitute input = do
+    let quarterround_tc = quarterroundTypeChecker input
+    let z1 = T.pack (quarterround_tc !! 1)
+    let z2 = T.replace z1 (T.pack "z1") (T.pack (quarterround_tc !! 2))
+    let z3' = T.replace z1 (T.pack "z1") (T.pack (quarterround_tc !! 3))
+    let z3 = T.replace z2 (T.pack "z2") z3'
+    let z0' = T.replace z1 (T.pack "z1") (T.pack (head quarterround_tc))
+    let z0'' = T.replace z2 (T.pack "z2") z0'
+    let z0 = T.replace z3 (T.pack "z3") z0''
+
+    [z0, z1, z2, z3]
