@@ -2,6 +2,7 @@
 import Data.Word
 import Text.Printf
 import qualified Data.Text as T
+import Data.List.Split (chunksOf)
 
 import Quarterround
 import Rowround
@@ -58,33 +59,12 @@ quarterroundInput6 = [0xe7e8c006, 0xc4f9417d, 0x6479b4b2, 0x68c67137]
 quarterroundOutput6 :: [Word32]
 quarterroundOutput6 = [0xe876d72b, 0x9361dfd5, 0xf1460244, 0x948541a3]
 
-quarterroundTypeCheckOutput6 :: [String]
-quarterroundTypeCheckOutput6 = [
-    "(3890790406 : Word32) ⊕ (((1757835575 : Word32) ⊕ (((1685697714 : Word32) ⊕ (((3304669565 : Word32) ⊕ (((3890790406 : Word32) + (1757835575 : Word32)) <<< 7) + (3890790406 : Word32)) <<< 9) + (3304669565 : Word32) ⊕ (((3890790406 : Word32) + (1757835575 : Word32)) <<< 7)) <<< 13) + (1685697714 : Word32) ⊕ (((3304669565 : Word32) ⊕ (((3890790406 : Word32) + (1757835575 : Word32)) <<< 7) + (3890790406 : Word32)) <<< 9)) <<< 18)",
-    "(3304669565 : Word32) ⊕ (((3890790406 : Word32) + (1757835575 : Word32)) <<< 7)",
-    "(1685697714 : Word32) ⊕ (((3304669565 : Word32) ⊕ (((3890790406 : Word32) + (1757835575 : Word32)) <<< 7) + (3890790406 : Word32)) <<< 9)",
-    "(1757835575 : Word32) ⊕ (((1685697714 : Word32) ⊕ (((3304669565 : Word32) ⊕ (((3890790406 : Word32) + (1757835575 : Word32)) <<< 7) + (3890790406 : Word32)) <<< 9) + (3304669565 : Word32) ⊕ (((3890790406 : Word32) + (1757835575 : Word32)) <<< 7)) <<< 13)"
-    ]
-
-quarterroundInputString1 :: [String]
-quarterroundInputString1 = ["y0", "y1", "y2", "y3"]
-
-quarterroundOutputString1 :: [T.Text]
-quarterroundOutputString1 = [
-    T.pack "y0 ⊕ ((z3 + z2) <<< 18)",
-    T.pack "y1 ⊕ ((y0 + y3) <<< 7)",
-    T.pack "y2 ⊕ ((z1 + y0) <<< 9)",
-    T.pack "y3 ⊕ ((z2 + z1) <<< 13)"]
-
-quarterroundInputString2 :: [String]
-quarterroundInputString2 = ["a", "b", "c", "d"]
-
-quarterroundOutputString2 :: [T.Text]
-quarterroundOutputString2 = [
-    T.pack "a ⊕ ((z3 + z2) <<< 18)",
-    T.pack "b ⊕ ((a + d) <<< 7)",
-    T.pack "c ⊕ ((z1 + a) <<< 9)",
-    T.pack "d ⊕ ((z2 + z1) <<< 13)"]
+quarterroundOutputString :: [String]
+quarterroundOutputString = [
+    "y0 ⊕ ((z3 + z2) <<< 18)",
+    "y1 ⊕ ((y0 + y3) <<< 7)",
+    "y2 ⊕ ((z1 + y0) <<< 9)",
+    "y3 ⊕ ((z2 + z1) <<< 13)"]
 
 -- Rowround
 
@@ -422,13 +402,14 @@ main = do
     putStrLn ""
 
     putStrLn "Quarterround type checker test:"
-    putStrLn $ if quarterroundDisplay quarterroundInput1 == quarterroundTypeCheckOutput1 then "OK" else "FAIL!"
-    putStrLn $ if quarterroundDisplay quarterroundInput6 == quarterroundTypeCheckOutput6 then "OK" else "FAIL!"
-    putStrLn ""
-
-    putStrLn "Quarterround equation test:"
-    putStrLn $ if substitute quarterroundInputString1 == quarterroundOutputString1 then "OK" else "FAIL!"
-    putStrLn $ if substitute quarterroundInputString2 == quarterroundOutputString2 then "OK" else "FAIL!"
+    let qr_display = quarterroundTypeChecker (listOfNumbersToPair quarterroundInput1)
+    putStrLn $ printf "z0 = %s" $ head qr_display 
+    putStrLn $ printf "z1 = %s" (qr_display !! 1)
+    putStrLn $ printf "z2 = %s" (qr_display !! 2)
+    putStrLn $ printf "z3 = %s" (qr_display !! 3)
+    --print $ substitute quarterroundInput1
+    putStrLn $ if quarterroundTypeChecker (listOfNumbersToPair quarterroundInput1) == quarterroundOutputString then "OK" else "FAIL!"
+    putStrLn $ if quarterroundTypeChecker (listOfNumbersToPair quarterroundInput6) == quarterroundOutputString then "OK" else "FAIL!"
     putStrLn ""
 
     putStrLn "Rowround tests:"
@@ -437,7 +418,9 @@ main = do
     putStrLn ""
 
     putStrLn "Print a rowround expression test:"
-    let rowround_display = rowroundDisplay rowroundInput2
+    let rowround_display = substitute2 rowroundInput1
+    --let rowround_display = rowroundTypeChecker rowroundInputString1
+
     putStrLn $ printf "z0 = %s" $ head rowround_display
     putStrLn $ printf "z1 = %s" (rowround_display !! 1)
     putStrLn $ printf "z2 = %s" (rowround_display !! 2)
@@ -446,6 +429,7 @@ main = do
     putStrLn $ printf "z5 = %s" (rowround_display !! 5)
     putStrLn $ printf "z6 = %s" (rowround_display !! 6)
     putStrLn $ printf "z7 = %s" (rowround_display !! 7)
+    
     putStrLn $ printf "z8 = %s" (rowround_display !! 8)
     putStrLn $ printf "z9 = %s" (rowround_display !! 9)
     putStrLn $ printf "z10 = %s" (rowround_display !! 10)
@@ -462,7 +446,10 @@ main = do
     putStrLn ""
 
     putStrLn "Print a columnround expression test:"
-    let columnround_display = columnroundDisplay columnroundInput2
+    
+    --let columnround_display = columnroundDisplay columnroundInput2
+    let columnround_display = substitute3 columnroundInput1
+
     putStrLn $ printf "y0 = %s" $ head columnround_display
     putStrLn $ printf "y1 = %s" (columnround_display !! 1)
     putStrLn $ printf "y2 = %s" (columnround_display !! 2)
@@ -482,8 +469,31 @@ main = do
     putStrLn ""
 
     putStrLn "Doubleround tests:"
-    putStrLn $ if doubleround doubleroundInput1 == doubleroundOutput1 then "OK" else "FAIL!"
-    putStrLn $ if doubleround doubleroundInput2 == doubleroundOutput2 then "OK" else "FAIL!"
+    putStrLn $ if doubleroundCompute doubleroundInput1 == doubleroundOutput1 then "OK" else "FAIL!"
+    putStrLn $ if doubleroundCompute doubleroundInput2 == doubleroundOutput2 then "OK" else "FAIL!"
+    putStrLn ""
+
+    putStrLn "Doubleround tests print:"
+    let doubleround_display = substituteDouble doubleroundInput1
+    --putStrLn $ printf "%d" (length doubleround_display)
+    --print doubleround_display
+
+    putStrLn $ printf "y0 = %s" $ head doubleround_display
+    putStrLn $ printf "y1 = %s" (doubleround_display !! 1)
+    putStrLn $ printf "y2 = %s" (doubleround_display !! 2)
+    putStrLn $ printf "y3 = %s" (doubleround_display !! 3)
+    putStrLn $ printf "y4 = %s" (doubleround_display !! 4)
+    putStrLn $ printf "y5 = %s" (doubleround_display !! 5)
+    putStrLn $ printf "y6 = %s" (doubleround_display !! 6)
+    putStrLn $ printf "y7 = %s" (doubleround_display !! 7)
+    putStrLn $ printf "y8 = %s" (doubleround_display !! 8)
+    putStrLn $ printf "y9 = %s" (doubleround_display !! 9)
+    putStrLn $ printf "y10 = %s" (doubleround_display !! 10)
+    putStrLn $ printf "y11 = %s" (doubleround_display !! 11)
+    putStrLn $ printf "y12 = %s" (doubleround_display !! 12)
+    putStrLn $ printf "y13 = %s" (doubleround_display !! 13)
+    putStrLn $ printf "y14 = %s" (doubleround_display !! 14)
+    putStrLn $ printf "y15 = %s" (doubleround_display !! 15)
     putStrLn ""
 
     putStrLn "Littleendian tests:"
@@ -552,15 +562,241 @@ main = do
     
     return ()
 
-substitute :: [String] -> [T.Text]
-substitute input = do
-    let quarterround_tc = quarterroundTypeChecker input
-    let z1 = T.pack (quarterround_tc !! 1)
-    let z2 = T.replace z1 (T.pack "z1") (T.pack (quarterround_tc !! 2))
-    let z3' = T.replace z1 (T.pack "z1") (T.pack (quarterround_tc !! 3))
+replaceInitial :: [T.Text] -> [T.Text]
+replaceInitial orig = do 
+    let l0 = map (T.replace (T.pack "y0_r1") (T.pack "y0")) orig
+    let l1 = map (T.replace (T.pack "y1_r1") (T.pack "y1")) l0
+    let l2 = map (T.replace (T.pack "y2_r1") (T.pack "y2")) l1
+    let l3 = map (T.replace (T.pack "y3_r1") (T.pack "y3")) l2
+
+    let l4 = map (T.replace (T.pack "y0_r2") (T.pack "y4")) l3
+    let l5 = map (T.replace (T.pack "y1_r2") (T.pack "y5")) l4
+    let l6 = map (T.replace (T.pack "y2_r2") (T.pack "y6")) l5
+    let l7 = map (T.replace (T.pack "y3_r2") (T.pack "y7")) l6
+
+    let l8 = map (T.replace (T.pack "y0_r3") (T.pack "y8")) l7
+    let l9 = map (T.replace (T.pack "y1_r3") (T.pack "y9")) l8
+    let l10 = map (T.replace (T.pack "y2_r3") (T.pack "y10")) l9
+    let l11 = map (T.replace (T.pack "y3_r3") (T.pack "y11")) l10
+
+    let l12 = map (T.replace (T.pack "y0_r4") (T.pack "y11")) l11
+    let l13 = map (T.replace (T.pack "y1_r4") (T.pack "y12")) l12
+    let l14 = map (T.replace (T.pack "y2_r4") (T.pack "y13")) l13
+    let l15 = map (T.replace (T.pack "y3_r4") (T.pack "y14")) l14
+
+    l15
+
+substitute2 :: [Word32] -> [T.Text]
+substitute2 input = do
+    let rowround_tc = rowroundTypeChecker input
+
+    let orig = [
+            T.pack (snd (rowround_tc !! 0)),
+            T.pack (snd (rowround_tc !! 1)),
+            T.pack (snd (rowround_tc !! 2)),
+            T.pack (snd (rowround_tc !! 3)),
+            T.pack (snd (rowround_tc !! 4)),
+            T.pack (snd (rowround_tc !! 5)),
+            T.pack (snd (rowround_tc !! 6)),
+            T.pack (snd (rowround_tc !! 7)),
+            T.pack (snd (rowround_tc !! 8)),
+            T.pack (snd (rowround_tc !! 9)),
+            T.pack (snd (rowround_tc !! 10)),
+            T.pack (snd (rowround_tc !! 11)),
+            T.pack (snd (rowround_tc !! 12)),
+            T.pack (snd (rowround_tc !! 13)),
+            T.pack (snd (rowround_tc !! 14)),
+            T.pack (snd (rowround_tc !! 15))]
+
+    replaceInitial orig
+
+    {-
+
+    let chunk1 = head (chunksOf 4 rowround_tc)
+    let chunk2 = chunksOf 4 rowround_tc!!1
+    let chunk3 = chunksOf 4 rowround_tc!!2
+    let chunk4 = chunksOf 4 rowround_tc!!3
+
+    let z1 = T.pack (snd (chunk1 !! 1))
+    let z2 = T.replace z1 (T.pack "z1") (T.pack (snd (chunk1 !! 2)))
+    let z3' = T.replace z1 (T.pack "z1") (T.pack (snd (chunk1 !! 3)))
     let z3 = T.replace z2 (T.pack "z2") z3'
-    let z0' = T.replace z1 (T.pack "z1") (T.pack (head quarterround_tc))
+    let z0' = T.replace z1 (T.pack "z1") (T.pack (snd (head chunk1)))
     let z0'' = T.replace z2 (T.pack "z2") z0'
     let z0 = T.replace z3 (T.pack "z3") z0''
 
-    [z0, z1, z2, z3]
+    let z5' = T.pack (snd (chunk2 !! 1))
+    let z6 = T.replace z5' (T.pack "z5") (T.pack (snd (chunk2 !! 2)))
+    let z7' = T.replace z5' (T.pack "z5") (T.pack (snd (chunk2 !! 3)))
+    let z7 = T.replace z6 (T.pack "z6") z7'
+    let z4' = T.replace z5' (T.pack "z5") (T.pack (snd (head chunk2)))
+    let z4'' = T.replace z6 (T.pack "z6") z4'
+    let z4 = T.replace z7 (T.pack "z7") z4''
+    let z5'' = T.replace z6 (T.pack "z6") z5'
+    let z5''' = T.replace z7 (T.pack "z7") z5''
+    let z5 = T.replace z4 (T.pack "z4") z5'''
+
+    let z9' = T.pack (snd (chunk3 !! 1))
+    let z10' = T.replace z9' (T.pack "z9") (T.pack (snd (chunk3 !! 2)))
+    let z11' = T.replace z9' (T.pack "z9") (T.pack (snd (chunk3 !! 3)))
+    let z11 = T.replace z10' (T.pack "z10") z11'
+    let z8' = T.replace z9' (T.pack "z9") (T.pack (snd (head chunk3)))
+    let z8'' = T.replace z10' (T.pack "z10") z8'
+    let z8 = T.replace z11 (T.pack "z11") z8''
+    let z9'' = T.replace z10' (T.pack "z10") z9'
+    let z9''' = T.replace z11 (T.pack "z11") z9''
+    let z9 = T.replace z8 (T.pack "z8") z9'''
+    let z10'' = T.replace z11 (T.pack "z11") z10'
+    let z10 = T.replace z8 (T.pack "z8") z10''
+
+    let z13' = T.pack (snd (chunk4 !! 1))
+    let z14' = T.replace z13' (T.pack "z13") (T.pack (snd (chunk4 !! 2)))
+    let z15' = T.replace z13' (T.pack "z13") (T.pack (snd (chunk4 !! 3)))
+    let z15 = T.replace z14' (T.pack "z14") z15'
+    let z12' = T.replace z13' (T.pack "z13") (T.pack (snd (head chunk4)))
+    let z12'' = T.replace z14' (T.pack "z14") z12'
+    let z12 = T.replace z15 (T.pack "z15") z12''
+    let z13'' =  T.replace z12 (T.pack "z12") z13'
+    let z13 =  T.replace z15 (T.pack "z15") z13''
+    let z14 =  T.replace z12 (T.pack "z12") z14'
+
+    [z0, z1, z2, z3, z4, z5, z6, z7, z8, z9, z10, z11, z12, z13, z14, z15]
+    -}
+
+substitute3 :: [Word32] -> [T.Text]
+substitute3 input = do
+    let rowround_tc =  (columnroundTypeChecker (transpose input))
+
+    let orig = [
+            T.pack (snd (rowround_tc !! 0)),
+            T.pack (snd (rowround_tc !! 1)),
+            T.pack (snd (rowround_tc !! 2)),
+            T.pack (snd (rowround_tc !! 3)),
+            T.pack (snd (rowround_tc !! 4)),
+            T.pack (snd (rowround_tc !! 5)),
+            T.pack (snd (rowround_tc !! 6)),
+            T.pack (snd (rowround_tc !! 7)),
+            T.pack (snd (rowround_tc !! 8)),
+            T.pack (snd (rowround_tc !! 9)),
+            T.pack (snd (rowround_tc !! 10)),
+            T.pack (snd (rowround_tc !! 11)),
+            T.pack (snd (rowround_tc !! 12)),
+            T.pack (snd (rowround_tc !! 13)),
+            T.pack (snd (rowround_tc !! 14)),
+            T.pack (snd (rowround_tc !! 15))]
+
+    replaceInitial orig
+    {-
+
+    let chunk1 = head (chunksOf 4 rowround_tc)
+    let chunk2 = chunksOf 4 rowround_tc!!1
+    let chunk3 = chunksOf 4 rowround_tc!!2
+    let chunk4 = chunksOf 4 rowround_tc!!3
+
+
+    let y3 = T.pack (chunk1 !! 3)
+    let y4 = T.pack (chunk2 !! 0)
+    let y9 = T.pack (chunk3 !! 1)
+    let y14 = T.pack (chunk4 !! 2)
+
+
+    let y2' = T.pack (chunk1 !! 2)
+    let y2 =  T.replace y14 (T.pack "y14") y2'
+    let y7' = T.pack (chunk2 !! 3)
+    let y7 =  T.replace y3 (T.pack "y3") y7'
+    let y8' = T.pack (chunk3 !! 0)
+    let y8 =  T.replace y4 (T.pack "y4") y8'
+    let y13' = T.pack (chunk4 !! 1)
+    let y13 =  T.replace y9 (T.pack "y9") y13'
+
+    let y1' = T.pack (chunk1 !! 1)
+    let y1'' = T.replace y9 (T.pack "y9") y1'
+    let y1 = T.replace y13 (T.pack "y13") y1''
+
+    let y6' = T.pack (chunk2 !! 2)
+    let y6'' = T.replace y14 (T.pack "y14") y6'
+    let y6 = T.replace y2 (T.pack "y2") y6''
+
+    let y11' = T.pack (chunk3 !! 3)
+    let y11'' = T.replace y3 (T.pack "y3") y11'
+    let y11 = T.replace y7 (T.pack "y7") y11''
+
+    let y12' = T.pack (chunk4 !! 0)
+    let y12'' = T.replace y4 (T.pack "y4") y12'
+    let y12 = T.replace y8 (T.pack "y8") y12''
+
+
+    let y0' = T.pack (chunk1 !! 0)
+    let y0'' = T.replace y4 (T.pack "y4") y0'
+    let y0''' = T.replace y8 (T.pack "y8") y0''
+    let y0 = T.replace y12 (T.pack "y12") y0'''
+
+    let y5' = T.pack (chunk2 !! 1)
+    let y5'' = T.replace y9 (T.pack "y9") y5'
+    let y5''' = T.replace y13 (T.pack "y13") y5''
+    let y5 = T.replace y1 (T.pack "y1") y5'''
+
+    let y10' = T.pack (chunk3 !! 2)
+    let y10'' = T.replace y14 (T.pack "y14") y10'
+    let y10''' = T.replace y2 (T.pack "y2") y10''
+    let y10 = T.replace y6 (T.pack "y6") y10'''
+
+    let y15' = T.pack (chunk4 !! 3)
+    let y15'' = T.replace y3 (T.pack "y3") y15'
+    let y15''' = T.replace y7 (T.pack "y7") y15''
+    let y15 = T.replace y11 (T.pack "y11") y15'''
+
+
+
+
+    --[y3, y4, y9, y14, y2, y7, y8, y13, y1, y6, y11, y12, y0, y5, y10, y15]
+
+    [y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, y13, y14, y15]
+-}
+
+substituteDouble :: [Word32] -> [T.Text]
+substituteDouble input = do
+    let rowround_tc = doubleroundTypeChecker input
+
+    let orig = [
+            T.pack (snd (rowround_tc !! 0)),
+            T.pack (snd (rowround_tc !! 1)),
+            T.pack (snd (rowround_tc !! 2)),
+            T.pack (snd (rowround_tc !! 3)),
+            T.pack (snd (rowround_tc !! 4)),
+            T.pack (snd (rowround_tc !! 5)),
+            T.pack (snd (rowround_tc !! 6)),
+            T.pack (snd (rowround_tc !! 7)),
+            T.pack (snd (rowround_tc !! 8)),
+            T.pack (snd (rowround_tc !! 9)),
+            T.pack (snd (rowround_tc !! 10)),
+            T.pack (snd (rowround_tc !! 11)),
+            T.pack (snd (rowround_tc !! 12)),
+            T.pack (snd (rowround_tc !! 13)),
+            T.pack (snd (rowround_tc !! 14)),
+            T.pack (snd (rowround_tc !! 15))]
+
+    replaceInitial orig
+
+    {-
+
+    let y3 = T.pack "y3 ⊕ ((y15 + y11) <<< 7)"
+    let y4 = T.pack "y4 ⊕ ((y0 + y12) <<< 7)"
+    let y8 = T.pack "y8 ⊕ ((d4 + y0) <<< 9)"
+
+    let y9 = T.pack "y9 ⊕ ((y5 + y1) <<< 7)"
+    let y12 = T.pack "y12 ⊕ ((d8 + d4) <<< 13)"
+    let y13 = T.pack "y13 ⊕ ((d9 + y5) <<< 9)"
+    let y0 = T.pack "y0 ⊕ ((d12 + d8) <<< 18)"
+
+    let y' = T.pack (doubleround_tc !! 1)
+    let y'' = T.replace y3 (T.pack "d3") y'
+    let y''' = T.replace y4 (T.pack "d4") y''
+    let y'''' = T.replace y8 (T.pack "d8") y'''
+    let y''''' = T.replace y9 (T.pack "d9") y''''
+    let y'''''' = T.replace y12 (T.pack "d12") y'''''
+    let y''''''' = T.replace y13 (T.pack "d13") y''''''
+    let y = T.replace y0 (T.pack "d0") y'''''''
+
+    [y]
+    -}

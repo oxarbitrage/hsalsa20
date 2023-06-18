@@ -25,7 +25,7 @@ salsa20 = aument . core . reduce
 
 -- |The core of the salsa20.
 core :: [Word32] -> [Word32]
-core input = modMatrix (doubleround10 input) input
+core input = modMatrix (doubleround10Compute input) input
 
 -- |Execute `salsa20` a specified number of times, this is not part of the protocol and just used in a test case. 
 salsa20power :: [Word32] -> Int -> [Word32]

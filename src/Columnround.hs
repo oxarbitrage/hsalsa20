@@ -11,10 +11,11 @@ We treat the columnround just as `Rowround` expressions with the input transpose
 module Columnround
     (
     columnroundCompute,
-    columnroundDisplay,
+    transpose,
+    columnroundTypeChecker,
     ) where
 
-import Rowround (rowroundCompute, rowroundDisplay)
+import Rowround (rowroundCompute, rowroundTypeChecker)
 
 import Data.Word
 
@@ -29,5 +30,5 @@ columnroundCompute :: [Word32] -> [Word32]
 columnroundCompute = transpose . rowroundCompute . transpose
 
 -- |The columnround expression as a string.
-columnroundDisplay :: [Word32] -> [String]
-columnroundDisplay = transpose . rowroundDisplay . transpose
+columnroundTypeChecker :: [Word32] -> [(Word32, String)]
+columnroundTypeChecker = transpose . rowroundTypeChecker . transpose
