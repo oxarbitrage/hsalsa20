@@ -9,11 +9,10 @@ Portability : POSIX
 We implement the rowround equations as an F-Algebra where `Quarterround` is its single operation.
 This allow us to form rowround expressions and evaluate them.
 
-We evaluate 3 different things:
+We evaluate2 different things:
 
 - The numeric value.
 - The type string.
-- The equations.
 -}
 module Rowround
     (
@@ -69,7 +68,7 @@ addSuffixEmpty = map (\x -> (x, ""))
 -- |The algebra maps for computation.
 algMapsCompute :: ExprF [(Word32, String)] -> [(Word32, String)]
 algMapsCompute (Const i) = i
-algMapsCompute (Quarterround a) = addSuffixEmpty (Quarterround.quarterroundCompute (listTupleToNumber a))
+algMapsCompute (Quarterround a) = addSuffixEmpty $ Quarterround.quarterroundCompute (listTupleToNumber a)
 
 passTypeIgnoreValue :: String -> (Word32, String)
 passTypeIgnoreValue s = (1, printf "%s" s)
@@ -94,11 +93,11 @@ evalTChecker = cata algMapsEquation
 
 -- |The first quarterround expression.
 quarterround1 :: [Word32] -> Fix ExprF
-quarterround1 a = In $ Quarterround (In $ Const (head (chunksOf 4 (addSuffixRow1 a))))
+quarterround1 a = In $ Quarterround $ In $ Const $ head $ chunksOf 4 (addSuffixRow1 a)
 
 -- |The second quarterround expression.
 quarterround2 :: [Word32] -> Fix ExprF
-quarterround2 a = In $ Quarterround (In $ Const (sort2 (chunksOf 4 (addSuffixRow2 a)!!1)))
+quarterround2 a = In $ Quarterround $ In $ Const $ sort2 $ chunksOf 4 (addSuffixRow2 a)!!1
 
 -- |Sort a second input for rowround.
 sort2 :: [a] -> [a]
@@ -112,7 +111,7 @@ sort2_inv _ = []
 
 -- |The third quarterround expression.
 quarterround3 :: [Word32] -> Fix ExprF
-quarterround3 a = In $ Quarterround (In $ Const (sort3 (chunksOf 4 (addSuffixRow3 a)!!2)))
+quarterround3 a = In $ Quarterround $ In $ Const $ sort3 $ chunksOf 4 (addSuffixRow3 a)!!2
 
 -- |Sort a third input for rowround.
 sort3 :: [a] -> [a]
@@ -126,7 +125,7 @@ sort3_inv _ = []
 
 -- |The fourth quarterround expression.
 quarterround4 :: [Word32] -> Fix ExprF
-quarterround4 a = In $ Quarterround (In $ Const (sort4 (chunksOf 4 (addSuffixRow4 a)!!3)))
+quarterround4 a = In $ Quarterround $ In $ Const $ sort4 $ chunksOf 4 (addSuffixRow4 a)!!3
 
 -- |Sort a fourth input for rowround.
 sort4 :: [a] -> [a]
@@ -140,12 +139,16 @@ sort4_inv _ = []
 
 -- |The rowround expression computed.
 rowroundCompute :: [Word32] -> [Word32]
-rowroundCompute input = concat [listTupleToNumber (evalCompute $ quarterround1 input), 
-    sort2_inv( listTupleToNumber (evalCompute $ quarterround2 input)),
-    sort3_inv( listTupleToNumber (evalCompute $ quarterround3 input)), 
-    sort4_inv( listTupleToNumber ( evalCompute $ quarterround4 input))]
+rowroundCompute input = concat [
+    listTupleToNumber $ evalCompute $ quarterround1 input,
+    sort2_inv $ listTupleToNumber $ evalCompute $ quarterround2 input,
+    sort3_inv $ listTupleToNumber $ evalCompute $ quarterround3 input, 
+    sort4_inv $ listTupleToNumber $ evalCompute $ quarterround4 input]
 
 -- |The rowround expression as a string.
 rowroundTypeChecker :: [Word32] -> [(Word32, String)]
-rowroundTypeChecker input = concat [evalTChecker $ quarterround1 input, sort2_inv(evalTChecker $ quarterround2 input),
-    sort3_inv(evalTChecker $ quarterround3 input), sort4_inv(evalTChecker $ quarterround4 input)]
+rowroundTypeChecker input = concat [
+    evalTChecker $ quarterround1 input,
+    sort2_inv $ evalTChecker $ quarterround2 input,
+    sort3_inv $ evalTChecker $ quarterround3 input,
+    sort4_inv $ evalTChecker $ quarterround4 input]
