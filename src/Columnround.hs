@@ -13,11 +13,14 @@ module Columnround
     columnroundCompute,
     transpose,
     columnroundTypeChecker,
+    displayColumnRound,
     ) where
 
-import Rowround (rowroundCompute, rowroundTypeChecker)
+import Rowround
+import Utils
 
 import Data.Word
+import qualified Data.Text as T
 
 -- |Transpose a 4x4 matrix type.
 transpose :: [a] -> [a]
@@ -32,3 +35,9 @@ columnroundCompute = transpose . rowroundCompute . transpose
 -- |The columnround expression as a string.
 columnroundTypeChecker :: [Word32] -> [(Word32, String)]
 columnroundTypeChecker = transpose . rowroundTypeChecker . transpose
+
+
+displayColumnRound :: [Word32] -> [(Word32, String)]
+displayColumnRound input = do
+    let columnround =  listTupleToString (columnroundTypeChecker (transpose input))
+    replaceInitialColumnround $ map (\x -> T.pack x) columnround

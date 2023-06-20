@@ -19,14 +19,13 @@ module Quarterround
     (
     quarterroundCompute,
     quarterroundTypeChecker,
-    listOfNumbersToPair,
     ) where
 
 import Data.Bits
---import Data.Typeable
 import Data.Word
 import Text.Printf
-import qualified Data.Text as T
+
+import Utils
 
 -- |The quarterround endofunctor to compute a value and a string type.
 data ExprF a = Const Word32 String
@@ -126,14 +125,8 @@ z0 _ = In (Const 0 "0")
 
 -- |The quarterround expression computed. `quarterround(y) = (z0, z1, z2, z3)`
 quarterroundCompute :: [Word32] -> [Word32]
-quarterroundCompute input = [evalCompute $ z0 (listOfNumbersToPair input), evalCompute $ z1 (listOfNumbersToPair input),
-    evalCompute $ z2 (listOfNumbersToPair input), evalCompute $ z3 (listOfNumbersToPair input)]
-
-insidemap :: Word32 -> (Word32, String)
-insidemap a = (a, "")
-
-listOfNumbersToPair :: [Word32] -> [(Word32, String)]
-listOfNumbersToPair = map insidemap
+quarterroundCompute input = [evalCompute $ z0 (listNumbersToPair input), evalCompute $ z1 (listNumbersToPair input),
+    evalCompute $ z2 (listNumbersToPair input), evalCompute $ z3 (listNumbersToPair input)]
 
 -- |The quarterround expression as a `String` for type checking purposes.
 quarterroundGetStrings :: [(Word32, String)] -> [String]
@@ -145,6 +138,7 @@ quarterroundTypeChecker input = do
     let quarterround_tc = quarterroundGetStrings input
     
     -- substitutions
+    {-
     let r1 = T.pack (quarterround_tc !! 1)
     let r2 = T.replace r1 (T.pack "z1") (T.pack (quarterround_tc !! 2))
     let r3' = T.replace r1 (T.pack "z1") (T.pack (quarterround_tc !! 3))
@@ -154,4 +148,6 @@ quarterroundTypeChecker input = do
     let r0 = T.replace r3 (T.pack "z3") r0''
 
     [T.unpack r0, T.unpack r1, T.unpack r2, T.unpack r3]
+    -}
+    quarterround_tc
 

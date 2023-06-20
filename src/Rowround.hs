@@ -19,13 +19,18 @@ module Rowround
     rowroundCompute,
     rowroundTypeChecker,
     stringList2numbers,
+    passTypeIgnoreValue,
+    displayRowRound,
+    addSuffixEmpty,
     ) where
 
 import Text.Printf
 import Data.Word
 import Data.List.Split (chunksOf)
+import qualified Data.Text as T
 
 import Quarterround
+import Utils
 
 -- |The rowround endofunctor.
 data ExprF a = Const [(Word32, String)] | Quarterround a
@@ -44,31 +49,10 @@ unFix (In x) = x
 cata :: Functor f => (f a -> a) -> Fix f -> a
 cata algebra = algebra . fmap (cata algebra) . unFix
 
-listTupleToNumber :: [(Word32, String)] -> [Word32]
-listTupleToNumber = map fst
-
-listTupleToString :: [(Word32, String)] -> [String]
-listTupleToString = map snd
-
-addSuffixRow1 :: [Word32] -> [(Word32, String)]
-addSuffixRow1 =  map (\x -> (x, "_r1"))
-
-addSuffixRow2 :: [Word32] -> [(Word32, String)]
-addSuffixRow2 = map (\x -> (x, "_r2"))
-
-addSuffixRow3 :: [Word32] -> [(Word32, String)]
-addSuffixRow3 =  map (\x -> (x, "_r3"))
-
-addSuffixRow4 :: [Word32] -> [(Word32, String)]
-addSuffixRow4 = map (\x -> (x, "_r4"))
-
-addSuffixEmpty :: [Word32] -> [(Word32, String)]
-addSuffixEmpty = map (\x -> (x, ""))
-
 -- |The algebra maps for computation.
 algMapsCompute :: ExprF [(Word32, String)] -> [(Word32, String)]
 algMapsCompute (Const i) = i
-algMapsCompute (Quarterround a) = addSuffixEmpty $ Quarterround.quarterroundCompute (listTupleToNumber a)
+algMapsCompute (Quarterround a) = addSuffixEmpty $ Quarterround.quarterroundCompute (listTupleToNumbers a)
 
 passTypeIgnoreValue :: String -> (Word32, String)
 passTypeIgnoreValue s = (1, printf "%s" s)
@@ -140,10 +124,10 @@ sort4_inv _ = []
 -- |The rowround expression computed.
 rowroundCompute :: [Word32] -> [Word32]
 rowroundCompute input = concat [
-    listTupleToNumber $ evalCompute $ quarterround1 input,
-    sort2_inv $ listTupleToNumber $ evalCompute $ quarterround2 input,
-    sort3_inv $ listTupleToNumber $ evalCompute $ quarterround3 input, 
-    sort4_inv $ listTupleToNumber $ evalCompute $ quarterround4 input]
+    listTupleToNumbers $ evalCompute $ quarterround1 input,
+    sort2_inv $ listTupleToNumbers $ evalCompute $ quarterround2 input,
+    sort3_inv $ listTupleToNumbers $ evalCompute $ quarterround3 input,
+    sort4_inv $ listTupleToNumbers $ evalCompute $ quarterround4 input]
 
 -- |The rowround expression as a string.
 rowroundTypeChecker :: [Word32] -> [(Word32, String)]
@@ -152,3 +136,8 @@ rowroundTypeChecker input = concat [
     sort2_inv $ evalTChecker $ quarterround2 input,
     sort3_inv $ evalTChecker $ quarterround3 input,
     sort4_inv $ evalTChecker $ quarterround4 input]
+
+displayRowRound :: [Word32] -> [(Word32, String)]
+displayRowRound input = do
+    let rowround =  listTupleToString (rowroundTypeChecker input)
+    replaceInitialRowround $ map (\x -> T.pack x) rowround
