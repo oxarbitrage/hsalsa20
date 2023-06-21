@@ -1,7 +1,5 @@
 
 import Data.Word
-import Text.Printf
-import qualified Data.Text as T
 
 import Quarterround
 import Rowround
@@ -49,13 +47,6 @@ quarterroundInput6 = [0xe7e8c006, 0xc4f9417d, 0x6479b4b2, 0x68c67137]
 
 quarterroundOutput6 :: [Word32]
 quarterroundOutput6 = [0xe876d72b, 0x9361dfd5, 0xf1460244, 0x948541a3]
-
-quarterroundOutputString :: [String]
-quarterroundOutputString = [
-    "y0 ⊕ ((z3 + z2) <<< 18)",
-    "y1 ⊕ ((y0 + y3) <<< 7)",
-    "y2 ⊕ ((z1 + y0) <<< 9)",
-    "y3 ⊕ ((z2 + z1) <<< 13)"]
 
 -- Rowround
 
@@ -384,101 +375,27 @@ key1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 main :: IO ()
 main = do
     putStrLn "Quarterround tests:"
-    putStrLn $ if quarterroundCompute quarterroundInput1 == quarterroundOutput1 then "OK" else "FAIL!"
-    putStrLn $ if quarterroundCompute quarterroundInput2 == quarterroundOutput2 then "OK" else "FAIL!"
-    putStrLn $ if quarterroundCompute quarterroundInput3 == quarterroundOutput3 then "OK" else "FAIL!"
-    putStrLn $ if quarterroundCompute quarterroundInput4 == quarterroundOutput4 then "OK" else "FAIL!"
-    putStrLn $ if quarterroundCompute quarterroundInput5 == quarterroundOutput5 then "OK" else "FAIL!"
-    putStrLn $ if quarterroundCompute quarterroundInput6 == quarterroundOutput6 then "OK" else "FAIL!"
-    putStrLn ""
-
-    putStrLn "Quarterround type checker test:"
-    let qr_display = quarterroundTypeChecker (listNumbersToPair quarterroundInput1)
-    putStrLn $ printf "z0 = %s" $ head qr_display 
-    putStrLn $ printf "z1 = %s" (qr_display !! 1)
-    putStrLn $ printf "z2 = %s" (qr_display !! 2)
-    putStrLn $ printf "z3 = %s" (qr_display !! 3)
-    --print $ substitute quarterroundInput1
-    putStrLn $ if quarterroundTypeChecker (listNumbersToPair quarterroundInput1) == quarterroundOutputString then "OK" else "FAIL!"
-    putStrLn $ if quarterroundTypeChecker (listNumbersToPair quarterroundInput6) == quarterroundOutputString then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute (numberListToStringList quarterroundInput1) ==  quarterroundOutput1 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute (numberListToStringList quarterroundInput2) ==  quarterroundOutput2 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute (numberListToStringList quarterroundInput3) ==  quarterroundOutput3 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute (numberListToStringList quarterroundInput4) ==  quarterroundOutput4 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute (numberListToStringList quarterroundInput5) ==  quarterroundOutput5 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute (numberListToStringList quarterroundInput6) ==  quarterroundOutput6 then "OK" else "FAIL!"
     putStrLn ""
 
     putStrLn "Rowround tests:"
     putStrLn $ if rowroundCompute rowroundInput1 == rowroundOutput1 then "OK" else "FAIL!"
     putStrLn $ if rowroundCompute rowroundInput2 == rowroundOutput2 then "OK" else "FAIL!"
     putStrLn ""
-
-    putStrLn "Print a rowround expression test:"
-    let rowround_display = listTupleToString $ displayRowRound rowroundInput1
-
-    putStrLn $ printf "z0 = %s" $ head rowround_display
-    putStrLn $ printf "z1 = %s" (rowround_display !! 1)
-    putStrLn $ printf "z2 = %s" (rowround_display !! 2)
-    putStrLn $ printf "z3 = %s" (rowround_display !! 3)
-    putStrLn $ printf "z4 = %s" (rowround_display !! 4)
-    putStrLn $ printf "z5 = %s" (rowround_display !! 5)
-    putStrLn $ printf "z6 = %s" (rowround_display !! 6)
-    putStrLn $ printf "z7 = %s" (rowround_display !! 7)
-    putStrLn $ printf "z8 = %s" (rowround_display !! 8)
-    putStrLn $ printf "z9 = %s" (rowround_display !! 9)
-    putStrLn $ printf "z10 = %s" (rowround_display !! 10)
-    putStrLn $ printf "z11 = %s" (rowround_display !! 11)
-    putStrLn $ printf "z12 = %s" (rowround_display !! 12)
-    putStrLn $ printf "z13 = %s" (rowround_display !! 13)
-    putStrLn $ printf "z14 = %s" (rowround_display !! 14)
-    putStrLn $ printf "z15 = %s" (rowround_display !! 15)
-    putStrLn ""
-
+    
     putStrLn "Columnround tests:"
     putStrLn $ if columnroundCompute columnroundInput1 == columnroundOutput1 then "OK" else "FAIL!"
     putStrLn $ if columnroundCompute columnroundInput2 == columnroundOutput2 then "OK" else "FAIL!"
     putStrLn ""
 
-    putStrLn "Print a columnround expression test:"    
-    let columnround_display = listTupleToString (displayColumnRound columnroundInput1)
-
-    putStrLn $ printf "y0 = %s" $ head columnround_display
-    putStrLn $ printf "y1 = %s" (columnround_display !! 1)
-    putStrLn $ printf "y2 = %s" (columnround_display !! 2)
-    putStrLn $ printf "y3 = %s" (columnround_display !! 3)
-    putStrLn $ printf "y4 = %s" (columnround_display !! 4)
-    putStrLn $ printf "y5 = %s" (columnround_display !! 5)
-    putStrLn $ printf "y6 = %s" (columnround_display !! 6)
-    putStrLn $ printf "y7 = %s" (columnround_display !! 7)
-    putStrLn $ printf "y8 = %s" (columnround_display !! 8)
-    putStrLn $ printf "y9 = %s" (columnround_display !! 9)
-    putStrLn $ printf "y10 = %s" (columnround_display !! 10)
-    putStrLn $ printf "y11 = %s" (columnround_display !! 11)
-    putStrLn $ printf "y12 = %s" (columnround_display !! 12)
-    putStrLn $ printf "y13 = %s" (columnround_display !! 13)
-    putStrLn $ printf "y14 = %s" (columnround_display !! 14)
-    putStrLn $ printf "y15 = %s" (columnround_display !! 15)
-    putStrLn ""
-
     putStrLn "Doubleround tests:"
     putStrLn $ if doubleroundCompute doubleroundInput1 == doubleroundOutput1 then "OK" else "FAIL!"
     putStrLn $ if doubleroundCompute doubleroundInput2 == doubleroundOutput2 then "OK" else "FAIL!"
-    putStrLn ""
-
-    putStrLn "Doubleround tests print:"
-    let doubleround_display = displayDoubleRound doubleroundInput1
-    
-    putStrLn $ printf "y0 = %s" $ head doubleround_display
-    putStrLn $ printf "y1 = %s" (doubleround_display !! 1)
-    putStrLn $ printf "y2 = %s" (doubleround_display !! 2)
-    putStrLn $ printf "y3 = %s" (doubleround_display !! 3)
-    putStrLn $ printf "y4 = %s" (doubleround_display !! 4)
-    putStrLn $ printf "y5 = %s" (doubleround_display !! 5)
-    putStrLn $ printf "y6 = %s" (doubleround_display !! 6)
-    putStrLn $ printf "y7 = %s" (doubleround_display !! 7)
-    putStrLn $ printf "y8 = %s" (doubleround_display !! 8)
-    putStrLn $ printf "y9 = %s" (doubleround_display !! 9)
-    putStrLn $ printf "y10 = %s" (doubleround_display !! 10)
-    putStrLn $ printf "y11 = %s" (doubleround_display !! 11)
-    putStrLn $ printf "y12 = %s" (doubleround_display !! 12)
-    putStrLn $ printf "y13 = %s" (doubleround_display !! 13)
-    putStrLn $ printf "y14 = %s" (doubleround_display !! 14)
-    putStrLn $ printf "y15 = %s" (doubleround_display !! 15)
     putStrLn ""
 
     putStrLn "Littleendian tests:"
@@ -547,8 +464,3 @@ main = do
     
     return ()
 
-
-displayDoubleRound :: [Word32] -> [T.Text]
-displayDoubleRound input = do
-    let doubleround = listTupleToString (doubleroundTypeChecker input)
-    map (\x -> T.pack x) doubleround
