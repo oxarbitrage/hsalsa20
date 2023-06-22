@@ -375,12 +375,12 @@ key1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 main :: IO ()
 main = do
     putStrLn "Quarterround tests:"
-    putStrLn $ if quarterroundCompute (numberListToStringList quarterroundInput1) ==  quarterroundOutput1 then "OK" else "FAIL!"
-    putStrLn $ if quarterroundCompute (numberListToStringList quarterroundInput2) ==  quarterroundOutput2 then "OK" else "FAIL!"
-    putStrLn $ if quarterroundCompute (numberListToStringList quarterroundInput3) ==  quarterroundOutput3 then "OK" else "FAIL!"
-    putStrLn $ if quarterroundCompute (numberListToStringList quarterroundInput4) ==  quarterroundOutput4 then "OK" else "FAIL!"
-    putStrLn $ if quarterroundCompute (numberListToStringList quarterroundInput5) ==  quarterroundOutput5 then "OK" else "FAIL!"
-    putStrLn $ if quarterroundCompute (numberListToStringList quarterroundInput6) ==  quarterroundOutput6 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute quarterroundInput1 ==  quarterroundOutput1 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute quarterroundInput2 ==  quarterroundOutput2 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute quarterroundInput3 ==  quarterroundOutput3 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute quarterroundInput4 ==  quarterroundOutput4 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute quarterroundInput5 ==  quarterroundOutput5 then "OK" else "FAIL!"
+    putStrLn $ if quarterroundCompute quarterroundInput6 ==  quarterroundOutput6 then "OK" else "FAIL!"
     putStrLn ""
 
     putStrLn "Rowround tests:"
