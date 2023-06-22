@@ -25,7 +25,7 @@ import Data.Bits
 import Data.Word
 import Text.Printf
 
---import Utils
+import Utils
 
 -- |The quarterround endofunctor to compute a value and a string type.
 data ExprF a = Const String
@@ -124,9 +124,12 @@ z0 [y0, y1, y2, y3] = In $ In (Const y0) `Xor2` rhs0 [y0, y1, y2, y3]
 z0 _ = In (Const "")
 
 -- |The quarterround expression computed.
-quarterroundCompute :: [String] -> [Word32]
-quarterroundCompute input = [evalCompute $ z0 input, evalCompute $ z1 input,
-    evalCompute $ z2 input, evalCompute $ z3 input]
+quarterroundCompute :: [Word32] -> [Word32]
+quarterroundCompute input = [
+    evalCompute $ z0 $ numberListToStringList input,
+    evalCompute $ z1 $ numberListToStringList input,
+    evalCompute $ z2 $ numberListToStringList input,
+    evalCompute $ z3 $ numberListToStringList input]
 
 -- |The quarterround expression as a string.
 quarterroundDisplay :: [String] -> [String]

@@ -47,7 +47,7 @@ cata algebra = algebra . fmap (cata algebra) . unFix
 -- |The algebra maps for computation.
 algMapsCompute :: ExprF [Word32] -> [Word32]
 algMapsCompute (Const i) = stringListToNumberList i
-algMapsCompute (Quarterround a) = Quarterround.quarterroundCompute $ numberListToStringList a
+algMapsCompute (Quarterround a) = Quarterround.quarterroundCompute a
 
 -- |The algebra maps for displaying.
 algMapsDisplay :: ExprF [String] -> [String]
