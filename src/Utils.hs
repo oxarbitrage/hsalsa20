@@ -19,6 +19,7 @@ module Utils
         stringListToNumberList,
         numberListToStringList,
         transpose,
+        index0,
     ) where
 
 import Data.Bits
@@ -67,3 +68,8 @@ stringListToNumberList = map (\x -> read x :: Word32)
 
 numberListToStringList :: [Word32] -> [String]
 numberListToStringList = map (\x -> printf "%d" x)
+
+--
+index0 :: Int
+index0 = 0
+

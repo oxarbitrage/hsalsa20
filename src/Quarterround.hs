@@ -153,7 +153,6 @@ quarterroundEquation :: [String] -> [String]
 quarterroundEquation input = do
     if length input == 4 then do
             let display = quarterroundDisplay input
-            let index0 :: Int = 0
             let displayIndex = zip [index0..] display
             let equation = map (uncurry (printf "z%d = %s")) displayIndex
             equation
