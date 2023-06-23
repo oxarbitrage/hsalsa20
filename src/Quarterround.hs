@@ -19,6 +19,7 @@ module Quarterround
     (
     quarterroundCompute,
     quarterroundDisplay,
+    quarterroundEquation,
     ) where
 
 import Data.Bits
@@ -86,55 +87,75 @@ evalDisplay = cata algMapsDisplay
 -- |The right hand side of the `z1` expression as an expression. `((y0 + y3) <<< 7)`
 rhs1 :: [String] -> Fix ExprF
 rhs1 [y0, _, _, y3] = In $ Rotl7 (In $ In (Const y0) `Mod` In (Const y3))
-rhs1 _ = In (Const "")
+rhs1 _ = error "input to `rhs1` must be a list of 4 `Word32` numbers"
 
 -- |The `z1` expression. `z1 = y1 ⊕ ((y0 + y3) <<< 7)`
 z1 :: [String] -> Fix ExprF
 z1 [y0, y1, y2, y3] = In $ In (Const y1) `Xor2` rhs1 [y0, y1, y2, y3]
-z1 _ = In (Const "")
+z1 _ = error "input to `z1` must be a list of 4 `Word32` numbers"
 
 -- |The right hand side of the `z2` expression as an expression. `((z1 + y0) <<< 9)`
 rhs2 :: [String] -> Fix ExprF
 rhs2 [y0, y1, y2, y3] = In $ Rotl9 (In $ z1 [y0, y1, y2, y3] `Mod` In (Const y0))
-rhs2 _ = In (Const "")
+rhs2 _ = error "input to `rhs2` must be a list of 4 `Word32` numbers"
 
 -- |The `z2` expression. `y2 ⊕ ((z1 + y0) <<< 9)`
 z2 :: [String] -> Fix ExprF
 z2 [y0, y1, y2, y3] = In $ In (Const y2) `Xor2` rhs2 [y0, y1, y2, y3]
-z2 _ = In (Const "")
+z2 _ = error "input to `z2` must be a list of 4 `Word32` numbers"
 
 -- |The right hand side of the `z3` expression as an expression. `(z2 + z1) <<< 13)`
 rhs3 :: [String] -> Fix ExprF
 rhs3 [y0, y1, y2, y3] = In $ Rotl13 (In $ z2 [y0, y1, y2, y3]  `Mod` z1 [y0, y1, y2, y3])
-rhs3 _ = In (Const "")
+rhs3 _ = error "input to `rhs3` must be a list of 4 `Word32` numbers"
 
 -- |The `z3` expression. `y3 ⊕ ((z2 + z1) <<< 13)`
 z3 :: [String] -> Fix ExprF
 z3 [y0, y1, y2, y3] = In $ In (Const y3) `Xor2` rhs3 [y0, y1, y2, y3]
-z3 _ = In (Const "")
+z3 _ = error "input to `z3` must be a list of 4 `Word32` numbers"
 
 -- |The right hand side of the `z0` expression as an expression. `((z3 + z2) <<< 18)`
 rhs0 :: [String] -> Fix ExprF
 rhs0 [y0, y1, y2, y3] = In $ Rotl18 (In $ z3 [y0, y1, y2, y3] `Mod` z2 [y0, y1, y2, y3])
-rhs0 _ = In (Const "")
+rhs0 _ = error "input to `rhs0`  must be a list of 4 `Word32` numbers"
 
 -- |The `z0` expression. `y0 ⊕ ((z3 + z2) <<< 18)`
 z0 :: [String] -> Fix ExprF
 z0 [y0, y1, y2, y3] = In $ In (Const y0) `Xor2` rhs0 [y0, y1, y2, y3]
-z0 _ = In (Const "")
+z0 _ = error "input to `z0` must be a list of 4 `Word32` numbers"
 
 -- |The quarterround expression computed.
 quarterroundCompute :: [Word32] -> [Word32]
-quarterroundCompute input = [
-    evalCompute $ z0 $ numberListToStringList input,
-    evalCompute $ z1 $ numberListToStringList input,
-    evalCompute $ z2 $ numberListToStringList input,
-    evalCompute $ z3 $ numberListToStringList input]
+quarterroundCompute input = do
+    if length input == 4 then
+        [
+        evalCompute $ z0 $ numberListToStringList input,
+        evalCompute $ z1 $ numberListToStringList input,
+        evalCompute $ z2 $ numberListToStringList input,
+        evalCompute $ z3 $ numberListToStringList input]
+    else
+        error "input to `quarterroundCompute` must be a list of 4 `Word32` numbers"
 
 -- |The quarterround expression as a string.
 quarterroundDisplay :: [String] -> [String]
-quarterroundDisplay input = [
-    evalDisplay $ z0 input,
-    evalDisplay $ z1 input,
-    evalDisplay $ z2 input,
-    evalDisplay $ z3 input]
+quarterroundDisplay input = do
+    if length input == 4 then
+        [
+        evalDisplay $ z0 input,
+        evalDisplay $ z1 input,
+        evalDisplay $ z2 input,
+        evalDisplay $ z3 input]
+    else
+        error "input to `quarterroundDisplay` must be a list of 4 `String` strings"
+
+-- |The quarterround expression as an equation.
+quarterroundEquation :: [String] -> [String]
+quarterroundEquation input = do
+    if length input == 4 then do
+            let display = quarterroundDisplay input
+            let index0 :: Int = 0
+            let displayIndex = zip [index0..] display
+            let equation = map (uncurry (printf "z%d = %s")) displayIndex
+            equation
+    else
+        error "input to `quarterroundEquation` must be a list of 4 `String` strings"
