@@ -16,6 +16,8 @@ module Doubleround
     doubleroundDisplay,
     doubleround10Compute,
     doubleround10Display,
+    doubleround2Compute,
+    doubleround2Display,
     ) where
 
 import Data.Word
@@ -33,14 +35,22 @@ doubleroundDisplay input = rowroundDisplay (columnroundDisplay input)
 
 -- |The doubleround10 expression computed.
 doubleround10Compute :: [Word32] -> [Word32]
-doubleround10Compute = doubleroundCompute . doubleroundCompute . doubleroundCompute . doubleroundCompute 
-    . doubleroundCompute . doubleroundCompute . doubleroundCompute . doubleroundCompute . doubleroundCompute 
-    . doubleroundCompute
+doubleround10Compute =
+    doubleroundCompute . doubleroundCompute . doubleroundCompute . doubleroundCompute .
+    doubleroundCompute . doubleroundCompute . doubleroundCompute . doubleroundCompute .
+    doubleroundCompute . doubleroundCompute
 
 -- |The doubleround10 expression as a string.
 doubleround10Display :: [String] -> [String]
 doubleround10Display =
+    doubleroundDisplay . doubleroundDisplay  . doubleroundDisplay . doubleroundDisplay .
+    doubleroundDisplay . doubleroundDisplay . doubleroundDisplay . doubleroundDisplay .
     doubleroundDisplay . doubleroundDisplay
-    -- . doubleroundDisplay . doubleroundDisplay .
-    --doubleroundDisplay . doubleroundDisplay . doubleroundDisplay . doubleroundDisplay .
-    --doubleroundDisplay . doubleroundDisplay
+
+-- |The doubleround2 expression computed.
+doubleround2Compute :: [Word32] -> [Word32]
+doubleround2Compute = doubleroundCompute . doubleroundCompute
+
+-- |The doubleround2 expression as a string.
+doubleround2Display :: [String] -> [String]
+doubleround2Display = doubleroundDisplay . doubleroundDisplay
