@@ -19,7 +19,7 @@ module Quarterround
     (
     quarterroundCompute,
     quarterroundDisplay,
-    quarterroundEquation,
+    quarterroundEquations,
     ) where
 
 import Data.Bits
@@ -148,9 +148,9 @@ quarterroundDisplay input = do
     else
         error "input to `quarterroundDisplay` must be a list of 4 `String` strings"
 
--- |The quarterround expression as an equation.
-quarterroundEquation :: [String] -> [String]
-quarterroundEquation input = do
+-- |The quarterround expression as a list of equations.
+quarterroundEquations :: [String] -> [String]
+quarterroundEquations input = do
     if length input == 4 then do
             let display = quarterroundDisplay input
             let displayIndex = zip [index0..] display

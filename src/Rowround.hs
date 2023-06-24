@@ -18,6 +18,7 @@ module Rowround
     (
     rowroundCompute,
     rowroundDisplay,
+    rowroundEquations,
     ) where
 
 import Text.Printf
@@ -73,12 +74,13 @@ quarterround2 a = In $ Quarterround $ In $ Const $ sort2 $ chunksOf 4 a!!1
 -- |Sort a second input for rowround.
 sort2 :: [a] -> [a]
 sort2 [y4, y5, y6, y7] = [y5, y6, y7, y4] 
-sort2 _ = []
+sort2 _ = error "input to `sort2` must be a list of 4 objects"
 
 -- |Inverse of `sort2`, used to order rowround output.
 sort2_inv :: [a] -> [a]
 sort2_inv [z5, z6, z7, z4] = [z4, z5, z6, z7] 
-sort2_inv _ = []
+sort2_inv _ = error "input to `sort2_inv` must be a list of 4 objects"
+
 
 -- |The third quarterround expression.
 quarterround3 :: [String] -> Fix ExprF
@@ -87,12 +89,12 @@ quarterround3 a = In $ Quarterround $ In $ Const $ sort3 $ chunksOf 4 a!!2
 -- |Sort a third input for rowround.
 sort3 :: [a] -> [a]
 sort3 [y8, y9, y10, y11] = [y10, y11, y8, y9] 
-sort3 _ = []
+sort3 _ = error "input to `sort3` must be a list of 4 objects"
 
 -- |Inverse of `sort3`, used to order rowround output.
 sort3_inv :: [a] -> [a]
 sort3_inv [z10, z11, z8, z9] = [z8, z9, z10, z11] 
-sort3_inv _ = []
+sort3_inv _ = error "input to `sort3_inv` must be a list of 4 objects"
 
 -- |The fourth quarterround expression.
 quarterround4 :: [String] -> Fix ExprF
@@ -101,26 +103,44 @@ quarterround4 a = In $ Quarterround $ In $ Const $ sort4 $ chunksOf 4 a!!3
 -- |Sort a fourth input for rowround.
 sort4 :: [a] -> [a]
 sort4 [y12, y13, y14, y15] = [y15, y12, y13, y14] 
-sort4 _ = []
+sort4 _ = error "input to `sort4` must be a list of 4 objects"
 
 -- |Inverse of `sort4`, used to order rowround output.
 sort4_inv :: [a] -> [a]
 sort4_inv [z15, z12, z13, z14] = [z12, z13, z14, z15]
-sort4_inv _ = []
+sort4_inv _ = error "input to `sort4_inv` must be a list of 4 objects"
 
 -- |The rowround expression computed.
 rowroundCompute :: [Word32] -> [Word32]
-rowroundCompute input = concat [
-    evalCompute $ quarterround1 $ numberListToStringList input,
-    sort2_inv $ evalCompute $ quarterround2 $ numberListToStringList input,
-    sort3_inv $ evalCompute $ quarterround3 $ numberListToStringList input,
-    sort4_inv $ evalCompute $ quarterround4 $ numberListToStringList input]
+rowroundCompute input = do
+    if length input == 16 then
+        concat [
+            evalCompute $ quarterround1 $ numberListToStringList input,
+            sort2_inv $ evalCompute $ quarterround2 $ numberListToStringList input,
+            sort3_inv $ evalCompute $ quarterround3 $ numberListToStringList input,
+            sort4_inv $ evalCompute $ quarterround4 $ numberListToStringList input]
+    else
+        error "input to `rowroundCompute` must be a list of 16 `Word32` numbers"
 
 -- |The rowround expression as a string.
 rowroundDisplay :: [String] -> [String]
-rowroundDisplay input = concat [
-    evalDisplay $ quarterround1 input,
-    sort2_inv $ evalDisplay $ quarterround2 input,
-    sort3_inv $ evalDisplay $ quarterround3 input,
-    sort4_inv $ evalDisplay $ quarterround4 input]
+rowroundDisplay input = do
+    if length input == 16 then
+        concat [
+            evalDisplay $ quarterround1 input,
+            sort2_inv $ evalDisplay $ quarterround2 input,
+            sort3_inv $ evalDisplay $ quarterround3 input,
+            sort4_inv $ evalDisplay $ quarterround4 input]
+    else
+        error "input to `rowroundCompute` must be a list of 16 `String` strings"
 
+-- |The rowround expression as a list of equations.
+rowroundEquations :: [String] -> [String]
+rowroundEquations input = do
+    if length input == 16 then do
+        let display = rowroundDisplay input
+        let displayIndex = zip [index0..] display
+        let equation = map (uncurry (printf "z%d = %s")) displayIndex
+        equation
+    else
+        error "input to `rowroundEquation` must be a list of 16 `String` strings"
