@@ -35,7 +35,7 @@ columnroundDisplay input = do
     if length input == 16 then
         transpose $ rowroundDisplay $ transpose input
     else
-        error "input to `columnroundCompute` must be a list of 16 `String` strings"
+        error "input to `columnroundDisplay` must be a list of 16 `String` strings"
 
 -- |The columnround expression as a list of equations.
 columnroundEquations :: [String] -> [String]
