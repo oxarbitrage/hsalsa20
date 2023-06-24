@@ -81,7 +81,6 @@ sort2_inv :: [a] -> [a]
 sort2_inv [z5, z6, z7, z4] = [z4, z5, z6, z7] 
 sort2_inv _ = error "input to `sort2_inv` must be a list of 4 objects"
 
-
 -- |The third quarterround expression.
 quarterround3 :: [String] -> Fix ExprF
 quarterround3 a = In $ Quarterround $ In $ Const $ sort3 $ chunksOf 4 a!!2

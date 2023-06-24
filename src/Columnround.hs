@@ -12,17 +12,38 @@ module Columnround
     (
     columnroundCompute,
     columnroundDisplay,
+    columnroundEquations,
     ) where
 
 import Rowround
 import Utils
 
 import Data.Word
+import Text.Printf
 
 -- |The columnround expression computed.
 columnroundCompute :: [Word32] -> [Word32]
-columnroundCompute = transpose . rowroundCompute . transpose
+columnroundCompute input = do
+    if length input == 16 then
+        transpose $ rowroundCompute $ transpose input
+    else
+        error "input to `columnroundCompute` must be a list of 16 `Word32` numbers"
 
 -- |The columnround expression as a string.
 columnroundDisplay :: [String] -> [String]
-columnroundDisplay = transpose . rowroundDisplay . transpose
+columnroundDisplay input = do
+    if length input == 16 then
+        transpose $ rowroundDisplay $ transpose input
+    else
+        error "input to `columnroundCompute` must be a list of 16 `String` strings"
+
+-- |The columnround expression as a list of equations.
+columnroundEquations :: [String] -> [String]
+columnroundEquations input = do
+    if length input == 16 then do
+        let display = columnroundDisplay input
+        let displayIndex = zip [index0..] display
+        let equation = map (uncurry (printf "z%d = %s")) displayIndex
+        equation
+    else
+        error "input to `columnroundEquation` must be a list of 16 `String` strings"
