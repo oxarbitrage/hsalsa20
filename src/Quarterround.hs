@@ -157,4 +157,4 @@ quarterroundEquations input = do
             let equation = map (uncurry (printf "z%d = %s")) displayIndex
             equation
     else
-        error "input to `quarterroundEquation` must be a list of 4 `String` strings"
+        error "input to `quarterroundEquations` must be a list of 4 `String` strings"

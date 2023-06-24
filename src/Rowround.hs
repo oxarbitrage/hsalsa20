@@ -142,4 +142,4 @@ rowroundEquations input = do
         let equation = map (uncurry (printf "z%d = %s")) displayIndex
         equation
     else
-        error "input to `rowroundEquation` must be a list of 16 `String` strings"
+        error "input to `rowroundEquations` must be a list of 16 `String` strings"
