@@ -16,7 +16,7 @@ module Expansion
 
 import Data.Word
 
-import Hash (salsa20)
+import Hash
 
 -- |`expa` in ascii. 
 o0 :: [Word32]
@@ -52,7 +52,7 @@ t3 = [116, 101, 32, 107]
 
 -- |The expansion function where we have two 16 bytes k's (k0 and k1).
 expand32 :: [Word32] -> [Word32] -> [Word32] -> [Word32]
-expand32 k0 k1 n = salsa20 $ sort32 k0 k1 n
+expand32 k0 k1 n = salsa20Compute $ sort32 k0 k1 n
 
 -- |The order needed for the 32 bytes k version of the expansion function `expand32`.
 sort32 :: [Word32] -> [Word32] -> [Word32] -> [Word32]
@@ -60,7 +60,7 @@ sort32 k0 k1 n = o0 ++ k0 ++ o1 ++ n ++ o2 ++ k1 ++ o3
 
 -- |The expansion function where we have one 16 bytes (k).
 expand16 :: [Word32] -> [Word32] -> [Word32]
-expand16 k n = salsa20 $ sort16 k n
+expand16 k n = salsa20Compute $ sort16 k n
 
 -- |The order needed for the 16 bytes k version of the expansion function `expand16`.
 sort16 :: [Word32] -> [Word32] -> [Word32]

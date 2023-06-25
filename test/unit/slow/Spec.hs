@@ -45,7 +45,7 @@ salsa20Output1 = [
 main :: IO ()
 main = do
     putStrLn "Salsa20 tests:"
-    putStrLn $ if salsa20power salsa20Input1 1000000 == salsa20Output1 then "OK" else "FAIL!"
+    putStrLn $ if salsa20powerCompute salsa20Input1 1000000 == salsa20Output1 then "OK" else "FAIL!"
 
     putStrLn ""
 

@@ -411,9 +411,9 @@ main = do
     putStrLn ""
 
     putStrLn "Salsa20 tests:"
-    putStrLn $ if salsa20 salsa20Input1 == salsa20Output1 then "OK" else "FAIL!"
-    putStrLn $ if salsa20 salsa20Input2 == salsa20Output2 then "OK" else "FAIL!"
-    putStrLn $ if salsa20 salsa20Input3 == salsa20Output3 then "OK" else "FAIL!"
+    putStrLn $ if salsa20Compute salsa20Input1 == salsa20Output1 then "OK" else "FAIL!"
+    putStrLn $ if salsa20Compute salsa20Input2 == salsa20Output2 then "OK" else "FAIL!"
+    putStrLn $ if salsa20Compute salsa20Input3 == salsa20Output3 then "OK" else "FAIL!"
     putStrLn ""
 
     putStrLn "Expanded Salsa20 tests:"
