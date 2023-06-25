@@ -20,6 +20,7 @@ module Utils
         numberListToStringList,
         transpose,
         index0,
+        modMatrixDisplay,
     ) where
 
 import Data.Bits
@@ -29,7 +30,7 @@ import Text.Printf
 
 -- |Raise 2 to the power of `p`.
 power :: Word32 -> Word32
-power p = 2 ^ p 
+power p = 2 ^ p
 
 -- |Encode a vector as a word using protocol specified littleendian. 
 littleendian :: [Word32] -> Word32
@@ -51,6 +52,14 @@ aument = concatMap littleendianInv
 -- |Given two matrices, do modulo addition on each of the elements.
 modMatrix :: [Word32] -> [Word32] -> [Word32]
 modMatrix = zipWith (+)
+
+-- |Given two matrices, do modulo addition on each of the elements.
+modMatrixDisplay :: [String] -> [String] -> [String]
+modMatrixDisplay = zipWith displayMod
+
+-- Append modulo addition symbol and a string to a given string.
+displayMod :: String -> String -> String
+displayMod a b = a ++ " + " ++ b
 
 -- |The littleendian function used in encryption/decryption where a number is obtained given a list of 8 bytes.
 littleendianInv4Crypt ::  Word32 -> [Word32]
