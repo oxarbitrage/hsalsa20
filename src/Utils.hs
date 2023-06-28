@@ -13,7 +13,9 @@ module Utils
         littleendian,
         littleendianInv,
         reduce,
+        reduceDisplay,
         aument,
+        aumentDisplay,
         modMatrix,
         littleendianInv4Crypt,
         stringListToNumberList,
@@ -37,17 +39,39 @@ littleendian :: [Word32] -> Word32
 littleendian [b0, b1, b2, b3] = b0 + power 8 * b1 + power 16 * b2 + power 24 * b3
 littleendian _ = 0
 
+-- |The littleendian expression as a string.
+littleendianDisplay :: [String] -> String
+littleendianDisplay [b0, b1, b2, b3] = printf "%s + 2^8 * %s + 2^16 * %s + 2^24 * %s" b0 b1 b2 b3
+littleendianDisplay _ = ""
+
 -- |The inverse of `littleendian`. Implemented as specified in https://crypto.stackexchange.com/a/22314.
 littleendianInv :: Word32 -> [Word32]
 littleendianInv w = [w .&. 0xff, shiftR w 8 .&. 0xff, shiftR w 16 .&. 0xff, shiftR w 24 .&. 0xff]
+
+-- |The inverse of `littleendian` as a string.
+littleendianInvDisplay :: String -> [String]
+littleendianInvDisplay w = [
+    printf "%s & 255" w,
+    printf "8 >> %s & 255" w,
+    printf "16 >> %s & 255" w,
+    printf "24 >> %s & 255" w
+    ]
 
 -- |Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendian` encoding.
 reduce :: [Word32] -> [Word32]
 reduce input = map littleendian $ chunksOf 4 input
 
+-- |Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendianDisplay` encoding.
+reduceDisplay :: [String] -> [String]
+reduceDisplay input = map littleendianDisplay $ chunksOf 4 input
+
 -- |Aument a matrix of 16 elements to one of 64 elements by using `littleendianInv`.
 aument :: [Word32] -> [Word32]
 aument = concatMap littleendianInv
+
+-- |Aument a matrix of 16 elements to one of 64 elements by using `littleendianInvDisplay`.
+aumentDisplay :: [String] -> [String]
+aumentDisplay = concatMap littleendianInvDisplay
 
 -- |Given two matrices, do modulo addition on each of the elements.
 modMatrix :: [Word32] -> [Word32] -> [Word32]
