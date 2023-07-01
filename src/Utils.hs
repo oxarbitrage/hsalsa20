@@ -23,12 +23,17 @@ module Utils
         transpose,
         index0,
         modMatrixDisplay,
+        numberListToEitherList,
+        stringListToEitherList,
+        eitherListToNumberList,
+        eitherListToStringList,
     ) where
 
 import Data.Bits
 import Data.Word
 import Data.List.Split
 import Text.Printf
+import Data.Either (fromLeft, fromRight)
 
 -- |Raise 2 to the power of `p`.
 power :: Word32 -> Word32
@@ -94,15 +99,29 @@ littleendianInv4Crypt w = [w .&. 0xff, shiftR w 8 .&. 0xff, shiftR w 16 .&. 0xff
 transpose :: [a] -> [a]
 transpose [y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, y13, y14, y15] = 
     [y0, y4, y8, y12, y1, y5, y9, y13, y2, y6, y10, y14, y3, y7, y11, y15]
-transpose n = n
+transpose _ = error "input to `transpose` must be a list of 16 objects"
 
+-- |Convert a list of strings to a list of numbers if possible.
 stringListToNumberList :: [String] -> [Word32]
 stringListToNumberList = map (\x -> read x :: Word32)
 
+-- |Convert a list of numbers to a list of strings. This is always possible. 
 numberListToStringList :: [Word32] -> [String]
 numberListToStringList = map (\x -> printf "%d" x)
+
+numberListToEitherList :: [Word32] -> [Either Word32 String]
+numberListToEitherList = map Left
+
+stringListToEitherList :: [String] -> [Either Word32 String]
+stringListToEitherList = map Right
+
+eitherListToNumberList :: [Either Word32 String] -> [Word32]
+eitherListToNumberList = map (fromLeft 0)
+
+eitherListToStringList :: [Either Word32 String] -> [String]
+eitherListToStringList = map (fromRight "0")
+
 
 --
 index0 :: Int
 index0 = 0
-

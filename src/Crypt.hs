@@ -27,15 +27,15 @@ iOver64 i = littleendianInv4Crypt (floor (i / 64))
 nonceAndiOver64 :: Integral a => [Word32] -> a -> [Word32]
 nonceAndiOver64 n i = n ++ iOver64 (fromIntegral i)
 
--- | Given a key, a nonce and an index get the salsa209 expanded matrix of it. 
+-- |Given a key, a nonce and an index get the salsa209 expanded matrix of it. 
 crypt :: [Word32] -> [Word32] -> Int -> [Word32]
 crypt k n i = expand16 k (nonceAndiOver64 n i)
 
--- | Given an aumented key and an index of it, returns the number corresponding to that index.
+-- |Given an aumented key and an index of it, returns the number corresponding to that index.
 keybyte :: [Word32] -> Int -> Word32
 keybyte aumented_key n = aumented_key!!n
 
--- | Encrypt or decrypt a message resulting in a list of the same length.
+-- |Encrypt or decrypt a message resulting in a list of the same length.
 cryptBlock :: [Word32] -> [Word32] -> [Word32] -> Int -> [Word32]
 cryptBlock (x:xs) k n index = xor x (keybyte (crypt k n index) (index `mod` 64)) : 
     cryptBlock xs k n (index+1)

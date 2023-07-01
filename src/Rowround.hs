@@ -24,12 +24,13 @@ module Rowround
 import Text.Printf
 import Data.Word
 import Data.List.Split (chunksOf)
+import Data.Either
 
 import Quarterround
 import Utils
 
 -- |The rowround endofunctor.
-data ExprF a = Const [String] | Quarterround a
+data ExprF a = Const [Either Word32 String] | Quarterround a
 
 -- |Functor instance.
 instance Functor ExprF where
@@ -47,12 +48,12 @@ cata algebra = algebra . fmap (cata algebra) . unFix
 
 -- |The algebra maps for computation.
 algMapsCompute :: ExprF [Word32] -> [Word32]
-algMapsCompute (Const i) = stringListToNumberList i
+algMapsCompute (Const i) = eitherListToNumberList i
 algMapsCompute (Quarterround a) = Quarterround.quarterroundCompute a
 
 -- |The algebra maps for displaying.
 algMapsDisplay :: ExprF [String] -> [String]
-algMapsDisplay (Const i) = map (printf "%s") i
+algMapsDisplay (Const i) = map (printf "%s") (eitherListToStringList i)
 algMapsDisplay (Quarterround a) = Quarterround.quarterroundDisplay a
 
 -- |The rowround evaluator.
@@ -64,11 +65,11 @@ evalDisplay :: Fix ExprF -> [String]
 evalDisplay = cata algMapsDisplay
 
 -- |The first quarterround expression.
-quarterround1 :: [String] -> Fix ExprF
+quarterround1 :: [Either Word32 String] -> Fix ExprF
 quarterround1 a = In $ Quarterround $ In $ Const $ head $ chunksOf 4 a
 
 -- |The second quarterround expression.
-quarterround2 :: [String] -> Fix ExprF
+quarterround2 :: [Either Word32 String] -> Fix ExprF
 quarterround2 a = In $ Quarterround $ In $ Const $ sort2 $ chunksOf 4 a!!1
 
 -- |Sort a second input for rowround.
@@ -82,7 +83,7 @@ sort2_inv [z5, z6, z7, z4] = [z4, z5, z6, z7]
 sort2_inv _ = error "input to `sort2_inv` must be a list of 4 objects"
 
 -- |The third quarterround expression.
-quarterround3 :: [String] -> Fix ExprF
+quarterround3 :: [Either Word32 String] -> Fix ExprF
 quarterround3 a = In $ Quarterround $ In $ Const $ sort3 $ chunksOf 4 a!!2
 
 -- |Sort a third input for rowround.
@@ -96,7 +97,7 @@ sort3_inv [z10, z11, z8, z9] = [z8, z9, z10, z11]
 sort3_inv _ = error "input to `sort3_inv` must be a list of 4 objects"
 
 -- |The fourth quarterround expression.
-quarterround4 :: [String] -> Fix ExprF
+quarterround4 :: [Either Word32 String] -> Fix ExprF
 quarterround4 a = In $ Quarterround $ In $ Const $ sort4 $ chunksOf 4 a!!3
 
 -- |Sort a fourth input for rowround.
@@ -114,10 +115,10 @@ rowroundCompute :: [Word32] -> [Word32]
 rowroundCompute input = do
     if length input == 16 then
         concat [
-            evalCompute $ quarterround1 $ numberListToStringList input,
-            sort2_inv $ evalCompute $ quarterround2 $ numberListToStringList input,
-            sort3_inv $ evalCompute $ quarterround3 $ numberListToStringList input,
-            sort4_inv $ evalCompute $ quarterround4 $ numberListToStringList input]
+            evalCompute $ quarterround1 $ numberListToEitherList input,
+            sort2_inv $ evalCompute $ quarterround2 $ numberListToEitherList input,
+            sort3_inv $ evalCompute $ quarterround3 $ numberListToEitherList input,
+            sort4_inv $ evalCompute $ quarterround4 $ numberListToEitherList input]
     else
         error "input to `rowroundCompute` must be a list of 16 `Word32` numbers"
 
@@ -126,10 +127,10 @@ rowroundDisplay :: [String] -> [String]
 rowroundDisplay input = do
     if length input == 16 then
         concat [
-            evalDisplay $ quarterround1 input,
-            sort2_inv $ evalDisplay $ quarterround2 input,
-            sort3_inv $ evalDisplay $ quarterround3 input,
-            sort4_inv $ evalDisplay $ quarterround4 input]
+            evalDisplay $ quarterround1 $ stringListToEitherList input,
+            sort2_inv $ evalDisplay $ quarterround2 $ stringListToEitherList input,
+            sort3_inv $ evalDisplay $ quarterround3 $ stringListToEitherList input,
+            sort4_inv $ evalDisplay $ quarterround4 $ stringListToEitherList input]
     else
         error "input to `rowroundCompute` must be a list of 16 `String` strings"
 
