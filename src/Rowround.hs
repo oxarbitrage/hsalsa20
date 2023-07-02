@@ -24,7 +24,6 @@ module Rowround
 import Text.Printf
 import Data.Word
 import Data.List.Split (chunksOf)
-import Data.Either
 
 import Quarterround
 import Utils
