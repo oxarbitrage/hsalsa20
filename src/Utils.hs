@@ -27,6 +27,8 @@ module Utils
         stringListToEitherList,
         eitherListToNumberList,
         eitherListToStringList,
+        (>>>),
+        (&),
     ) where
 
 import Data.Bits
@@ -57,10 +59,18 @@ littleendianInv w = [w .&. 0xff, shiftR w 8 .&. 0xff, shiftR w 16 .&. 0xff, shif
 littleendianInvDisplay :: String -> [String]
 littleendianInvDisplay w = [
     printf "%s & 255" w,
-    printf "8 >> %s & 255" w,
-    printf "16 >> %s & 255" w,
-    printf "24 >> %s & 255" w
+    printf "8 >>> %s & 255" w,
+    printf "16 >>> %s & 255" w,
+    printf "24 >>> %s & 255" w
     ]
+
+-- |The shiftR operator.
+(>>>) :: Word32 -> Int -> Word32
+(>>>) = shiftR
+
+-- |The bitwise and operator.
+(&) :: Word32 -> Word32 -> Word32
+(&) a b = a .&. b
 
 -- |Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendian` encoding.
 reduce :: [Word32] -> [Word32]
