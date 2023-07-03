@@ -11,8 +11,9 @@ The salsa20 hash expressions.
 module Hash
     (
     coreCompute,
-    core1Display,
-    core1Equations,
+    coreDisplay,
+    core2Display,
+    core2Equations,
     salsa20Compute,
     salsa20Display,
     salsa20Equations,
@@ -25,6 +26,49 @@ import Text.Printf
 import Doubleround
 import Utils
 
+-- |The core expression computed.
+coreCompute :: [Word32] -> [Word32]
+coreCompute input = do
+    if length input == 16 then do
+        modMatrix (doubleround10Compute input) input
+    else
+        error "input to `coreCompute` must be a list of 16 `Word32` numbers"
+
+-- |The core expression as a string.
+coreDisplay :: [String] -> [String]
+coreDisplay input = do
+    if length input == 16 then do
+        modMatrixDisplay (doubleround10Display input) input
+    else
+        error "input to `core10Display` must be a list of 16 `String` strings"
+
+-- |The core2 expression computed.
+core2Compute :: [Word32] -> [Word32]
+core2Compute input = do
+    if length input == 16 then do
+        modMatrix (doubleround2Compute input) input
+    else
+        error "input to `core2Compute` must be a list of 16 `Word32` numbers"
+
+-- |The core2 expression as a string.
+core2Display :: [String] -> [String]
+core2Display input = do
+    if length input == 16 then do
+        modMatrixDisplay (doubleround2Display input) input
+    else
+        error "input to `core2Display` must be a list of 16 `String` strings"
+
+-- |The core2 expression as a list of equations.
+core2Equations :: [String] -> [String]
+core2Equations input = do
+    if length input == 16 then do
+        let display = core2Display input
+        let displayIndex = zip [index0..] display
+        let equation = map (uncurry (printf "z%d = %s")) displayIndex
+        equation
+    else
+        error "input to `core1Equations` must be a list of 16 `String` strings"
+
 -- |The salsa20 expression computed.
 salsa20Compute :: [Word32] -> [Word32]
 salsa20Compute input = do
@@ -33,11 +77,11 @@ salsa20Compute input = do
     else
         error "input to `salsa20Compute` must be a list of 64 `Word32` numbers"
 
--- |The salsa20 expression as a string.
+-- |The salsa20 expression as a string using `core2Display` which is only two rounds of doubleround.
 salsa20Display :: [String] -> [String]
 salsa20Display input = do
     if length input == 64 then do
-        aumentDisplay $ core1Display $ reduceDisplay input
+        aumentDisplay $ core2Display $ reduceDisplay input
     else
         error "input to `salsa20Display` must be a list of 64 `String` strings"
 
@@ -51,33 +95,6 @@ salsa20Equations input = do
         equation
     else
         error "input to `salsa20Equations` must be a list of 64 `String` strings"
-
--- |The core expression computed.
-coreCompute :: [Word32] -> [Word32]
-coreCompute input = do
-    if length input == 16 then do
-        modMatrix (doubleround10Compute input) input
-    else
-        error "input to `coreCompute` must be a list of 16 `Word32` numbers"
-
--- |The core1 expression as a string.
-core1Display :: [String] -> [String]
-core1Display input = do
-    if length input == 16 then do
-        modMatrixDisplay (doubleroundDisplay input) input
-    else
-        error "input to `core1Display` must be a list of 16 `String` strings"
-
--- |The core1 expression as a list of equations.
-core1Equations :: [String] -> [String]
-core1Equations input = do
-    if length input == 16 then do
-        let display = core1Display input
-        let displayIndex = zip [index0..] display
-        let equation = map (uncurry (printf "z%d = %s")) displayIndex
-        equation
-    else
-        error "input to `core1Equations` must be a list of 16 `String` strings"
 
 -- |Execute `salsa20` a specified number of times, this is not part of the protocol and just used in a test case. 
 salsa20powerCompute :: [Word32] -> Int -> [Word32]
