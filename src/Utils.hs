@@ -119,19 +119,22 @@ stringListToNumberList = map (\x -> read x :: Word32)
 numberListToStringList :: [Word32] -> [String]
 numberListToStringList = map (\x -> printf "%d" x)
 
+-- |Convert a list of numbers to an list of `Either` type.
 numberListToEitherList :: [Word32] -> [Either Word32 String]
 numberListToEitherList = map Left
 
+-- |Convert a list of strings to a list of `Either` type.
 stringListToEitherList :: [String] -> [Either Word32 String]
 stringListToEitherList = map Right
 
+-- |Convert a list of `Either` type to an list of numbers.
 eitherListToNumberList :: [Either Word32 String] -> [Word32]
 eitherListToNumberList = map (fromLeft 0)
 
+-- |Convert a list of `Either` type to a list of strings. 
 eitherListToStringList :: [Either Word32 String] -> [String]
 eitherListToStringList = map (fromRight "0")
 
-
---
+-- |The number 0 as an integer. Used as list index in certain cases.
 index0 :: Int
 index0 = 0

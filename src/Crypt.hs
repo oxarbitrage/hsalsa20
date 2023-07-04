@@ -27,7 +27,7 @@ iOver64 i = littleendianInv4Crypt (floor (i / 64))
 nonceAndiOver64 :: Integral a => [Word32] -> a -> [Word32]
 nonceAndiOver64 n i = n ++ iOver64 (fromIntegral i)
 
--- |Given a key, a nonce and an index get the salsa209 expanded matrix of it. 
+-- |Given a key, a nonce and an index get the salsa20 expanded matrix of it. 
 crypt :: [Word32] -> [Word32] -> Int -> [Word32]
 crypt k n i = expand16 k (nonceAndiOver64 n i)
 
