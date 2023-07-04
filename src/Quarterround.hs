@@ -9,10 +9,11 @@ Portability : POSIX
 We implement the quarterround equations defined in the spec as an F-Algebra where `Mod`, `Rotl` and `Xor2` are operations.
 This allow us to form quarterround expressions and evaluate them.
 
-We evaluate 2 things:
+We evaluate 3 things:
 
 - The numeric values.
 - The type string.
+- The equations.
 
 -}
 module Quarterround
@@ -31,7 +32,7 @@ import Data.Either
 
 import Utils
 
--- |The quarterround endofunctor to compute a value and a string type.
+-- |The quarterround endofunctor to compute a value or a string type.
 data ExprF a = Const (Either Word32 String)
         | Mod a a
         | Rotl7 a
@@ -40,7 +41,7 @@ data ExprF a = Const (Either Word32 String)
         | Rotl18 a
         | Xor2 a a -- `2` needed to avoid ambiguity with Data.Bits.Xor
 
--- |Quarterround functor instance for computing a value and displaying a type string.
+-- |Quarterround functor instance for computing a value or displaying a type string.
 instance Functor ExprF where
     fmap _ (Const i) = Const i
     fmap f (left `Mod` right) = f left `Mod` f right

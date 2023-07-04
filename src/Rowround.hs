@@ -9,10 +9,12 @@ Portability : POSIX
 We implement the rowround equations as an F-Algebra where `Quarterround` is its single operation.
 This allow us to form rowround expressions and evaluate them.
 
-We evaluate2 different things:
+We evaluate 3 things:
 
 - The numeric value.
 - The type string.
+- The equations.
+
 -}
 module Rowround
     (

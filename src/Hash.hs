@@ -6,12 +6,16 @@ License     : MIT
 Stability   : experimental
 Portability : POSIX
 
-The salsa20 hash expressions.
+The salsa20 `core` function and what we call the `hash` expressions.
+
+The `hash` expression is the extended `core` expression. It is formed by reducing the input from 64
+to 16 using `littleendian` functions and then aument the result back to 64.
 -}
 module Hash
     (
     coreCompute,
     coreDisplay,
+    core2Compute,
     core2Display,
     core2Equations,
     salsa20Compute,
@@ -67,7 +71,7 @@ core2Equations input = do
         let equation = map (uncurry (printf "z%d = %s")) displayIndex
         equation
     else
-        error "input to `core1Equations` must be a list of 16 `String` strings"
+        error "input to `core2Equations` must be a list of 16 `String` strings"
 
 -- |The salsa20 expression computed.
 salsa20Compute :: [Word32] -> [Word32]

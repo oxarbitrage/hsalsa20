@@ -6,9 +6,11 @@ License     : MIT
 Stability   : experimental
 Portability : POSIX
 
-Here we define the doubleround function as the composition of rowround and columnround. 
+We define the doubleround function as the composition of rowround and columnround.
+
 In addition we define `doubleround10`, which is the `doubleround` function applied 10 times,
-as specified in the salsa20 spec.
+as specified in the salsa20 spec and `doubleround2` which is the `doubleround` function
+applied 2 times only for practical analysis of expressions purposes.
 -}
 module Doubleround
     (
