@@ -29,7 +29,7 @@ nonceAndiOver64 n i = n ++ iOver64 (fromIntegral i)
 
 -- |Given a key, a nonce and an index get the salsa20 expanded matrix of it. 
 crypt :: [Word32] -> [Word32] -> Int -> [Word32]
-crypt k n i = expand16 k (nonceAndiOver64 n i)
+crypt k n i = expand16Compute k (nonceAndiOver64 n i)
 
 -- |Given an aumented key and an index of it, returns the number corresponding to that index.
 keybyte :: [Word32] -> Int -> Word32

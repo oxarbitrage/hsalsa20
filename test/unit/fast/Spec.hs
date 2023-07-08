@@ -417,8 +417,8 @@ main = do
     putStrLn ""
 
     putStrLn "Expanded Salsa20 tests:"
-    putStrLn $ if expand32 expandedk0 expandedk1 expandedn == expandedOutput1 then "OK" else "FAIL!"
-    putStrLn $ if expand16 expandedk0 expandedn == expandedOutput2 then "OK" else "FAIL!"
+    putStrLn $ if expand32Compute expandedk0 expandedk1 expandedn == expandedOutput1 then "OK" else "FAIL!"
+    putStrLn $ if expand16Compute expandedk0 expandedn == expandedOutput2 then "OK" else "FAIL!"
     putStrLn ""
 
     putStrLn "Encrypt/Decrypt tests:"
