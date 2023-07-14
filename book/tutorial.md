@@ -14,6 +14,7 @@ A library for the salsa20 protocol.
   - [Hash](#hash)
 - [Analysis](#analysis)
   - [Known core collisions](#known-core-collisions)
+  - [More on expressions](#more-on-expressions)
 
 ## Intro
 
@@ -62,7 +63,7 @@ ghci>
 
 If the variables are not defined then we will not be able to compute but they will be valid expressions for displaying.
 
-* We said almost here because there are a few other operations that will be needed later, for example we will eventually need multiplication (`*`) when dealing with littleendian related expressions.  
+(*) We said almost here because there are a few other operations that will be needed later, for example we will eventually need multiplication (`*`) when dealing with littleendian related expressions.  
 
 ## Modules
 
@@ -70,7 +71,7 @@ We separated the code project into modules following a similar structure of the 
 
 ### Quarterround
 
-A quarterround function will take a list of 4 numbera and produce an output of the same length.
+A quarterround function will take a list of 4 numbers and produce an output of the same length.
 
 For example:
 
@@ -94,7 +95,7 @@ ghci> quarterroundDisplay input
 ghci>
 ```
 
-The above does not looks very good, we will generally use `quarterroundEquations` instead with a bit of formatting:
+The above does not looks very good to a human, we can use `quarterroundEquations` instead with a bit of formatting:
 
 ```
 ghci> mapM_ putStrLn $ quarterroundEquations input
@@ -135,7 +136,7 @@ ghci> rowroundCompute input
 ghci>
 ```
 
-It's equations can be obtained for example as:
+It's equations can be displayed for example as:
 
 ```
 ghci> input = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"] 
@@ -206,7 +207,7 @@ ghci>
 
 ### Doubleround
 
-Doubleround is simply columnround to the outoput of rowround. Computing is easy:
+Doubleround is simply columnround to the outoput of a rowround. Computing is easy:
 
 ```
 ghci> doubleroundCompute input
@@ -238,7 +239,7 @@ z15 = 16 ⊕ ((12 ⊕ ((8 ⊕ ((4 ⊕ ((16 + 12) <<< 7) + 16) <<< 9) + 4 ⊕ ((1
 ghci>
 ```
 
-Note how each equation grow as we build the cipher, this will make the `doubleround10` expression impractical to display so we have `doubleround2` as an alternative, which is the same but only doing doubleround 2 times instead of 10.
+Note how each equation grow as we build the cipher, this will make the `doubleround10` (doubleround 10 times) expression impractical to display so we have `doubleround2` as an alternative, which is the same but only doing doubleround 2 times instead of 10.
 
 It is ok to compute doubleround10 with `doubleroundCompute`:
 
@@ -249,7 +250,7 @@ ghci> doubleround10Compute input
 ghci> 
 ```
 
-But we will use `doubleround2` for displaying purposes and just get the first (`z0`) and second (`z1`) equations instead of the 16 total:
+But we will use `doubleround2` for displaying purposes and just get the first (`z0`) and second (`z1`) equations instead of the 16 produced:
 
 ```
 ghci> :load Doubleround
@@ -282,7 +283,7 @@ ghci> coreCompute input
 ghci>
 ```
 
-Displaying `core` can be impractical when we use the underlying `doubleround10`, however we can use the reduced versions like `doubleround2` to see whats going on, for example:
+Displaying `core` can be impractical when we use the underlying `doubleround10`, however we can use the reduced versions like `core2Equations` to see whats going on, for example:
 
 ```
 ghci> input = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"] 
@@ -444,4 +445,40 @@ ghci> coreCompute input1
 ghci> coreCompute input2
 [3957682599,4247314016,3069266164,928241627,1833609583,2277935034,3608905336,2855561087,3069266164,928241627,3957682599,4247314016,3608905336,2855561087,1833609583,2277935034]
 ghci>
+```
+
+### More on expressions
+
+Expressions obtanied from `*Display` function can be evaluated to produce a number.
+
+Consider the following session where the `z1` equation from `salsa20` is obtained and evaluated:
+
+```
+ghci> :load Hash
+[5 of 6] Compiling Doubleround      ( Doubleround.hs, Doubleround.o )
+[6 of 6] Compiling Hash             ( Hash.hs, Hash.o )
+Ok, six modules loaded.
+ghci> input2 = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64"]
+ghci> let z1 = (salsa20Display input2)!!1
+ghci> z1
+"8 >>> 1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 \8853 ((49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52 \8853 ((33 + 2^8 * 34 + 2^16 * 35 + 2^24 * 36 \8853 ((17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7) + 1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4) <<< 9) + 17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7)) <<< 13) + 33 + 2^8 * 34 + 2^16 * 35 + 2^24 * 36 \8853 ((17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7) + 1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4) <<< 9)) <<< 18) \8853 ((13 + 2^8 * 14 + 2^16 * 15 + 2^24 * 16 \8853 ((61 + 2^8 * 62 + 2^16 * 63 + 2^24 * 64 + 45 + 2^8 * 46 + 2^16 * 47 + 2^24 * 48) <<< 7) \8853 ((9 + 2^8 * 10 + 2^16 * 11 + 2^24 * 12 \8853 ((57 + 2^8 * 58 + 2^16 * 59 + 2^24 * 60 \8853 ((41 + 2^8 * 42 + 2^16 * 43 + 2^24 * 44 + 25 + 2^8 * 26 + 2^16 * 27 + 2^24 * 28) <<< 7) + 41 + 2^8 * 42 + 2^16 * 43 + 2^24 * 44) <<< 9) \8853 ((5 + 2^8 * 6 + 2^16 * 7 + 2^24 * 8 \8853 ((53 + 2^8 * 54 + 2^16 * 55 + 2^24 * 56 \8853 ((37 + 2^8 * 38 + 2^16 * 39 + 2^24 * 40 \8853 ((21 + 2^8 * 22 + 2^16 * 23 + 2^24 * 24 + 5 + 2^8 * 6 + 2^16 * 7 + 2^24 * 8) <<< 7) + 21 + 2^8 * 22 + 2^16 * 23 + 2^24 * 24) <<< 9) + 37 + 2^8 * 38 + 2^16 * 39 + 2^24 * 40 \8853 ((21 + 2^8 * 22 + 2^16 * 23 + 2^24 * 24 + 5 + 2^8 * 6 + 2^16 * 7 + 2^24 * 8) <<< 7)) <<< 13) \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 \8853 ((49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52 \8853 ((33 + 2^8 * 34 + 2^16 * 35 + 2^24 * 36 \8853 ((17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7) + 1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4) <<< 9) + 17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7)) <<< 13) + 33 + 2^8 * 34 + 2^16 * 35 + 2^24 * 36 \8853 ((17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7) + 1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4) <<< 9)) <<< 18) + 13 + 2^8 * 14 + 2^16 * 15 + 2^24 * 16 \8853 ((61 + 2^8 * 62 + 2^16 * 63 + 2^24 * 64 + 45 + 2^8 * 46 + 2^16 * 47 + 2^24 * 48) <<< 7)) <<< 7) + 1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 \8853 ((49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52 \8853 ((33 + 2^8 * 34 + 2^16 * 35 + 2^24 * 36 \8853 ((17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7) + 1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4) <<< 9) + 17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7)) <<< 13) + 33 + 2^8 * 34 + 2^16 * 35 + 2^24 * 36 \8853 ((17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7) + 1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4) <<< 9)) <<< 18)) <<< 9) + 5 + 2^8 * 6 + 2^16 * 7 + 2^24 * 8 \8853 ((53 + 2^8 * 54 + 2^16 * 55 + 2^24 * 56 \8853 ((37 + 2^8 * 38 + 2^16 * 39 + 2^24 * 40 \8853 ((21 + 2^8 * 22 + 2^16 * 23 + 2^24 * 24 + 5 + 2^8 * 6 + 2^16 * 7 + 2^24 * 8) <<< 7) + 21 + 2^8 * 22 + 2^16 * 23 + 2^24 * 24) <<< 9) + 37 + 2^8 * 38 + 2^16 * 39 + 2^24 * 40 \8853 ((21 + 2^8 * 22 + 2^16 * 23 + 2^24 * 24 + 5 + 2^8 * 6 + 2^16 * 7 + 2^24 * 8) <<< 7)) <<< 13) \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 \8853 ((49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52 \8853 ((33 + 2^8 * 34 + 2^16 * 35 + 2^24 * 36 \8853 ((17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7) + 1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4) <<< 9) + 17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7)) <<< 13) + 33 + 2^8 * 34 + 2^16 * 35 + 2^24 * 36 \8853 ((17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7) + 1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4) <<< 9)) <<< 18) + 13 + 2^8 * 14 + 2^16 * 15 + 2^24 * 16 \8853 ((61 + 2^8 * 62 + 2^16 * 63 + 2^24 * 64 + 45 + 2^8 * 46 + 2^16 * 47 + 2^24 * 48) <<< 7)) <<< 7)) <<< 13) + 9 + 2^8 * 10 + 2^16 * 11 + 2^24 * 12 \8853 ((57 + 2^8 * 58 + 2^16 * 59 + 2^24 * 60 \8853 ((41 + 2^8 * 42 + 2^16 * 43 + 2^24 * 44 + 25 + 2^8 * 26 + 2^16 * 27 + 2^24 * 28) <<< 7) + 41 + 2^8 * 42 + 2^16 * 43 + 2^24 * 44) <<< 9) \8853 ((5 + 2^8 * 6 + 2^16 * 7 + 2^24 * 8 \8853 ((53 + 2^8 * 54 + 2^16 * 55 + 2^24 * 56 \8853 ((37 + 2^8 * 38 + 2^16 * 39 + 2^24 * 40 \8853 ((21 + 2^8 * 22 + 2^16 * 23 + 2^24 * 24 + 5 + 2^8 * 6 + 2^16 * 7 + 2^24 * 8) <<< 7) + 21 + 2^8 * 22 + 2^16 * 23 + 2^24 * 24) <<< 9) + 37 + 2^8 * 38 + 2^16 * 39 + 2^24 * 40 \8853 ((21 + 2^8 * 22 + 2^16 * 23 + 2^24 * 24 + 5 + 2^8 * 6 + 2^16 * 7 + 2^24 * 8) <<< 7)) <<< 13) \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 \8853 ((49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52 \8853 ((33 + 2^8 * 34 + 2^16 * 35 + 2^24 * 36 \8853 ((17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7) + 1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4) <<< 9) + 17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7)) <<< 13) + 33 + 2^8 * 34 + 2^16 * 35 + 2^24 * 36 \8853 ((17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7) + 1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4) <<< 9)) <<< 18) + 13 + 2^8 * 14 + 2^16 * 15 + 2^24 * 16 \8853 ((61 + 2^8 * 62 + 2^16 * 63 + 2^24 * 64 + 45 + 2^8 * 46 + 2^16 * 47 + 2^24 * 48) <<< 7)) <<< 7) + 1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 \8853 ((49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52 \8853 ((33 + 2^8 * 34 + 2^16 * 35 + 2^24 * 36 \8853 ((17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7) + 1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4) <<< 9) + 17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7)) <<< 13) + 33 + 2^8 * 34 + 2^16 * 35 + 2^24 * 36 \8853 ((17 + 2^8 * 18 + 2^16 * 19 + 2^24 * 20 \8853 ((1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 + 49 + 2^8 * 50 + 2^16 * 51 + 2^24 * 52) <<< 7) + 1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4) <<< 9)) <<< 18)) <<< 9)) <<< 18) + 1 + 2^8 * 2 + 2^16 * 3 + 2^24 * 4 & 255"
+ghci> import Language.Haskell.Interpreter
+ghci> runInterpreter $ do { loadModules ["Quarterround.hs"]; setImports ["Quarterround", "Prelude", "Utils"]; eval z1 }
+Right "956695557"
+ghci> 
+```
+
+Or a session to evaluate an equation from the `Expansion` module:
+
+```
+ghci> :load Expansion
+Ok, 7 modules loaded.
+ghci> k0 = ["101", "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116"] 
+ghci> k1 = ["201", "202", "203", "204", "205", "206", "207", "208", "209", "210", "211", "212", "213", "214", "215", "216"] 
+ghci> n = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"] 
+ghci> let z1 = (expand32Display k0 k1 n)!!1
+ghci> import Language.Haskell.Interpreter
+ghci> runInterpreter $ do { loadModules ["Quarterround.hs"]; setImports ["Quarterround", "Prelude", "Utils"]; eval z1 }
+Right "3269521509"
+ghci> 
 ```
