@@ -423,22 +423,22 @@ main = do
 
     putStrLn "Encrypt/Decrypt tests:"
 
-    let encrypted1 = cryptBlock message1 key1 nonce1 0
-    let decrypted1 = cryptBlock encrypted1 key1 nonce1 0
+    let encrypted1 = cryptBlockV1 message1 key1 nonce1 0
+    let decrypted1 = cryptBlockV1 encrypted1 key1 nonce1 0
 
     putStrLn $ if length encrypted1 == length message1 then "OK" else "FAIL!"
     putStrLn $ if encrypted1 /= message1 then "OK" else "FAIL!"
     putStrLn $ if decrypted1 == message1 then "OK" else "FAIL!"
 
-    let encrypted2 = cryptBlock message2 key1 nonce1 0
-    let decrypted2 = cryptBlock encrypted2 key1 nonce1 0
+    let encrypted2 = cryptBlockV1 message2 key1 nonce1 0
+    let decrypted2 = cryptBlockV1 encrypted2 key1 nonce1 0
 
     putStrLn $ if length encrypted2 == length message2 then "OK" else "FAIL!"
     putStrLn $ if encrypted2 /= message2 then "OK" else "FAIL!"
     putStrLn $ if decrypted2 == message2 then "OK" else "FAIL!"
     
-    let encrypted3 = cryptBlock message3 key1 nonce1 0
-    let decrypted3 = cryptBlock encrypted3 key1 nonce1 0
+    let encrypted3 = cryptBlockV1 message3 key1 nonce1 0
+    let decrypted3 = cryptBlockV1 encrypted3 key1 nonce1 0
 
     putStrLn $ if length encrypted3 == length message3 then "OK" else "FAIL!"
     putStrLn $ if encrypted3 /= message3 then "OK" else "FAIL!"
@@ -446,8 +446,8 @@ main = do
     
     -- one more than 64
     let message4 = message3 ++ [0]
-    let encrypted4 = cryptBlock message4 key1 nonce1 0
-    let decrypted4 = cryptBlock encrypted4 key1 nonce1 0
+    let encrypted4 = cryptBlockV1 message4 key1 nonce1 0
+    let decrypted4 = cryptBlockV1 encrypted4 key1 nonce1 0
 
     putStrLn $ if length encrypted4 == length message4 then "OK" else "FAIL!"
     putStrLn $ if encrypted4 /= message4 then "OK" else "FAIL!"
@@ -455,12 +455,11 @@ main = do
     
     -- one more than 129
     let message5 = message3 ++ message3 ++ [0]
-    let encrypted5 = cryptBlock message5 key1 nonce1 0
-    let decrypted5 = cryptBlock encrypted5 key1 nonce1 0
+    let encrypted5 = cryptBlockV1 message5 key1 nonce1 0
+    let decrypted5 = cryptBlockV1 encrypted5 key1 nonce1 0
 
     putStrLn $ if length encrypted5 == length message5 then "OK" else "FAIL!"
     putStrLn $ if encrypted5 /= message5 then "OK" else "FAIL!"
     putStrLn $ if decrypted5 == message5 then "OK" else "FAIL!"
     
     return ()
-
