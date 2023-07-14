@@ -18,6 +18,7 @@ module Utils
         aumentDisplay,
         modMatrix,
         littleendianInv4Crypt,
+        littleendianInv4CryptDisplay,
         stringListToNumberList,
         numberListToStringList,
         transpose,
@@ -100,10 +101,23 @@ modMatrixDisplay = zipWith displayMod
 displayMod :: String -> String -> String
 displayMod a b = a ++ " + " ++ b
 
--- |The littleendian function used in encryption/decryption where a number is obtained given a list of 8 bytes.
+-- |The littleendian function used in encryption/decryption where a list of 8 bytes is obtained from a number.
 littleendianInv4Crypt ::  Word32 -> [Word32]
 littleendianInv4Crypt w = [w .&. 0xff, shiftR w 8 .&. 0xff, shiftR w 16 .&. 0xff, shiftR w 24 .&. 0xff,
     shiftR w 32 .&. 0xff, shiftR 40 8 .&. 0xff, shiftR w 48 .&. 0xff, shiftR w 56 .&. 0xff]
+
+-- |The `littleendianInv4Crypt` as a string.
+littleendianInv4CryptDisplay :: String -> [String]
+littleendianInv4CryptDisplay w = [
+    printf "%s & 255" w,
+    printf "8 >>> %s & 255" w,
+    printf "16 >>> %s & 255" w,
+    printf "24 >>> %s & 255" w,
+    printf "32 >>> %s & 255" w,
+    printf "40 >>> %s & 255" w,
+    printf "48 >>> %s & 255" w,
+    printf "56 >>> %s & 255" w
+    ]
 
 -- |Transpose a 4x4 matrix type.
 transpose :: [a] -> [a]
