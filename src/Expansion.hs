@@ -97,7 +97,7 @@ sort32Display k0 k1 n = numberListToStringList o0 ++ k0 ++ numberListToStringLis
 
 -- |The expansion function computed where we have one 16 bytes (k).
 expand16Compute :: [Word32] -> [Word32] -> [Word32]
-expand16Compute k n = do 
+expand16Compute k n = do
     if length k == 16 && length n == 16 then do
         salsa20Compute $ sort16Compute k n
     else

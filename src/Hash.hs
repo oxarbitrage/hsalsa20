@@ -15,6 +15,9 @@ module Hash
     (
     coreCompute,
     coreDisplay,
+    core1Compute,
+    core1Display,
+    core1Equations,
     core2Compute,
     core2Display,
     core2Equations,
@@ -73,6 +76,33 @@ core2Equations input = do
     else
         error "input to `core2Equations` must be a list of 16 `String` strings"
 
+-- |The core1 expression computed.
+core1Compute :: [Word32] -> [Word32]
+core1Compute input = do
+    if length input == 16 then do
+        modMatrix (doubleroundCompute input) input
+    else
+        error "input to `coreCompute` must be a list of 16 `Word32` numbers"
+
+-- |The core1 expression as a string.
+core1Display :: [String] -> [String]
+core1Display input = do
+    if length input == 16 then do
+        modMatrixDisplay (doubleroundDisplay input) input
+    else
+        error "input to `core1Display` must be a list of 16 `String` strings"
+
+-- |The core1 expression as a list of equations.
+core1Equations :: [String] -> [String]
+core1Equations input = do
+    if length input == 16 then do
+        let display = core1Display input
+        let displayIndex = zip [index0..] display
+        let equation = map (uncurry (printf "z%d = %s")) displayIndex
+        equation
+    else
+        error "input to `core1Equations` must be a list of 16 `String` strings"
+
 -- |The salsa20 expression computed.
 salsa20Compute :: [Word32] -> [Word32]
 salsa20Compute input = do
@@ -81,11 +111,11 @@ salsa20Compute input = do
     else
         error "input to `salsa20Compute` must be a list of 64 `Word32` numbers"
 
--- |The salsa20 expression as a string using `core2Display` which is only two rounds of doubleround.
+-- |The salsa20 expression as a string using `core1Display` which is only one round of doubleround.
 salsa20Display :: [String] -> [String]
 salsa20Display input = do
     if length input == 64 then do
-        aumentDisplay $ core2Display $ reduceDisplay input
+        aumentDisplay $ core1Display $ reduceDisplay input
     else
         error "input to `salsa20Display` must be a list of 64 `String` strings"
 
