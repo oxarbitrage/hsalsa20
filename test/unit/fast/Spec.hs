@@ -372,6 +372,9 @@ nonce1 = [101, 102, 103, 104, 105, 106, 107, 108]
 key1 :: [Word32]
 key1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
+key2 :: [Word32]
+key2 = [201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216]
+
 main :: IO ()
 main = do
     putStrLn "Quarterround tests:"
@@ -461,5 +464,52 @@ main = do
     putStrLn $ if length encrypted5 == length message5 then "OK" else "FAIL!"
     putStrLn $ if encrypted5 /= message5 then "OK" else "FAIL!"
     putStrLn $ if decrypted5 == message5 then "OK" else "FAIL!"
-    
+
+    -- the other version (2 keys)
+
+    let v2encrypted1 = cryptBlockV2 message1 key1 key2 nonce1 0
+    let v2decrypted1 = cryptBlockV2 v2encrypted1 key1 key2 nonce1 0
+
+    putStrLn $ if length v2encrypted1 == length message1 then "OK" else "FAIL!"
+    putStrLn $ if v2encrypted1 /= message1 then "OK" else "FAIL!"
+    putStrLn $ if v2decrypted1 == message1 then "OK" else "FAIL!"
+    putStrLn $ if v2encrypted1 /= encrypted1 then "OK" else "FAIL!"
+    putStrLn $ if v2decrypted1 == decrypted1 then "OK" else "FAIL!"
+
+    let v2encrypted2 = cryptBlockV2 message2 key1 key2 nonce1 0
+    let v2decrypted2 = cryptBlockV2 v2encrypted2 key1 key2 nonce1 0
+
+    putStrLn $ if length v2encrypted2 == length message2 then "OK" else "FAIL!"
+    putStrLn $ if v2encrypted2 /= message2 then "OK" else "FAIL!"
+    putStrLn $ if v2decrypted2 == message2 then "OK" else "FAIL!"
+    putStrLn $ if v2encrypted2 /= encrypted2 then "OK" else "FAIL!"
+    putStrLn $ if v2decrypted2 == decrypted2 then "OK" else "FAIL!"
+
+    let v2encrypted3 = cryptBlockV2 message3 key1 key2 nonce1 0
+    let v2decrypted3 = cryptBlockV2 v2encrypted3 key1 key2 nonce1 0
+
+    putStrLn $ if length v2encrypted3 == length message3 then "OK" else "FAIL!"
+    putStrLn $ if v2encrypted3 /= message3 then "OK" else "FAIL!"
+    putStrLn $ if v2decrypted3 == message3 then "OK" else "FAIL!"
+    putStrLn $ if v2encrypted3 /= encrypted3 then "OK" else "FAIL!"
+    putStrLn $ if v2decrypted3 == decrypted3 then "OK" else "FAIL!"
+
+    let v2encrypted4 = cryptBlockV2 message4 key1 key2 nonce1 0
+    let v2decrypted4 = cryptBlockV2 v2encrypted4 key1 key2 nonce1 0
+
+    putStrLn $ if length v2encrypted4 == length message4 then "OK" else "FAIL!"
+    putStrLn $ if v2encrypted1 /= message4 then "OK" else "FAIL!"
+    putStrLn $ if v2decrypted4 == message4 then "OK" else "FAIL!"
+    putStrLn $ if v2encrypted4 /= encrypted4 then "OK" else "FAIL!"
+    putStrLn $ if v2decrypted4 == decrypted4 then "OK" else "FAIL!"
+
+    let v2encrypted5 = cryptBlockV2 message5 key1 key2 nonce1 0
+    let v2decrypted5 = cryptBlockV2 v2encrypted5 key1 key2 nonce1 0
+
+    putStrLn $ if length v2encrypted5 == length message5 then "OK" else "FAIL!"
+    putStrLn $ if v2encrypted5 /= message5 then "OK" else "FAIL!"
+    putStrLn $ if v2decrypted5 == message5 then "OK" else "FAIL!"
+    putStrLn $ if v2encrypted5 /= encrypted5 then "OK" else "FAIL!"
+    putStrLn $ if v2decrypted5 == decrypted5 then "OK" else "FAIL!"
+
     return ()
