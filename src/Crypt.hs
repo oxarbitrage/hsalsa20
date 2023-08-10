@@ -12,6 +12,7 @@ module Crypt
     (
     cryptBlockV1,
     cryptBlockV2,
+    iOver64Display,
     ) where
 
 import Expansion
@@ -19,10 +20,15 @@ import Utils
 
 import Data.Bits
 import Data.Word
+import Text.Printf
 
 -- |Calculate an index over 64 as described in the spec.
 iOver64 :: Integral a => a -> [Word32]
 iOver64 i = littleendianInv4Crypt $ floor ((fromIntegral i / 64) :: Double)
+
+-- |Display the calculation of an index over 64.
+iOver64Display :: String -> [String]
+iOver64Display i = littleendianInv4CryptDisplay $ printf "_(%s/64)" i
 
 -- |Join the nonce and the calculated `iOver64`
 nonceAndiOver64 :: [Word32] -> Word8 -> [Word32]

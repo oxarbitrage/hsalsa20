@@ -166,7 +166,7 @@ The columnround function described in the spec is just the rowround with a trans
 
 The functionality is the same as the [Rowround](#rowround) module.
 
-We can compute values with `evalCompute`:
+We can compute values with `columnroundCompute`:
 
 ```
 ghci> :load Columnround
@@ -181,7 +181,7 @@ ghci> columnroundCompute input
 ghci>
 ```
 
-And we can see the equations with `evalEquations`:
+And we can see the equations with `columnroundEquations`:
 
 ```
 ghci> input = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"] 
@@ -207,7 +207,7 @@ ghci>
 
 ### Doubleround
 
-Doubleround is simply columnround to the outoput of a rowround. Computing is easy:
+Doubleround is simply columnround to the output of a rowround. Computing is easy:
 
 ```
 ghci> doubleroundCompute input
