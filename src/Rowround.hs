@@ -75,7 +75,7 @@ quarterround2 a = In $ Quarterround $ In $ Const $ sort2 $ chunksOf 4 a!!1
 
 -- |Sort a second input for rowround.
 sort2 :: [a] -> [a]
-sort2 [y4, y5, y6, y7] = [y5, y6, y7, y4] 
+sort2 [y4, y5, y6, y7] = [y5, y6, y7, y4]
 sort2 _ = error "input to `sort2` must be a list of 4 objects"
 
 -- |Inverse of `sort2`, used to order rowround output.

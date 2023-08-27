@@ -13,6 +13,9 @@ module Crypt
     cryptBlockV1,
     cryptBlockV2,
     iOver64Display,
+    nonceAndiOver64Display,
+    cryptV1Display,
+    cryptV2Display,
     ) where
 
 import Expansion
@@ -22,25 +25,41 @@ import Data.Bits
 import Data.Word
 import Text.Printf
 
--- |Calculate an index over 64 as described in the spec.
+{- |Calculate an index over 64 as described in the spec.
+`i` is the index of a provided l-length message that we want to encrypt. This index is then divided by 64 and the
+floor if it is taken.
+The resulting  number is returned expressed as a unique 8 bytes sequence.
+-}
 iOver64 :: Integral a => a -> [Word32]
 iOver64 i = littleendianInv4Crypt $ floor ((fromIntegral i / 64) :: Double)
 
--- |Display the calculation of an index over 64.
+-- |Display the calculation of an index over 64. See `iOver64`.
 iOver64Display :: String -> [String]
 iOver64Display i = littleendianInv4CryptDisplay $ printf "_(%s/64)" i
 
--- |Join the nonce and the calculated `iOver64`
+-- |Join the nonce and the calculated `iOver64`. Nonce is 8 bytes and index 8 bytes more for a total of 16 as the result.
 nonceAndiOver64 :: [Word32] -> Word8 -> [Word32]
 nonceAndiOver64 n i = n ++ iOver64 i
 
--- |Given a single 16 bytes key, a nonce and an index get the salsa20 expanded matrix of it. 
+-- |Join the nonce and the calculated `iOver64Display`
+nonceAndiOver64Display :: [String] -> String -> [String]
+nonceAndiOver64Display n i = n ++ iOver64Display i
+
+-- |Given a single 16 bytes key, a nonce and an index of a message byte, get the salsa20 expanded matrix of it. 
 cryptV1 :: [Word32] -> [Word32] -> Word8 -> [Word32]
 cryptV1 k n i = expand16Compute k $ nonceAndiOver64 n i
 
--- |Given two 16 bytes keys, a nonce and an index get the salsa20 expanded matrix of it. 
+-- |Given a single 16 bytes key, a nonce and an index get the salsa20 expanded matrix of it.
+cryptV1Display :: [String] -> [String] -> String -> [String]
+cryptV1Display k n i = expand16Display k $ nonceAndiOver64Display n i
+
+-- |Given two 16 bytes keys, a nonce and an index get the salsa20 expanded matrix of it.
 cryptV2 :: [Word32] -> [Word32] -> [Word32] -> Word8 -> [Word32]
 cryptV2 k0 k1 n i = expand32Compute k0 k1 $ nonceAndiOver64 n i
+
+-- |Given two 16 bytes keys, a nonce and an index get the salsa20 expanded matrix of it.
+cryptV2Display :: [String] -> [String] -> [String] -> String -> [String]
+cryptV2Display k0 k1 n i = expand32Display k0 k1 $ nonceAndiOver64Display n i
 
 -- |Given an aumented key and an index of it, returns the number corresponding to that index.
 keybyte :: [Word32] -> Int -> Word32
