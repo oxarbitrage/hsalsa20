@@ -16,6 +16,8 @@ module Crypt
     nonceAndiOver64Display,
     cryptV1Display,
     cryptV2Display,
+    cryptBlockV1Display,
+    cryptBlockV1Equations,
     ) where
 
 import Expansion
@@ -37,11 +39,13 @@ iOver64 i = littleendianInv4Crypt $ floor ((fromIntegral i / 64) :: Double)
 iOver64Display :: String -> [String]
 iOver64Display i = littleendianInv4CryptDisplay $ printf "_(%s/64)" i
 
--- |Join the nonce and the calculated `iOver64`. Nonce is 8 bytes and index 8 bytes more for a total of 16 as the result.
+{- |Join the nonce and the calculated `iOver64`.
+Nonce is 8 bytes and index 8 bytes more for a total of 16 as the result.
+-}
 nonceAndiOver64 :: [Word32] -> Word8 -> [Word32]
 nonceAndiOver64 n i = n ++ iOver64 i
 
--- |Join the nonce and the calculated `iOver64Display`
+-- |Join the nonce and the calculated `iOver64Display`.
 nonceAndiOver64Display :: [String] -> String -> [String]
 nonceAndiOver64Display n i = n ++ iOver64Display i
 
@@ -65,11 +69,29 @@ cryptV2Display k0 k1 n i = expand32Display k0 k1 $ nonceAndiOver64Display n i
 keybyte :: [Word32] -> Int -> Word32
 keybyte aumented_key n = aumented_key!!n
 
+-- |Given an aumented key as a list of strings and an index of it, returns the string corresponding to that index.
+keybyteDisplay :: [String] -> Int -> String
+keybyteDisplay aumented_key n = aumented_key!!n
+
 -- |Encrypt or decrypt a message with a single 16 bytes key resulting in a list of the same length.
 cryptBlockV1 :: [Word32] -> [Word32] -> [Word32] -> Word8 -> [Word32]
 cryptBlockV1 (x:xs) k n index = xor x (keybyte (cryptV1 k n index) (fromIntegral index `mod` 64)) :
     cryptBlockV1 xs k n (index+1)
 cryptBlockV1 _ _ _ _ = []
+
+-- |Encrypt or decrypt a message with a single 16 bytes key resulting in a list of the same length.
+cryptBlockV1Display :: [String] -> [String] -> [String] -> Int -> [String]
+cryptBlockV1Display (x:xs) k n index = printf "%s ⊕ %s" x (keybyteDisplay (cryptV1Display k n (show index)) (index `mod` 64)) :
+    cryptBlockV1Display xs k n (index+1)
+cryptBlockV1Display _ _ _ _ = []
+
+-- |Display the output of `cryptBlockV1` as string equations.
+cryptBlockV1Equations :: [String] -> [String] -> [String] -> Int -> [String]
+cryptBlockV1Equations m k n index = do
+    let display = cryptBlockV1Display m k n index
+    let displayIndex = zip [index0..] display
+    let equation = map (uncurry (printf "c%d = %s")) displayIndex
+    equation
 
 -- |Encrypt or decrypt a message with two 16 bytes key resulting in a list of the same length.
 cryptBlockV2 :: [Word32] -> [Word32] -> [Word32] -> [Word32] -> Word8 -> [Word32]
