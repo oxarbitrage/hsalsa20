@@ -8,21 +8,17 @@ Portability : POSIX
 
 We define the doubleround function as the composition of rowround and columnround.
 
-In addition we define `doubleround10`, which is the `doubleround` function applied 10 times,
-as specified in the salsa20 spec and `doubleround2` which is the `doubleround` function
-applied 2 times only for practical analysis of expressions purposes.
+In addition we define `doubleroundR`, which is the `doubleround` function applied R times,
+as specified in the salsa20 spec.
 -}
 module Doubleround
     (
     doubleroundCompute,
     doubleroundDisplay,
     doubleroundEquations,
-    doubleround10Compute,
-    doubleround10Display,
-    doubleround10Equations,
-    doubleround2Compute,
-    doubleround2Display,
-    doubleround2Equations,
+    doubleroundRCompute,
+    doubleroundRDisplay,
+    doubleroundREquations,
     ) where
 
 import Data.Word
@@ -59,60 +55,31 @@ doubleroundEquations input = do
     else
         error "input to `doubleroundEquations` must be a list of 16 `String` strings"
 
--- |The doubleround10 expression computed.
-doubleround10Compute :: [Word32] -> [Word32]
-doubleround10Compute input = do
+-- |The doubleroundR expression computed.
+doubleroundRCompute :: [Word32] -> Int -> [Word32]
+doubleroundRCompute input 0 = input
+doubleroundRCompute input r = do
     if length input == 16 then do
-        doubleroundCompute $ doubleroundCompute $ doubleroundCompute $ doubleroundCompute $ 
-            doubleroundCompute $ doubleroundCompute $ doubleroundCompute $ doubleroundCompute $
-            doubleroundCompute $ doubleroundCompute input
+        doubleroundRCompute (doubleroundCompute input) (r - 1)
     else
-        error "input to `doubleround10Compute` must be a list of 16 `Word32` numbers"
+        error "arguments of `doubleroundRCompute` must be a list of 16 `Word32` numbers and a number `Int` of rounds"
 
--- |The doubleround10 expression as a string.
-doubleround10Display :: [String] -> [String]
-doubleround10Display input = do
+-- |The doubleroundR expression as a string.
+doubleroundRDisplay :: [String] -> Int -> [String]
+doubleroundRDisplay input 0 = input
+doubleroundRDisplay input r = do
     if length input == 16 then do
-        doubleroundDisplay $ doubleroundDisplay $ doubleroundDisplay $ doubleroundDisplay $
-            doubleroundDisplay $ doubleroundDisplay $ doubleroundDisplay $ doubleroundDisplay $
-            doubleroundDisplay $ doubleroundDisplay input
+        doubleroundRDisplay (doubleroundDisplay input) (r - 1)
     else
-        error "input to `doubleround10Display` must be a list of 16 `String` strings"
+        error "arguments of `doubleroundRDisplay` must be a list of 16 `String` strings and a number `Int` of rounds"
 
--- |The doubleround10 expression as a list of equations.
-doubleround10Equations :: [String] -> [String]
-doubleround10Equations input = do
+-- |The doubleroundR expression as a list of equations.
+doubleroundREquations :: [String] -> Int -> [String]
+doubleroundREquations input r = do
     if length input == 16 then do
-        let display = doubleround10Display input
+        let display = doubleroundRDisplay input r
         let displayIndex = zip [index0..] display
         let equation = map (uncurry (printf "z%d = %s")) displayIndex
         equation
     else
-        error "input to `doubleround10Equations` must be a list of 16 `String` strings"
-
--- |The doubleround2 expression computed.
-doubleround2Compute :: [Word32] -> [Word32]
-doubleround2Compute input = do
-    if length input == 16 then do
-        doubleroundCompute $ doubleroundCompute input
-    else
-        error "input to `doubleround2Compute` must be a list of 16 `Word32` numbers"
-
--- |The doubleround2 expression as a string.
-doubleround2Display :: [String] -> [String]
-doubleround2Display input = do
-    if length input == 16 then do
-        doubleroundDisplay $ doubleroundDisplay input
-    else
-        error "input to `doubleround2Display` must be a list of 16 `String` strings"
-
--- |The doubleround10 expression as a list of equations.
-doubleround2Equations :: [String] -> [String]
-doubleround2Equations input = do
-    if length input == 16 then do
-        let display = doubleround2Display input
-        let displayIndex = zip [index0..] display
-        let equation = map (uncurry (printf "z%d = %s")) displayIndex
-        equation
-    else
-        error "input to `doubleround2Equations` must be a list of 16 `String` strings"
+        error "arguments of `doubleroundREquations` must be a list of 16 `String` strings and a number `Int` of rounds"

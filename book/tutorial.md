@@ -239,18 +239,18 @@ z15 = 16 ⊕ ((12 ⊕ ((8 ⊕ ((4 ⊕ ((16 + 12) <<< 7) + 16) <<< 9) + 4 ⊕ ((1
 ghci>
 ```
 
-Note how each equation grow as we build the cipher, this will make the `doubleround10` (doubleround 10 times) expression impractical to display so we have `doubleround2` as an alternative, which is the same but only doing doubleround 2 times instead of 10.
+Note how each equation grow as we build the cipher, the spec for salsa20 is 10 rounds of doubleround but the number of rounds is an argument of the `doubleroundR` function.
 
-It is ok to compute doubleround10 with `doubleroundCompute`:
+It is ok to compute doubleround 10 times with `doubleroundRCompute`:
 
 ```
 ghci> input = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-ghci> doubleround10Compute input
+ghci> doubleroundRCompute input 10
 [1404140657,617196032,2156026738,1598378278,1320572932,2911795924,848484514,1720253541,2259298499,1446763212,3297210272,2542453700,1082050440,992640509,3623268805,2227813469]
 ghci> 
 ```
 
-But we will use `doubleround2` for displaying purposes and just get the first (`z0`) and second (`z1`) equations instead of the 16 produced:
+But we will use `doubleroundR` with `r = 2` for displaying purposes. Additionally here we are going to get the first (`z0`) and second (`z1`) equations instead of the 16 produced:
 
 ```
 ghci> :load Doubleround
@@ -261,9 +261,9 @@ ghci> :load Doubleround
 [5 of 5] Compiling Doubleround      ( Doubleround.hs, interpreted )
 Ok, five modules loaded.
 ghci> input = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"] 
-ghci> mapM_ putStrLn $ [(doubleround2Equations input)!!0]
+ghci> mapM_ putStrLn $ [(doubleroundREquations input 2)!!0]
 z0 = 1 ⊕ ((13 ⊕ ((9 ⊕ ((5 ⊕ ((1 + 13) <<< 7) + 1) <<< 9) + 5 ⊕ ((1 + 13) <<< 7)) <<< 13) + 9 ⊕ ((5 ⊕ ((1 + 13) <<< 7) + 1) <<< 9)) <<< 18) ⊕ ((4 ⊕ ((16 + 12) <<< 7) ⊕ ((3 ⊕ ((15 ⊕ ((11 + 7) <<< 7) + 11) <<< 9) ⊕ ((2 ⊕ ((14 ⊕ ((10 ⊕ ((6 + 2) <<< 7) + 6) <<< 9) + 10 ⊕ ((6 + 2) <<< 7)) <<< 13) ⊕ ((1 ⊕ ((13 ⊕ ((9 ⊕ ((5 ⊕ ((1 + 13) <<< 7) + 1) <<< 9) + 5 ⊕ ((1 + 13) <<< 7)) <<< 13) + 9 ⊕ ((5 ⊕ ((1 + 13) <<< 7) + 1) <<< 9)) <<< 18) + 4 ⊕ ((16 + 12) <<< 7)) <<< 7) + 1 ⊕ ((13 ⊕ ((9 ⊕ ((5 ⊕ ((1 + 13) <<< 7) + 1) <<< 9) + 5 ⊕ ((1 + 13) <<< 7)) <<< 13) + 9 ⊕ ((5 ⊕ ((1 + 13) <<< 7) + 1) <<< 9)) <<< 18)) <<< 9) + 2 ⊕ ((14 ⊕ ((10 ⊕ ((6 + 2) <<< 7) + 6) <<< 9) + 10 ... ⊕ ((1 ⊕ ((13 ⊕ ((9 ⊕ ((5 ⊕ ((1 + 13) <<< 7) + 1) <<< 9) + 5 ⊕ ((1 + 13) <<< 7)) <<< 13) + 9 ⊕ ((5 ⊕ ((1 + 13) <<< 7) + 1) <<< 9)) <<< 18) + 4 ⊕ ((16 + 12) <<< 7)) <<< 7)) <<< 13) + 3 ⊕ ((15 ⊕ ((11 + 7) <<< 7) + 11) <<< 9) ⊕ ((2 ⊕ ((14 ⊕ ((10 ⊕ ((6 + 2) <<< 7) + 6) <<< 9) + 10 ⊕ ((6 + 2) <<< 7)) <<< 13) ⊕ ((1 ⊕ ((13 ⊕ ((9 ⊕ ((5 ⊕ ((1 + 13) <<< 7) + 1) <<< 9) + 5 ⊕ ((1 + 13) <<< 7)) <<< 13) + 9 ⊕ ((5 ⊕ ((1 + 13) <<< 7) + 1) <<< 9)) <<< 18) + 4 ⊕ ((16 + 12) <<< 7)) <<< 7) + 1 ⊕ ((13 ⊕ ((9 ⊕ ((5 ⊕ ((1 + 13) <<< 7) + 1) <<< 9) + 5 ⊕ ((1 + 13) <<< 7)) <<< 13) + 9 ⊕ ((5 ⊕ ((1 + 13) <<< 7) + 1) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)
-ghci> mapM_ putStrLn $ [(doubleround2Equations input)!!1]
+ghci> mapM_ putStrLn $ [(doubleroundREquations input 2)!!1]
 z1 = 2 ⊕ ((14 ⊕ ((10 ⊕ ((6 + 2) <<< 7) + 6) <<< 9) + 10 ⊕ ((6 + 2) <<< 7)) <<< 13) ⊕ ((1 ⊕ ((13 ⊕ ((9 ⊕ ((5 ⊕ ((1 + 13) <<< 7) + 1) <<< 9) + 5 ⊕ ((1 + 13) <<< 7)) <<< 13) + 9 ⊕ ((5 ⊕ ((1 + 13) <<< 7) + 1) <<< 9)) <<< 18) + 4 ⊕ ((16 + 12) <<< 7)) <<< 7) ⊕ ((14 ⊕ ((10 ⊕ ((6 + 2) <<< 7) + 6) <<< 9) ⊕ ... + 4 ⊕ ((16 + 12) <<< 7)) <<< 13) ⊕ ((11 ⊕ ((7 ⊕ ((3 ⊕ ((15 ⊕ ((11 + 7) <<< 7) + 11) <<< 9) + 15 ⊕ ((11 + 7) <<< 7)) <<< 13) + 3 ⊕ ((15 ⊕ ((11 + 7) <<< 7) + 11) <<< 9)) <<< 18) + 10 ⊕ ((6 + 2) <<< 7)) <<< 7)) <<< 7)) <<< 7)
 ghci> 
 ```
@@ -283,7 +283,7 @@ ghci> coreCompute input
 ghci>
 ```
 
-Displaying `core` can be impractical when we use the underlying `doubleround10`, however we can use the reduced versions like `core2Equations` to see whats going on, for example:
+Displaying `core` can be impractical when we use the underlying `doubleround` 10 times, however we can use the reduced versions like `core2Equations` to see whats going on, for example:
 
 ```
 ghci> input = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"] 
@@ -291,7 +291,7 @@ ghci> mapM_ putStrLn $ [(core2Equations input)!!1]
 z1 = 2 ⊕ ((14 ⊕ ((10 ⊕ ((6 + 2) <<< 7) + 6) <<< 9) + 10 ⊕ ((6 + 2) <<< 7)) <<< 13) ... <<< 7)) <<< 7) + 2
 ```
 
-The difference between the above expression and a `doubleround2` one is actually just the `+ 2` at the end, as `core` is defined to be a sum of each element of the `doubleround` output and the original input.
+The difference between the above expression and a `doubleroundR` with a `r=2` is actually just the `+ 2` at the end, as `core` is defined to be a sum of each element of the `doubleround` output and the original input.
 
 Now lets move on into the `salsa20` expressions where the input is a list of 64 objects instead. The 64 objects are reduced to 16 using `littleendian` and aumented back using `littleendian_inv`.
 

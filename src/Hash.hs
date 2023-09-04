@@ -37,7 +37,7 @@ import Utils
 coreCompute :: [Word32] -> [Word32]
 coreCompute input = do
     if length input == 16 then do
-        modMatrix (doubleround10Compute input) input
+        modMatrix (doubleroundRCompute input 10) input
     else
         error "input to `coreCompute` must be a list of 16 `Word32` numbers"
 
@@ -45,7 +45,7 @@ coreCompute input = do
 coreDisplay :: [String] -> [String]
 coreDisplay input = do
     if length input == 16 then do
-        modMatrixDisplay (doubleround10Display input) input
+        modMatrixDisplay (doubleroundRDisplay input 10) input
     else
         error "input to `core10Display` must be a list of 16 `String` strings"
 
@@ -53,7 +53,7 @@ coreDisplay input = do
 core2Compute :: [Word32] -> [Word32]
 core2Compute input = do
     if length input == 16 then do
-        modMatrix (doubleround2Compute input) input
+        modMatrix (doubleroundRCompute input 2) input
     else
         error "input to `core2Compute` must be a list of 16 `Word32` numbers"
 
@@ -61,7 +61,7 @@ core2Compute input = do
 core2Display :: [String] -> [String]
 core2Display input = do
     if length input == 16 then do
-        modMatrixDisplay (doubleround2Display input) input
+        modMatrixDisplay (doubleroundRDisplay input 2) input
     else
         error "input to `core2Display` must be a list of 16 `String` strings"
 
