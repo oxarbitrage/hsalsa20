@@ -1,4 +1,3 @@
-
 import Data.Word
 
 import Quarterround
@@ -366,6 +365,13 @@ message3 = [
     0, 0, 0, 0
     ]
 
+message6 :: [Word32]
+message6 = [fromIntegral $ fromEnum 'H', fromIntegral $ fromEnum 'O', fromIntegral $ fromEnum 'L',
+    fromIntegral $ fromEnum 'A'] -- [72, 79, 76, 65]
+
+message6_crypted :: [Word32]
+message6_crypted = [130, 166, 72, 243] -- [, ¦, H, ó]
+
 nonce1 :: [Word32]
 nonce1 = [101, 102, 103, 104, 105, 106, 107, 108]
 
@@ -511,5 +517,14 @@ main = do
     putStrLn $ if v2decrypted5 == message5 then "OK" else "FAIL!"
     putStrLn $ if v2encrypted5 /= encrypted5 then "OK" else "FAIL!"
     putStrLn $ if v2decrypted5 == decrypted5 then "OK" else "FAIL!"
+
+    let encrypted6 = cryptBlockV1 message6 key1 nonce1 0
+    let decrypted6 = cryptBlockV1 encrypted6 key1 nonce1 0
+
+    putStrLn $ if length encrypted6 == length message6 then "OK" else "FAIL!"
+    putStrLn $ if encrypted6 /= message6 then "OK" else "FAIL!"
+    putStrLn $ if encrypted6 == message6_crypted then "OK" else "FAIL!"
+    putStrLn $ if decrypted6 == message6 then "OK" else "FAIL!"
+
 
     return ()
