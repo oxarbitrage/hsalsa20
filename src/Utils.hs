@@ -28,7 +28,6 @@ module Utils
         stringListToEitherList,
         eitherListToNumberList,
         eitherListToStringList,
-        listOfNumbersToListOfHex,
         (>>>),
         (&),
     ) where
@@ -153,7 +152,3 @@ eitherListToStringList = map (fromRight "0")
 -- |The number 0 as an integer. Used as list index in certain cases.
 index0 :: Int
 index0 = 0
-
--- |
-listOfNumbersToListOfHex :: [Word32] -> [String]
-listOfNumbersToListOfHex input = map (printf "0x%08x") input
