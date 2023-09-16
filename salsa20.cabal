@@ -62,6 +62,7 @@ test-suite salsa20-ecrypt-tests
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Vectors
       Paths_salsa20
   hs-source-dirs:
       test/unit/ecrypt
