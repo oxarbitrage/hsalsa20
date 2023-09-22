@@ -62,14 +62,15 @@ test-suite salsa20-ecrypt-tests
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Vectors
       Paths_salsa20
   hs-source-dirs:
       test/unit/ecrypt
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
     , bytestring
+    , containers
     , hex-text
     , salsa20
     , split
