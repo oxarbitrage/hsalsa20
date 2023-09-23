@@ -15,7 +15,7 @@ import GHC.Generics
 import Data.Aeson
 import qualified Data.ByteString.Lazy as B
 
--- The test data
+-- The test data from the json
 data TestVector = TestVector {
     key1 :: String,
     key2 :: String,
@@ -38,49 +38,9 @@ instance FromJSON TestVector
 gettestname :: Map k a -> [k]
 gettestname = Data.Map.keys
 
--- Get all `key1` as a list.
-getkey1 :: Map k TestVector -> Map k String
-getkey1 = Data.Map.map (show . key1)
-
--- Get all `key2` as a list.
-getkey2 :: Map k TestVector -> Map k String
-getkey2 = Data.Map.map (show . key2)
-
--- Get all `iv` as a list.
-getiv :: Map k TestVector -> Map k String
-getiv = Data.Map.map (show . iv)
-
--- Get all `stream1_index` as a list.
-getstream1_index :: Map k TestVector -> Map k String
-getstream1_index = Data.Map.map (show . stream1index)
-
--- Get all `stream1_expected` as a list.
-getstream1_expected :: Map k TestVector -> Map k String
-getstream1_expected = Data.Map.map (show . stream1expected)
-
--- Get all `stream2_index` as a list.
-getstream2_index :: Map k TestVector -> Map k String
-getstream2_index = Data.Map.map (show . stream2index)
-
--- Get all `stream2_expected` as a list.
-getstream2_expected :: Map k TestVector -> Map k String
-getstream2_expected = Data.Map.map (show . stream2expected)
-
--- Get all `stream3_index` as a list.
-getstream3_index :: Map k TestVector -> Map k String
-getstream3_index = Data.Map.map (show . stream3index)
-
--- Get all `stream3_expected` as a list.
-getstream3_expected :: Map k TestVector -> Map k String
-getstream3_expected = Data.Map.map (show . stream3expected)
-
--- Get all `stream4_index` as a list.
-getstream4_index :: Map k TestVector -> Map k String
-getstream4_index = Data.Map.map (show . stream4index)
-
--- Get all `stream4_expected` as a list.
-getstream4_expected :: Map k TestVector -> Map k String
-getstream4_expected = Data.Map.map (show . stream4expected)
+-- Get a field of the test vector.
+getField :: (TestVector -> a) -> Map k TestVector -> Map k a
+getField = Data.Map.map
 
 -- Given a map of key values get a list of values.
 getelementlist :: Map k a -> [a]
@@ -94,72 +54,87 @@ cleanup = Prelude.map (Prelude.filter (/='"'))
 encodeHexString :: String -> [Word32]
 encodeHexString key = Prelude.map fromIntegral $ ByteString.unpack $ fromJust $ decodeHex $ T.pack key
 
--- Collect data from the json string, returning a list of lists with each with test data.
-collect :: B.ByteString -> [[String]]
+-- The prepared, generated data from the json as lists.
+data CollectedTestData = CollectedTestData {
+    test_name_list :: [String],
+    key1_list :: [String],
+    key2_list :: [String],
+    iv_list :: [String],
+    stream1index_list  :: [Int],
+    stream1expected_list :: [String],
+    stream2index_list  :: [Int],
+    stream2expected_list :: [String],
+    stream3index_list  :: [Int],
+    stream3expected_list :: [String],
+    stream4index_list  :: [Int],
+    stream4expected_list :: [String],
+    xordigest_list :: [String]
+} deriving (Generic, Show)
+
+-- Collect data from the json string, prepare it and return a list of lists with each test data field.
+collect :: B.ByteString -> CollectedTestData
 collect json_file = do
     let maybe_decoded = decode json_file :: Maybe [Map String TestVector]
     let decoded = fromJust maybe_decoded
 
     let test_name_list = concatMap gettestname decoded
-    let key1_list = cleanup $ concatMap (getelementlist . getkey1) decoded
-    let key2_list = cleanup $ concatMap (getelementlist . getkey2) decoded
-    let iv_list = cleanup $ concatMap (getelementlist . getiv) decoded
+    let key1_list = cleanup $ concatMap (getelementlist . getField key1) decoded
+    let key2_list = cleanup $ concatMap (getelementlist . getField key2) decoded
+    let iv_list = cleanup $ concatMap (getelementlist . getField iv) decoded
 
-    let stream1_index_list = concatMap (getelementlist . getstream1_index) decoded
-    let stream1_expected_list = cleanup $ concatMap (getelementlist . getstream1_expected) decoded
+    let stream1index_list = concatMap (getelementlist . getField stream1index) decoded
+    let stream1expected_list = cleanup $ concatMap (getelementlist . getField stream1expected) decoded
 
-    let stream2_index_list = concatMap (getelementlist . getstream2_index) decoded
-    let stream2_expected_list = cleanup $ concatMap (getelementlist . getstream2_expected) decoded
+    let stream2index_list = concatMap (getelementlist . getField stream2index) decoded
+    let stream2expected_list = cleanup $ concatMap (getelementlist . getField stream2expected) decoded
 
-    let stream3_index_list = concatMap (getelementlist . getstream3_index) decoded
-    let stream3_expected_list = cleanup $ concatMap (getelementlist . getstream3_expected) decoded
+    let stream3index_list = concatMap (getelementlist . getField stream3index) decoded
+    let stream3expected_list = cleanup $ concatMap (getelementlist . getField stream3expected) decoded
 
-    let stream4_index_list = concatMap (getelementlist . getstream4_index) decoded
-    let stream4_expected_list = cleanup $ concatMap (getelementlist . getstream4_expected) decoded
+    let stream4index_list = concatMap (getelementlist . getField stream4index) decoded
+    let stream4expected_list = cleanup $ concatMap (getelementlist . getField stream4expected) decoded
 
-    [
-        test_name_list, key1_list, key2_list, iv_list, stream1_index_list, stream1_expected_list,
-        stream2_index_list, stream2_expected_list, stream3_index_list, stream3_expected_list,
-        stream4_index_list, stream4_expected_list]
+    let xordigest_list = []
 
+    CollectedTestData test_name_list key1_list key2_list iv_list stream1index_list stream1expected_list
+        stream2index_list stream2expected_list stream3index_list stream3expected_list
+        stream4index_list stream4expected_list xordigest_list
 
--- Run the test given all the 12 lists of data.
-run :: [String] -> [String] -> [String] -> [String] -> [String] -> [String] ->
-    [String] -> [String] -> [String] -> [String] -> [String] -> [String] -> IO ()
-run (test_name_x:test_name_xs) (key1_x:key1_xs) (key2_x:key2_xs) 
-    (iv_x:iv_xs) (stream1_index_x:stream1_index_xs) (stream1_expected_x:stream1_expected_xs) 
-    (stream2_index_x:stream2_index_xs) (stream2_expected_x:stream2_expected_xs)
-    (stream3_index_x:stream3_index_xs) (stream3_expected_x:stream3_expected_xs)
-    (stream4_index_x:stream4_index_xs) (stream4_expected_x:stream4_expected_xs) = do
-
-    putStrLn test_name_x
+-- Run the test given the prepared collected data from the json file.
+run :: CollectedTestData -> IO()
+run c = do
+    putStrLn (head (test_name_list c))
 
     let message = Prelude.replicate 64 0 :: [Word32]
 
-    let stream1_output = cryptBlockV2 message (encodeHexString key1_x)
-            (encodeHexString key2_x) (encodeHexString iv_x) (read stream1_index_x)
+    let stream1_output = cryptBlockV2 message (encodeHexString (head (key1_list c)))
+            (encodeHexString (head (key2_list c))) (encodeHexString (head (iv_list c))) (head (stream1index_list c))
     
-    putStrLn $ if stream1_output == encodeHexString stream1_expected_x then "OK" else "FAIL!"
+    putStrLn $ if stream1_output == encodeHexString (head (stream1expected_list c)) then "OK" else "FAIL!"
 
-    let stream2_output = cryptBlockV2 message (encodeHexString key1_x)
-            (encodeHexString key2_x) (encodeHexString iv_x) (read stream2_index_x)
+    let stream2_output = cryptBlockV2 message (encodeHexString (head (key1_list c)))
+            (encodeHexString (head (key2_list c))) (encodeHexString (head (iv_list c))) (head (stream2index_list c))
 
-    putStrLn $ if stream2_output == encodeHexString stream2_expected_x then "OK" else "FAIL!"
+    putStrLn $ if stream2_output == encodeHexString (head (stream2expected_list c)) then "OK" else "FAIL!"
 
-    let stream3_output = cryptBlockV2 message (encodeHexString key1_x)
-            (encodeHexString key2_x) (encodeHexString iv_x) (read stream3_index_x)
+    let stream3_output = cryptBlockV2 message (encodeHexString (head (key1_list c)))
+            (encodeHexString (head (key2_list c))) (encodeHexString (head (iv_list c))) (head (stream3index_list c))
 
-    putStrLn $ if stream3_output == encodeHexString stream3_expected_x then "OK" else "FAIL!"
+    putStrLn $ if stream3_output == encodeHexString (head (stream3expected_list c)) then "OK" else "FAIL!"
 
-    let stream4_output = cryptBlockV2 message (encodeHexString key1_x)
-            (encodeHexString key2_x) (encodeHexString iv_x) (read stream4_index_x)
+    let stream4_output = cryptBlockV2 message (encodeHexString (head (key1_list c)))
+            (encodeHexString (head (key2_list c))) (encodeHexString (head (iv_list c))) (head (stream4index_list c))
 
-    putStrLn $ if stream4_output == encodeHexString stream4_expected_x then "OK" else "FAIL!"
+    putStrLn $ if stream4_output == encodeHexString (head (stream4expected_list c)) then "OK" else "FAIL!"
 
-    run test_name_xs key1_xs key2_xs iv_xs stream1_index_xs stream1_expected_xs
-        stream2_index_xs stream2_expected_xs stream3_index_xs stream3_expected_xs
-        stream4_index_xs stream4_expected_xs
-run _ _ _ _ _ _ _ _ _ _ _ _ = return ()
+    -- TODO: maybe do xor-digest field
+    let xordigest_dummy = []
+
+    run (CollectedTestData (tail $ test_name_list c) (tail $ key1_list c) (tail $ key2_list c) (tail $ iv_list c)
+        (tail $ stream1index_list c) (tail $ stream1expected_list c)
+        (tail $ stream2index_list c) (tail $ stream2expected_list c)
+        (tail $ stream3index_list c) (tail $ stream3expected_list c)
+        (tail $ stream4index_list c) (tail $ stream4expected_list c) xordigest_dummy)
 
 main :: IO ()
 main = do
@@ -173,7 +148,6 @@ main = do
     let collected = collect json_file
 
     -- Run tests with our collected lists.
-    run (head collected) (collected!!1) (collected!!2) (collected!!3) (collected!!4) (collected!!5) 
-        (collected!!6) (collected!!7) (collected!!8) (collected!!9) (collected!!10) (collected!!11)
+    run collected
 
     return ()
