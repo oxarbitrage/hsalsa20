@@ -77,28 +77,28 @@ collect json_file = do
     let maybe_decoded = decode json_file :: Maybe [Map String TestVector]
     let decoded = fromJust maybe_decoded
 
-    let test_name_list = concatMap gettestname decoded
-    let key1_list = cleanup $ concatMap (getelementlist . getField key1) decoded
-    let key2_list = cleanup $ concatMap (getelementlist . getField key2) decoded
-    let iv_list = cleanup $ concatMap (getelementlist . getField iv) decoded
+    let test_name_l = concatMap gettestname decoded
+    let key1_l = cleanup $ concatMap (getelementlist . getField key1) decoded
+    let key2_l = cleanup $ concatMap (getelementlist . getField key2) decoded
+    let iv_l = cleanup $ concatMap (getelementlist . getField iv) decoded
 
-    let stream1index_list = concatMap (getelementlist . getField stream1index) decoded
-    let stream1expected_list = cleanup $ concatMap (getelementlist . getField stream1expected) decoded
+    let stream1index_l = concatMap (getelementlist . getField stream1index) decoded
+    let stream1expected_l = cleanup $ concatMap (getelementlist . getField stream1expected) decoded
 
-    let stream2index_list = concatMap (getelementlist . getField stream2index) decoded
-    let stream2expected_list = cleanup $ concatMap (getelementlist . getField stream2expected) decoded
+    let stream2index_l = concatMap (getelementlist . getField stream2index) decoded
+    let stream2expected_l = cleanup $ concatMap (getelementlist . getField stream2expected) decoded
 
-    let stream3index_list = concatMap (getelementlist . getField stream3index) decoded
-    let stream3expected_list = cleanup $ concatMap (getelementlist . getField stream3expected) decoded
+    let stream3index_l = concatMap (getelementlist . getField stream3index) decoded
+    let stream3expected_l = cleanup $ concatMap (getelementlist . getField stream3expected) decoded
 
-    let stream4index_list = concatMap (getelementlist . getField stream4index) decoded
-    let stream4expected_list = cleanup $ concatMap (getelementlist . getField stream4expected) decoded
+    let stream4index_l = concatMap (getelementlist . getField stream4index) decoded
+    let stream4expected_l = cleanup $ concatMap (getelementlist . getField stream4expected) decoded
 
-    let xordigest_list = []
+    let xordigest_l = []
 
-    CollectedTestData test_name_list key1_list key2_list iv_list stream1index_list stream1expected_list
-        stream2index_list stream2expected_list stream3index_list stream3expected_list
-        stream4index_list stream4expected_list xordigest_list
+    CollectedTestData test_name_l key1_l key2_l iv_l stream1index_l stream1expected_l
+        stream2index_l stream2expected_l stream3index_l stream3expected_l
+        stream4index_l stream4expected_l xordigest_l
 
 -- Run the test given the prepared collected data from the json file.
 run :: CollectedTestData -> IO()
