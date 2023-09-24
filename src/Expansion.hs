@@ -57,35 +57,27 @@ t2 = [54, 45, 98, 121]
 t3 :: [Word32]
 t3 = [116, 101, 32, 107]
 
--- |The expansion function where we have two 16 bytes k's (k0 and k1).
+-- | The expansion function where we have two 16 bytes k's (k0 and k1).
 expand32Compute :: [Word32] -> [Word32] -> [Word32] -> [Word32]
-expand32Compute k0 k1 n = do
-    if length k0 == 16 && length k1 == 16 && length n == 16 then do
-        salsa20Compute $ sort32Compute k0 k1 n
-    else
-        error "inputs to `expand32Compute` must be 2 lists of 16 `Word32` numbers as a k0 and k1; and a \
-            \list of 16 `Word32` numbers as an `n`"
+expand32Compute k0 k1 n
+    | length k0 == 16 && length k1 == 16 && length n == 16 = salsa20Compute $ sort32Compute k0 k1 n
+    | otherwise = error "inputs to `expand32Compute` must be 2 lists of 16 `Word32` numbers as k0 and k1; and a \
+        \list of 16 `Word32` numbers as an `n`"
 
 -- |The expansion function displayed where we have two 16 bytes (k0 and k1).
 expand32Display :: [String] -> [String] -> [String] -> [String]
-expand32Display k0 k1 n = do 
-    if length k0 == 16 && length k1 == 16 && length n == 16 then do
-        salsa20Display $ sort32Display k0 k1 n
-    else
-        error "inputs to `expand32Display` must be 2 lists of 16 `String` strings as a k0 and k1;  and a \
-            \list of 16 `String` strings as an `n`"
+expand32Display k0 k1 n
+    | length k0 == 16 && length k1 == 16 && length n == 16 = salsa20Display $ sort32Display k0 k1 n
+    | otherwise = error "inputs to `expand32Display` must be 2 lists of 16 `String` strings as a k0 and k1; and a \
+        \list of 16 `String` strings as an `n`"
 
 -- |The expansion function equations where we have two 16 bytes (k0 and k1).
 expand32Equations :: [String] -> [String] -> [String] -> [String]
-expand32Equations k0 k1 n = do
-    if length k0 == 16 && length k1 == 16 && length n == 16 then do
-        let display = expand32Display k0 k1 n
-        let displayIndex = zip [index0..] display
-        let equation = map (uncurry (printf "z%d = %s")) displayIndex
-        equation
-    else
-        error "inputs to `expand32Equations` must be 2 lists of 16 `String` strings as a k0 and k1;  and a \
-            \list of 16 `String` strings as an `n`"
+expand32Equations k0 k1 n
+    | length k0 == 16 && length k1 == 16 && length n == 16 =
+        [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (expand32Display k0 k1 n)]
+    | otherwise = error "inputs to `expand32Equations` must be 2 lists of 16 `String` strings as a k0 and k1;  and a \
+        \list of 16 `String` strings as an `n`"
 
 -- |The order needed for the 32 bytes k version of the expansion function `expand32`.
 sort32Compute :: [Word32] -> [Word32] -> [Word32] -> [Word32]
@@ -98,33 +90,25 @@ sort32Display k0 k1 n = numberListToStringList o0 ++ k0 ++ numberListToStringLis
 
 -- |The expansion function computed where we have one 16 bytes (k).
 expand16Compute :: [Word32] -> [Word32] -> [Word32]
-expand16Compute k n = do
-    if length k == 16 && length n == 16 then do
-        salsa20Compute $ sort16Compute k n
-    else
-        error "inputs to `expand16Compute` must be a list of 16 `Word32` numbers as a key and a \
-            \list of 16 `Word32` numbers as an `n`"
+expand16Compute k n
+    | length k == 16 && length n == 16 = salsa20Compute $ sort16Compute k n
+    | otherwise = error "inputs to `expand16Compute` must be a list of 16 `Word32` numbers as a key and a \
+        \list of 16 `Word32` numbers as an `n`"
 
 -- |The expansion function displayed where we have one 16 bytes (k).
 expand16Display :: [String] -> [String] -> [String]
-expand16Display k n = do 
-    if length k == 16 && length n == 16 then do
-        salsa20Display $ sort16Display k n
-    else
-        error "inputs to `expand16Display` must be a list of 16 `String` strings as a key and a \
-            \list of 16 `String` strings as an `n`"
+expand16Display k n
+    | length k == 16 && length n == 16 = salsa20Display $ sort16Display k n
+    | otherwise = error "inputs to `expand16Display` must be a list of 16 `String` strings as a key and a \
+        \list of 16 `String` strings as an `n`"
 
 -- |The expansion function equations where we have one 16 bytes (k).
 expand16Equations :: [String] -> [String] -> [String]
-expand16Equations k n = do
-    if length k == 16 && length n == 16 then do
-        let display = expand16Display k n
-        let displayIndex = zip [index0..] display
-        let equation = map (uncurry (printf "z%d = %s")) displayIndex
-        equation
-    else
-        error "inputs to `expand16Equations` must be a list of 16 `String` strings as a key and a \
-            \list of 16 `String` strings as an `n`"
+expand16Equations k n
+    | length k == 16 && length n == 16 =
+        [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (expand16Display k n)]
+    | otherwise = error "inputs to `expand16Equations` must be a list of 16 `String` strings as a key and a \
+        \list of 16 `String` strings as an `n`"
 
 -- |Expand for computation of the 16 bytes k version of the expansion function `expand16`.
 sort16Compute :: [Word32] -> [Word32] -> [Word32]
