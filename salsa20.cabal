@@ -30,6 +30,7 @@ library
       Doubleround
       Expansion
       Hash
+      Operators
       Quarterround
       Rowround
       Utils

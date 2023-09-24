@@ -28,8 +28,6 @@ module Utils
         stringListToEitherList,
         eitherListToNumberList,
         eitherListToStringList,
-        (>>>),
-        (&),
     ) where
 
 import Data.Bits
@@ -37,6 +35,8 @@ import Data.Word
 import Data.List.Split
 import Text.Printf
 import Data.Either (fromLeft, fromRight)
+
+import Operators()
 
 -- |Raise 2 to the power of `p`.
 power :: Word32 -> Word32
@@ -64,14 +64,6 @@ littleendianInvDisplay w = [
     printf "16 >>> %s & 255" w,
     printf "24 >>> %s & 255" w
     ]
-
--- |The shiftR operator.
-(>>>) :: Word32 -> Int -> Word32
-(>>>) = shiftR
-
--- |The bitwise and operator.
-(&) :: Word32 -> Word32 -> Word32
-(&) a b = a .&. b
 
 -- |Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendian` encoding.
 reduce :: [Word32] -> [Word32]

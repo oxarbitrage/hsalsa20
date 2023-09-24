@@ -21,8 +21,6 @@ module Quarterround
     quarterroundCompute,
     quarterroundDisplay,
     quarterroundEquations,
-    (⊕),
-    (<<<),
     ) where
 
 import Data.Bits
@@ -163,11 +161,3 @@ quarterroundEquations input = do
     else
         error "input to `quarterroundEquations` must be a list of 4 `String` strings"
 
-
--- |The xor operator.
-(⊕) :: Word32 -> Word32 -> Word32
-(⊕) = xor
-
--- |The shift operator.
-(<<<) :: Word32 -> Int -> Word32
-(<<<) = rotate
