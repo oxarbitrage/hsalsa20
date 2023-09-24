@@ -19,7 +19,6 @@ module Utils
         modMatrix,
         littleendianInv4Crypt,
         littleendianInv4CryptDisplay,
-        stringListToNumberList,
         numberListToStringList,
         transpose,
         modMatrixDisplay,
@@ -115,10 +114,6 @@ transpose :: [a] -> [a]
 transpose [y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, y13, y14, y15] = 
     [y0, y4, y8, y12, y1, y5, y9, y13, y2, y6, y10, y14, y3, y7, y11, y15]
 transpose _ = error "input to `transpose` must be a list of 16 objects"
-
--- |Convert a list of strings to a list of numbers if possible.
-stringListToNumberList :: [String] -> [Word32]
-stringListToNumberList = map (\x -> read x :: Word32)
 
 -- |Convert a list of numbers to a list of strings. This is always possible. 
 numberListToStringList :: [Word32] -> [String]
