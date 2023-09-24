@@ -92,7 +92,7 @@ cryptBlockV1Display _ _ _ _ = []
 cryptBlockV1Equations :: [String] -> [String] -> [String] -> Int -> [String]
 cryptBlockV1Equations m k n index = do
     let display = cryptBlockV1Display m k n index
-    let displayIndex = zip [index0..] display
+    let displayIndex = zip [0 :: Int ..] display
     let equation = map (uncurry (printf "c%d = %s")) displayIndex
     equation
 

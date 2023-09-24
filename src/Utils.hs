@@ -22,7 +22,6 @@ module Utils
         stringListToNumberList,
         numberListToStringList,
         transpose,
-        index0,
         modMatrixDisplay,
         numberListToEitherList,
         stringListToEitherList,
@@ -140,7 +139,3 @@ eitherListToNumberList = map (fromLeft 0)
 -- |Convert a list of `Either` type to a list of strings. 
 eitherListToStringList :: [Either Word32 String] -> [String]
 eitherListToStringList = map (fromRight "0")
-
--- |The number 0 as an integer. Used as list index in certain cases.
-index0 :: Int
-index0 = 0
