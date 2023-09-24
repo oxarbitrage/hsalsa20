@@ -7,7 +7,7 @@ A library for the salsa20 protocol.
 - [Intro](#intro)
 - [Expressions](#expressions)
 - [Modules](#modules)
-  - [Quaterround](#quaterround)
+  - [Quarterround](#quarterround)
   - [Rowround](#rowround)
   - [Columnround](#columnround)
   - [Doubleround](#doubleround)

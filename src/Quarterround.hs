@@ -128,36 +128,24 @@ z0 _ = error "input to `z0` must be a list of 4 `Word32` numbers"
 
 -- |The quarterround expression computed.
 quarterroundCompute :: [Word32] -> [Word32]
-quarterroundCompute input = do
-    if length input == 4 then
-        [
-        evalCompute $ z0 $ numberListToEitherList input,
-        evalCompute $ z1 $ numberListToEitherList input,
-        evalCompute $ z2 $ numberListToEitherList input,
-        evalCompute $ z3 $ numberListToEitherList input]
-    else
-        error "input to `quarterroundCompute` must be a list of 4 `Word32` numbers"
+quarterroundCompute input@[_, _, _, _] = [
+    evalCompute $ z0 $ numberListToEitherList input,
+    evalCompute $ z1 $ numberListToEitherList input,
+    evalCompute $ z2 $ numberListToEitherList input,
+    evalCompute $ z3 $ numberListToEitherList input]
+quarterroundCompute _ = error "input to `quarterroundCompute` must be a list of 4 `Word32` numbers"
 
 -- |The quarterround expression as a string.
 quarterroundDisplay :: [String] -> [String]
-quarterroundDisplay input = do
-    if length input == 4 then
-        [
-        evalDisplay $ z0 $ stringListToEitherList input,
-        evalDisplay $ z1 $ stringListToEitherList input,
-        evalDisplay $ z2 $ stringListToEitherList input,
-        evalDisplay $ z3 $ stringListToEitherList input]
-    else
-        error "input to `quarterroundDisplay` must be a list of 4 `String` strings"
+quarterroundDisplay input@[_, _, _, _] = [
+    evalDisplay $ z0 $ stringListToEitherList input,
+    evalDisplay $ z1 $ stringListToEitherList input,
+    evalDisplay $ z2 $ stringListToEitherList input,
+    evalDisplay $ z3 $ stringListToEitherList input]
+quarterroundDisplay _ = error "input to `quarterroundDisplay` must be a list of 4 `String` strings"
 
 -- |The quarterround expression as a list of equations.
 quarterroundEquations :: [String] -> [String]
-quarterroundEquations input = do
-    if length input == 4 then do
-            let display = quarterroundDisplay input
-            let displayIndex = zip [index0..] display
-            let equation = map (uncurry (printf "z%d = %s")) displayIndex
-            equation
-    else
-        error "input to `quarterroundEquations` must be a list of 4 `String` strings"
-
+quarterroundEquations input@[_, _, _, _] =
+    [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (quarterroundDisplay input)]
+quarterroundEquations _ = error "input to `quarterroundEquations` must be a list of 4 `String` strings"
