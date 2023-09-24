@@ -26,60 +26,42 @@ import Text.Printf
 
 import Rowround
 import Columnround
-import Utils
 
 -- |The doubleround expression computed.
 doubleroundCompute :: [Word32] -> [Word32]
-doubleroundCompute input = do
-    if length input == 16 then do
-        rowroundCompute $ columnroundCompute input
-    else
-        error "input to `doubleroundCompute` must be a list of 16 `Word32` numbers"
+doubleroundCompute input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] = rowroundCompute $ columnroundCompute input
+doubleroundCompute _ = error "input to `doubleroundCompute` must be a list of 16 `Word32` numbers"
 
 -- |The doubleround expression as a string.
 doubleroundDisplay :: [String] -> [String]
-doubleroundDisplay input = do
-    if length input == 16 then do
-        rowroundDisplay (columnroundDisplay input)
-    else
-        error "input to `doubleroundDisplay` must be a list of 16 `String` strings"
+doubleroundDisplay input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] = rowroundDisplay $ columnroundDisplay input
+doubleroundDisplay _ = error "input to `doubleroundDisplay` must be a list of 16 `String` strings"
 
 -- |The doubleround expression as a list of equations.
 doubleroundEquations :: [String] -> [String]
-doubleroundEquations input = do
-    if length input == 16 then do
-        let display = doubleroundDisplay input
-        let displayIndex = zip [index0..] display
-        let equation = map (uncurry (printf "z%d = %s")) displayIndex
-        equation
-    else
-        error "input to `doubleroundEquations` must be a list of 16 `String` strings"
+doubleroundEquations input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] =
+    [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (doubleroundDisplay input)]
+doubleroundEquations _ = error "input to `doubleroundEquations` must be a list of 16 `String` strings"
 
 -- |The doubleroundR expression computed.
 doubleroundRCompute :: [Word32] -> Int -> [Word32]
-doubleroundRCompute input 0 = input
-doubleroundRCompute input r = do
-    if length input == 16 then do
-        doubleroundRCompute (doubleroundCompute input) (r - 1)
-    else
-        error "arguments of `doubleroundRCompute` must be a list of 16 `Word32` numbers and a number `Int` of rounds"
+doubleroundRCompute input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] 0 = input
+doubleroundRCompute input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] r =
+    doubleroundRCompute (doubleroundCompute input) (r - 1)
+doubleroundRCompute _ _ =
+    error "arguments of `doubleroundRCompute` must be a list of 16 `Word32` numbers and a number `Int` of rounds"
 
 -- |The doubleroundR expression as a string.
 doubleroundRDisplay :: [String] -> Int -> [String]
-doubleroundRDisplay input 0 = input
-doubleroundRDisplay input r = do
-    if length input == 16 then do
-        doubleroundRDisplay (doubleroundDisplay input) (r - 1)
-    else
-        error "arguments of `doubleroundRDisplay` must be a list of 16 `String` strings and a number `Int` of rounds"
+doubleroundRDisplay input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] 0 = input
+doubleroundRDisplay input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] r =
+    doubleroundRDisplay (doubleroundDisplay input) (r - 1)
+doubleroundRDisplay _ _ =
+    error "arguments of `doubleroundRDisplay` must be a list of 16 `String` strings and a number `Int` of rounds"
 
 -- |The doubleroundR expression as a list of equations.
 doubleroundREquations :: [String] -> Int -> [String]
-doubleroundREquations input r = do
-    if length input == 16 then do
-        let display = doubleroundRDisplay input r
-        let displayIndex = zip [index0..] display
-        let equation = map (uncurry (printf "z%d = %s")) displayIndex
-        equation
-    else
-        error "arguments of `doubleroundREquations` must be a list of 16 `String` strings and a number `Int` of rounds"
+doubleroundREquations input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] r =
+    [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (doubleroundRDisplay input r)]
+doubleroundREquations _ _ =
+    error "arguments of `doubleroundREquations` must be a list of 16 `String` strings and a number `Int` of rounds"
