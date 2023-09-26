@@ -414,9 +414,9 @@ main = do
     putStrLn ""
 
     putStrLn "Littleendian inverse tests:"
-    putStrLn $ if littleendianInv littleendianOutput1 == littleendianInput1 then "OK" else "FAIL!"
-    putStrLn $ if littleendianInv littleendianOutput2 == littleendianInput2 then "OK" else "FAIL!"
-    putStrLn $ if littleendianInv littleendianOutput3 == littleendianInput3 then "OK" else "FAIL!"
+    putStrLn $ if extractBytes 4 littleendianOutput1 == littleendianInput1 then "OK" else "FAIL!"
+    putStrLn $ if extractBytes 4 littleendianOutput2 == littleendianInput2 then "OK" else "FAIL!"
+    putStrLn $ if extractBytes 4 littleendianOutput3 == littleendianInput3 then "OK" else "FAIL!"
     putStrLn ""
 
     putStrLn "Salsa20 tests:"

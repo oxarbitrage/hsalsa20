@@ -36,11 +36,11 @@ floor of it is taken.
 The resulting  number is returned expressed as a unique 8 bytes sequence.
 -}
 iOver64 :: Integral a => a -> [Word32]
-iOver64 i = littleendianInv4Crypt $ floor ((fromIntegral i / 64) :: Double)
+iOver64 i = extractBytes 8 $ floor ((fromIntegral i / 64) :: Double)
 
 -- |Display the calculation of an index over 64. See `iOver64`.
 iOver64Display :: String -> [String]
-iOver64Display i = littleendianInv4CryptDisplay $ printf "_(%s/64)" i
+iOver64Display i = displayBytes 8 $ printf "_(%s/64)" i
 
 {- |Join the nonce and the calculated `iOver64`.
 Nonce is 8 bytes and index 8 bytes more for a total of 16 as the result.
