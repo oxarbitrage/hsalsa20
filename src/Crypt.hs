@@ -11,16 +11,11 @@ The salsa20 encryption and decryption.
 module Crypt
     (
     cryptBlockV1,
-    cryptBlockV2,
-    iOver64Display,
-    nonceAndiOver64Display,
-    cryptV2,
-    cryptV1Display,
-    cryptV2Display,
     cryptBlockV1Display,
     cryptBlockV1Equations,
-    iOver64,
-    nonceAndiOver64,
+    cryptBlockV2,
+    cryptBlockV2Display,
+    cryptBlockV2Equations,
     ) where
 
 import Expansion
@@ -125,3 +120,19 @@ cryptBlockV2 (x:xs) key0 key1 nonce index
             cryptBlockV2 xs key0 key1 nonce (index+1)
     | otherwise = error "first input to `cryptBlockV2` must be a list of 16 `Word32` numbers, the second a list of 16 `Word32` numbers and the third a list of 8 `Word32` numbers"
 cryptBlockV2 _ _ _ _ _ = []
+
+-- |Encrypt or decrypt a message with two 16 bytes key resulting in a list of the same length.
+cryptBlockV2Display :: [String] -> [String] -> [String] -> [String] -> Int -> [String]
+cryptBlockV2Display (x:xs) key0 key1 nonce index
+    | length key0 == 16 && length key1 == 16 && length nonce == 8 =
+        printf "%s ⊕ %s" x (keybyteDisplay (cryptV2Display key0 key1 nonce (show index)) (index `mod` 64)) :
+            cryptBlockV2Display xs key0 key1 nonce (index+1)
+    | otherwise = error "first input to `cryptBlockV2Display` must be a list of 16 `String` strings, the second a list of 16 `String` strings and the third a list of 8 `String` strings"
+cryptBlockV2Display _ _ _ _ _ = []
+
+-- |Display the output of `cryptBlockV2` as string equations.
+cryptBlockV2Equations :: [String] -> [String] -> [String] -> [String] -> Int -> [String]
+cryptBlockV2Equations message key0 key1 nonce index
+    | length key0 == 16 && length key1 == 16 && length nonce == 8 =
+        [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (cryptBlockV2Display message key0 key1 nonce index)]
+    | otherwise = error "first input to `cryptBlockV2Equations` must be a list of 16 `String` strings, the second a list of 16 `String` strings and the third a list of 8 `String` strings"

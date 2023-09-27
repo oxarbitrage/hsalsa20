@@ -16,7 +16,6 @@ module Expansion
     expand16Compute,
     expand16Display,
     expand16Equations,
-    sort32Compute,
     ) where
 
 import Data.Word
