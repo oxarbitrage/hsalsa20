@@ -13,13 +13,10 @@ as specified in the salsa20 spec.
 -}
 module Doubleround
     (
-    doubleroundCompute,
-    doubleroundDisplay,
-    doubleroundEquations,
-    doubleroundRCompute,
-    doubleroundRDisplay,
-    doubleroundREquations,
-    ) where
+        doubleroundCompute, doubleroundDisplay, doubleroundEquations,
+        doubleroundRCompute, doubleroundRDisplay, doubleroundREquations,
+    )
+where
 
 import Data.Word
 import Text.Printf

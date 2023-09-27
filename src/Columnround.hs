@@ -10,10 +10,9 @@ We treat the columnround just as `Rowround` expressions with the input transpose
 -}
 module Columnround
     (
-    columnroundCompute,
-    columnroundDisplay,
-    columnroundEquations,
-    ) where
+        columnroundCompute, columnroundDisplay, columnroundEquations,
+    )
+where
 
 import Rowround
 import Utils

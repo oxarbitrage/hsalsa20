@@ -18,10 +18,9 @@ We evaluate 3 things:
 -}
 module Rowround
     (
-    rowroundCompute,
-    rowroundDisplay,
-    rowroundEquations,
-    ) where
+        rowroundCompute, rowroundDisplay, rowroundEquations,
+    )
+where
 
 import Text.Printf
 import Data.Word

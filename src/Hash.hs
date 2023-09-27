@@ -13,14 +13,10 @@ to 16 using `littleendian` functions and then aument the result back to 64.
 -}
 module Hash
     (
-    coreCompute,
-    coreDisplay,
-    coreEquations,
-    salsa20Compute,
-    salsa20Display,
-    salsa20Equations,
-    salsa20powerCompute,
-    ) where
+        coreCompute, coreDisplay, coreEquations, salsa20Compute, salsa20Display, salsa20Equations,
+        salsa20powerCompute,
+    )
+where
 
 import Data.Word
 import Text.Printf

@@ -10,13 +10,10 @@ The two forms of expansion supported by Salsa20 are given by key size.
 -}
 module Expansion
     (
-    expand32Compute,
-    expand32Display,
-    expand32Equations,
-    expand16Compute,
-    expand16Display,
-    expand16Equations,
-    ) where
+        expand32Compute, expand32Display, expand32Equations,
+        expand16Compute, expand16Display, expand16Equations,
+    )
+where
 
 import Data.Word
 import Text.Printf

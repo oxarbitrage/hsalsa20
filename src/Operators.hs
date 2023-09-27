@@ -11,11 +11,9 @@ Custom operators.
 -}
 module Operators
     (
-    (>>>),
-    (&),
-    (⊕),
-    (<<<),
-    ) where
+        (>>>), (&), (⊕), (<<<),
+    )
+where
 
 import Data.Bits
 import Data.Word

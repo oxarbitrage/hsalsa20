@@ -18,10 +18,9 @@ We evaluate 3 things:
 -}
 module Quarterround
     (
-    quarterroundCompute,
-    quarterroundDisplay,
-    quarterroundEquations,
-    ) where
+        quarterroundCompute, quarterroundDisplay, quarterroundEquations,
+    )
+where
 
 import Data.Bits
 import Data.Word

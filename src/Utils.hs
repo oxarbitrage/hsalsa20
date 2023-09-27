@@ -10,22 +10,11 @@ General utility functions used to create the salsa20 cipher.
 -}
 module Utils
     (
-        littleendian,
-        extractBytes,
-        displayBytes,
-        reduce,
-        reduceDisplay,
-        aument,
-        aumentDisplay,
-        modMatrix,
-        numberListToStringList,
-        transpose,
-        modMatrixDisplay,
-        numberListToEitherList,
-        stringListToEitherList,
-        eitherListToNumberList,
-        eitherListToStringList,
-    ) where
+        littleendian, extractBytes, displayBytes, reduce, reduceDisplay, aument, aumentDisplay,
+        modMatrix, numberListToStringList, transpose, modMatrixDisplay, numberListToEitherList,
+        stringListToEitherList, eitherListToNumberList, eitherListToStringList,
+    )
+where
 
 import Data.Bits
 import Data.Word

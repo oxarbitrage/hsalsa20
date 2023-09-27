@@ -10,13 +10,10 @@ The salsa20 encryption and decryption.
 -}
 module Crypt
     (
-    cryptBlockV1,
-    cryptBlockV1Display,
-    cryptBlockV1Equations,
-    cryptBlockV2,
-    cryptBlockV2Display,
-    cryptBlockV2Equations,
-    ) where
+        cryptBlockV1, cryptBlockV1Display, cryptBlockV1Equations,
+        cryptBlockV2, cryptBlockV2Display, cryptBlockV2Equations,
+    )
+where
 
 import Expansion
 import Utils
