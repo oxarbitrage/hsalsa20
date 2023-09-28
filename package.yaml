@@ -84,4 +84,13 @@ tests:
     - bytestring
     - aeson
     - containers
-    
+  salsa20-display-unit-tests:
+    main:                Spec.hs
+    source-dirs:         test/unit/display
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - salsa20
+    - HUnit
