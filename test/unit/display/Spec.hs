@@ -1,5 +1,6 @@
 import Quarterround
 import Rowround
+import Columnround
 
 import Test.HUnit
 
@@ -92,12 +93,63 @@ rowroundDisplayTests = test
                 "z15 = y15 ⊕ ((y14 ⊕ ((y13 ⊕ ((y12 ⊕ ((y15 + y14) <<< 7) + y15) <<< 9) + y12 ⊕ ((y15 + y14) <<< 7)) <<< 13) + y13 ⊕ ((y12 ⊕ ((y15 + y14) <<< 7) + y15) <<< 9)) <<< 18)"
             ]
     ]
+-- |Test success cases for the `columnroundDisplay` and `columnroundEquations` functions.
+columnroundDisplayTests :: Test
+columnroundDisplayTests = test
+    ["columnroundDisplay with valid input" ~:
+        columnroundDisplay ["y0", "y1", "y2", "y3", "y4", "y5", "y6", "y7", "y8", "y9", "y10", "y11", "y12", "y13", "y14", "y15"] ~?=
+            [
+                "y0 \8853 ((y12 \8853 ((y8 \8853 ((y4 \8853 ((y0 + y12) <<< 7) + y0) <<< 9) + y4 \8853 ((y0 + y12) <<< 7)) <<< 13) + y8 \8853 ((y4 \8853 ((y0 + y12) <<< 7) + y0) <<< 9)) <<< 18)",
+                "y1 \8853 ((y13 \8853 ((y9 \8853 ((y5 + y1) <<< 7) + y5) <<< 9) + y9 \8853 ((y5 + y1) <<< 7)) <<< 13)",
+                "y2 \8853 ((y14 \8853 ((y10 + y6) <<< 7) + y10) <<< 9)",
+                "y3 \8853 ((y15 + y11) <<< 7)",
+                "y4 \8853 ((y0 + y12) <<< 7)",
+                "y5 \8853 ((y1 \8853 ((y13 \8853 ((y9 \8853 ((y5 + y1) <<< 7) + y5) <<< 9) + y9 \8853 ((y5 + y1) <<< 7)) <<< 13) + y13 \8853 ((y9 \8853 ((y5 + y1) <<< 7) + y5) <<< 9)) <<< 18)",
+                "y6 \8853 ((y2 \8853 ((y14 \8853 ((y10 + y6) <<< 7) + y10) <<< 9) + y14 \8853 ((y10 + y6) <<< 7)) <<< 13)",
+                "y7 \8853 ((y3 \8853 ((y15 + y11) <<< 7) + y15) <<< 9)",
+                "y8 \8853 ((y4 \8853 ((y0 + y12) <<< 7) + y0) <<< 9)",
+                "y9 \8853 ((y5 + y1) <<< 7)",
+                "y10 \8853 ((y6 \8853 ((y2 \8853 ((y14 \8853 ((y10 + y6) <<< 7) + y10) <<< 9) + y14 \8853 ((y10 + y6) <<< 7)) <<< 13) + y2 \8853 ((y14 \8853 ((y10 + y6) <<< 7) + y10) <<< 9)) <<< 18)",
+                "y11 \8853 ((y7 \8853 ((y3 \8853 ((y15 + y11) <<< 7) + y15) <<< 9) + y3 \8853 ((y15 + y11) <<< 7)) <<< 13)",
+                "y12 \8853 ((y8 \8853 ((y4 \8853 ((y0 + y12) <<< 7) + y0) <<< 9) + y4 \8853 ((y0 + y12) <<< 7)) <<< 13)",
+                "y13 \8853 ((y9 \8853 ((y5 + y1) <<< 7) + y5) <<< 9)",
+                "y14 \8853 ((y10 + y6) <<< 7)",
+                "y15 \8853 ((y11 \8853 ((y7 \8853 ((y3 \8853 ((y15 + y11) <<< 7) + y15) <<< 9) + y3 \8853 ((y15 + y11) <<< 7)) <<< 13) + y7 \8853 ((y3 \8853 ((y15 + y11) <<< 7) + y15) <<< 9)) <<< 18)"
+            ]
+    ,"columnroundEquations with valid input" ~:
+        columnroundEquations ["y0", "y1", "y2", "y3", "y4", "y5", "y6", "y7", "y8", "y9", "y10", "y11", "y12", "y13", "y14", "y15"] ~?=
+            [
+                "z0 = y0 ⊕ ((y12 ⊕ ((y8 ⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9) + y4 ⊕ ((y0 + y12) <<< 7)) <<< 13) + y8 ⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9)) <<< 18)",
+                "z1 = y1 ⊕ ((y13 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9) + y9 ⊕ ((y5 + y1) <<< 7)) <<< 13)",
+                "z2 = y2 ⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9)",
+                "z3 = y3 ⊕ ((y15 + y11) <<< 7)",
+                "z4 = y4 ⊕ ((y0 + y12) <<< 7)",
+                "z5 = y5 ⊕ ((y1 ⊕ ((y13 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9) + y9 ⊕ ((y5 + y1) <<< 7)) <<< 13) + y13 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9)) <<< 18)",
+                "z6 = y6 ⊕ ((y2 ⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9) + y14 ⊕ ((y10 + y6) <<< 7)) <<< 13)",
+                "z7 = y7 ⊕ ((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9)",
+                "z8 = y8 ⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9)",
+                "z9 = y9 ⊕ ((y5 + y1) <<< 7)",
+                "z10 = y10 ⊕ ((y6 ⊕ ((y2 ⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9) + y14 ⊕ ((y10 + y6) <<< 7)) <<< 13) + y2 ⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9)) <<< 18)",
+                "z11 = y11 ⊕ ((y7 ⊕ ((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9) + y3 ⊕ ((y15 + y11) <<< 7)) <<< 13)",
+                "z12 = y12 ⊕ ((y8 ⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9) + y4 ⊕ ((y0 + y12) <<< 7)) <<< 13)",
+                "z13 = y13 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9)",
+                "z14 = y14 ⊕ ((y10 + y6) <<< 7)",
+                "z15 = y15 ⊕ ((y11 ⊕ ((y7 ⊕ ((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9) + y3 ⊕ ((y15 + y11) <<< 7)) <<< 13) + y7 ⊕ ((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9)) <<< 18)"
+            ]
+    ]
 
 main :: IO Counts
 main = do
+    -- Run tests
 
     putStrLn "Running quarterround display tests:"
     _ <- runTestTT quarterroundDisplayTests
 
     putStrLn "Running rowround display tests:"
-    runTestTT rowroundDisplayTests
+    _ <- runTestTT rowroundDisplayTests
+
+    putStrLn "Running columnround display tests:"
+    _ <- runTestTT columnroundDisplayTests
+
+    -- just return an empty `Count` so we don't have to return the one from a specific test:
+    return (Counts 0 0 0 0)
