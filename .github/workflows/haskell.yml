@@ -43,5 +43,7 @@ jobs:
     - name: Run fast tests
       run: cabal test salsa20-fast-unit-tests
     - name: Run ECRYPT tests
-      run: cabal test salsa20-fast-unit-tests
+      run: cabal test salsa20-ecrypt-tests
+    - name: Run display tests
+      run: cabal test salsa20-display-unit-tests
 
