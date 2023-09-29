@@ -1,3 +1,10 @@
+{-|
+ECRYPT tests for the 128 bit key size.
+
+TODO: 
+- Add the xordigest tests.
+- This file is almost the same code as `ecrypt256/Spec.hs`. We should refactor it.
+-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 
@@ -20,7 +27,6 @@ import Control.Monad (forM_)
 -- The test data from the json
 data TestVector = TestVector 
     { key1 :: String
-    , key2 :: String
     , iv :: String
     , stream1index  :: Int
     , stream1expected :: String
@@ -60,7 +66,6 @@ encodeHexString key = Prelude.map fromIntegral $ ByteString.unpack $ fromJust $ 
 data CollectedTestData = CollectedTestData 
     { test_name_list :: [String]
     , key1_list :: [String]
-    , key2_list :: [String]
     , iv_list :: [String]
     , stream1index_list  :: [Int]
     , stream1expected_list :: [String]
@@ -78,7 +83,6 @@ collect :: B.ByteString -> CollectedTestData
 collect json_file = CollectedTestData
     { test_name_list = concatMap gettestname decoded
     , key1_list = cleanupField key1
-    , key2_list = cleanupField key2
     , iv_list = cleanupField iv
     , stream1index_list = getFieldValues stream1index
     , stream1expected_list = cleanupField stream1expected
@@ -110,9 +114,8 @@ processTestVectors message collected = do
 
     forM_ zipped $ \(testName, idx) -> do
         let runTest streamIndex getExpected = do
-                let output = cryptBlockV2 message
+                let output = cryptBlockV1 message
                         (encodeHexString (key1_list collected !! idx))
-                        (encodeHexString (key2_list collected !! idx))
                         (encodeHexString (iv_list collected !! idx))
                         (streamIndex !! idx)
 
@@ -127,11 +130,11 @@ processTestVectors message collected = do
 
 main :: IO ()
 main = do
-    putStrLn "-- Salsa20 ECRYPT test vectors --"
+    putStrLn "-- Salsa20 ECRYPT 128 bit key test vectors --"
     putStrLn ""
 
-    -- Read the 256 bit key size json.
-    json_file <- B.readFile "test/unit/ecrypt/test_vectors_256.json"
+    -- Read the 128 bit key size json.
+    json_file <- B.readFile "test/unit/ecrypt128/test_vectors_128.json"
 
     -- Collect data as lists.
     let collected = collect json_file

@@ -42,7 +42,9 @@ jobs:
       run: cabal build --enable-tests --enable-benchmarks all
     - name: Run fast tests
       run: cabal test salsa20-fast-unit-tests
-    - name: Run ECRYPT tests
-      run: cabal test salsa20-ecrypt-tests
+    - name: Run ECRYPT 128 bits key size tests
+      run: cabal test salsa20-ecrypt128-tests
+    - name: Run ECRYPT 256 bits key size tests
+      run: cabal test salsa20-ecrypt256-tests
     - name: Run display tests
       run: cabal test salsa20-display-unit-tests

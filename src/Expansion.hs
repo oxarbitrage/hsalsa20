@@ -108,9 +108,9 @@ expand16Equations k n
 
 -- |Expand for computation of the 16 bytes k version of the expansion function `expand16`.
 sort16Compute :: [Word32] -> [Word32] -> [Word32]
-sort16Compute k n = t0 ++ k ++ t1 ++ n ++ t2 ++ k ++ t3 
+sort16Compute k n = t0 ++ k ++ t1 ++ n ++ t2 ++ k ++ t3
 
 -- |Expand for display of the 16 bytes k version of the expansion function `expand16`.
 sort16Display :: [String] -> [String] -> [String]
 sort16Display k n = numberListToStringList t0 ++ k ++ numberListToStringList t1 ++ n ++
-    numberListToStringList t2 ++ k ++ numberListToStringList t3 
+    numberListToStringList t2 ++ k ++ numberListToStringList t3
