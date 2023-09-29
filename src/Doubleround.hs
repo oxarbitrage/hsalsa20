@@ -26,39 +26,39 @@ import Columnround
 
 -- |The doubleround expression computed.
 doubleroundCompute :: [Word32] -> [Word32]
-doubleroundCompute input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] = rowroundCompute $ columnroundCompute input
-doubleroundCompute _ = error "input to `doubleroundCompute` must be a list of 16 `Word32` numbers"
+doubleroundCompute input
+    | length input == 16 = rowroundCompute $ columnroundCompute input
+    | otherwise = error "input to `doubleroundCompute` must be a list of 16 `Word32` numbers"
 
 -- |The doubleround expression as a string.
 doubleroundDisplay :: [String] -> [String]
-doubleroundDisplay input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] = rowroundDisplay $ columnroundDisplay input
-doubleroundDisplay _ = error "input to `doubleroundDisplay` must be a list of 16 `String` strings"
+doubleroundDisplay input
+    | length input == 16 = rowroundDisplay $ columnroundDisplay input
+    | otherwise = error "input to `doubleroundDisplay` must be a list of 16 `String` strings"
 
 -- |The doubleround expression as a list of equations.
 doubleroundEquations :: [String] -> [String]
-doubleroundEquations input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] =
-    [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (doubleroundDisplay input)]
-doubleroundEquations _ = error "input to `doubleroundEquations` must be a list of 16 `String` strings"
+doubleroundEquations input
+    | length input == 16 = [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (doubleroundDisplay input)]
+    | otherwise = error "input to `doubleroundEquations` must be a list of 16 `String` strings"
 
 -- |The doubleroundR expression computed.
 doubleroundRCompute :: [Word32] -> Int -> [Word32]
-doubleroundRCompute input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] 0 = input
-doubleroundRCompute input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] r =
-    doubleroundRCompute (doubleroundCompute input) (r - 1)
-doubleroundRCompute _ _ =
-    error "arguments of `doubleroundRCompute` must be a list of 16 `Word32` numbers and a number `Int` of rounds"
+doubleroundRCompute input r
+    | length input == 16 && r == 0 = input
+    | length input == 16 && r > 0 = doubleroundRCompute (doubleroundCompute input) (r - 1)
+    | otherwise = error "arguments of `doubleroundRCompute` must be a list of 16 `Word32` numbers and a number `Int` of rounds"
 
 -- |The doubleroundR expression as a string.
 doubleroundRDisplay :: [String] -> Int -> [String]
-doubleroundRDisplay input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] 0 = input
-doubleroundRDisplay input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] r =
-    doubleroundRDisplay (doubleroundDisplay input) (r - 1)
-doubleroundRDisplay _ _ =
-    error "arguments of `doubleroundRDisplay` must be a list of 16 `String` strings and a number `Int` of rounds"
+doubleroundRDisplay input r
+    | length input == 16 && r == 0 = input
+    | length input == 16 && r > 0 = doubleroundRDisplay (doubleroundDisplay input) (r - 1)
+    | otherwise = error "arguments of `doubleroundRDisplay` must be a list of 16 `String` strings and a number `Int` of rounds"
 
 -- |The doubleroundR expression as a list of equations.
 doubleroundREquations :: [String] -> Int -> [String]
-doubleroundREquations input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] r =
-    [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (doubleroundRDisplay input r)]
-doubleroundREquations _ _ =
-    error "arguments of `doubleroundREquations` must be a list of 16 `String` strings and a number `Int` of rounds"
+doubleroundREquations input r
+    | length input == 16 && r == 0 = input
+    | length input == 16 && r > 0 = [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (doubleroundRDisplay input r)]
+    | otherwise = error "arguments of `doubleroundREquations` must be a list of 16 `String` strings and a number `Int` of rounds"
