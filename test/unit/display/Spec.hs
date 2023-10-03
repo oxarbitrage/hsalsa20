@@ -184,6 +184,96 @@ doubleroundDisplayTests = test
             ]
     ]
 
+-- |Test success cases for the `doubleroundRDisplay` and `doubleroundREquations` functions.
+doubleroundRDisplayTests :: Test
+doubleroundRDisplayTests = test
+    ["doubleroundRDisplay with valid input" ~: do
+        -- Expected output for the first 100 chars of each line of the display output.
+        let expectedDisplayOutputStart = [
+                "y0 ⊕ ((y12 ⊕ ((y8 ⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9) + y4 ⊕ ((y0 + y12) <<< 7)) <<< 13) + y8 ⊕",
+                "y1 ⊕ ((y13 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9) + y9 ⊕ ((y5 + y1) <<< 7)) <<< 13) ⊕ ((y0 ⊕ ((y12 ",
+                "y2 ⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9) ⊕ ((y1 ⊕ ((y13 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9)",
+                "y3 ⊕ ((y15 + y11) <<< 7) ⊕ ((y2 ⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9) ⊕ ((y1 ⊕ ((y13 ⊕ ((y9 ⊕ (",
+                "y4 ⊕ ((y0 + y12) <<< 7) ⊕ ((y7 ⊕ ((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9) ⊕ ((y6 ⊕ ((y2 ⊕ ((y14 ⊕ ((",
+                "y5 ⊕ ((y1 ⊕ ((y13 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9) + y9 ⊕ ((y5 + y1) <<< 7)) <<< 13) + y13 ⊕ ",
+                "y6 ⊕ ((y2 ⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9) + y14 ⊕ ((y10 + y6) <<< 7)) <<< 13) ⊕ ((y5 ⊕ ((",
+                "y7 ⊕ ((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9) ⊕ ((y6 ⊕ ((y2 ⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< ",
+                "y8 ⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9) ⊕ ((y11 ⊕ ((y7 ⊕ ((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9",
+                "y9 ⊕ ((y5 + y1) <<< 7) ⊕ ((y8 ⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9) ⊕ ((y11 ⊕ ((y7 ⊕ ((y3 ⊕ ((y15",
+                "y10 ⊕ ((y6 ⊕ ((y2 ⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9) + y14 ⊕ ((y10 + y6) <<< 7)) <<< 13) + y",
+                "y11 ⊕ ((y7 ⊕ ((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9) + y3 ⊕ ((y15 + y11) <<< 7)) <<< 13) ⊕ ((y10 ⊕ ",
+                "y12 ⊕ ((y8 ⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9) + y4 ⊕ ((y0 + y12) <<< 7)) <<< 13) ⊕ ((y15 ⊕ ((y",
+                "y13 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9) ⊕ ((y12 ⊕ ((y8 ⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9) ",
+                "y14 ⊕ ((y10 + y6) <<< 7) ⊕ ((y13 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9) ⊕ ((y12 ⊕ ((y8 ⊕ ((y4 ⊕ ((y",
+                "y15 ⊕ ((y11 ⊕ ((y7 ⊕ ((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9) + y3 ⊕ ((y15 + y11) <<< 7)) <<< 13) + "]
+
+        -- Expected output for the last 100 chars of each line of the display output.
+        let expectedDisplayOutputEnd = [
+                "⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)",
+                "⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9)) <<< 18) + y9 ⊕ ((y5 + y1) <<< 7)) <<< 7)) <<< 7)) <<< 7)",
+                "13) + y8 ⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)",
+                " ((y10 + y6) <<< 7) + y10) <<< 9)) <<< 18) + y9 ⊕ ((y5 + y1) <<< 7)) <<< 7)) <<< 7)) <<< 7)) <<< 13)",
+                "y15 + y11) <<< 7) + y15) <<< 9)) <<< 18) + y14 ⊕ ((y10 + y6) <<< 7)) <<< 7)) <<< 7)) <<< 7)) <<< 13)",
+                " ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)",
+                "((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9)) <<< 18) + y14 ⊕ ((y10 + y6) <<< 7)) <<< 7)) <<< 7)) <<< 7)",
+                "13) + y13 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)",
+                ") + y2 ⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)",
+                "((y0 + y12) <<< 7) + y0) <<< 9)) <<< 18) + y3 ⊕ ((y15 + y11) <<< 7)) <<< 7)) <<< 7)) <<< 7)) <<< 13)",
+                "((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)",
+                "⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9)) <<< 18) + y3 ⊕ ((y15 + y11) <<< 7)) <<< 7)) <<< 7)) <<< 7)",
+                "3 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9)) <<< 18) + y4 ⊕ ((y0 + y12) <<< 7)) <<< 7)) <<< 7)) <<< 7)",
+                ") + y7 ⊕ ((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)",
+                "⊕ ((y5 + y1) <<< 7) + y5) <<< 9)) <<< 18) + y4 ⊕ ((y0 + y12) <<< 7)) <<< 7)) <<< 7)) <<< 7)) <<< 13)",
+                "((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)"]
+
+        -- Expected output for the first 100 chars of each line of the equations output.
+        let expectedEquationsOutputStart = [
+                "z0 = y0 ⊕ ((y12 ⊕ ((y8 ⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9) + y4 ⊕ ((y0 + y12) <<< 7)) <<< 13) +",
+                "z1 = y1 ⊕ ((y13 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9) + y9 ⊕ ((y5 + y1) <<< 7)) <<< 13) ⊕ ((y0 ⊕ (",
+                "z2 = y2 ⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9) ⊕ ((y1 ⊕ ((y13 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <",
+                "z3 = y3 ⊕ ((y15 + y11) <<< 7) ⊕ ((y2 ⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9) ⊕ ((y1 ⊕ ((y13 ⊕ ((y",
+                "z4 = y4 ⊕ ((y0 + y12) <<< 7) ⊕ ((y7 ⊕ ((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9) ⊕ ((y6 ⊕ ((y2 ⊕ ((y14",
+                "z5 = y5 ⊕ ((y1 ⊕ ((y13 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9) + y9 ⊕ ((y5 + y1) <<< 7)) <<< 13) + y",
+                "z6 = y6 ⊕ ((y2 ⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9) + y14 ⊕ ((y10 + y6) <<< 7)) <<< 13) ⊕ ((y5",
+                "z7 = y7 ⊕ ((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9) ⊕ ((y6 ⊕ ((y2 ⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10)",
+                "z8 = y8 ⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9) ⊕ ((y11 ⊕ ((y7 ⊕ ((y3 ⊕ ((y15 + y11) <<< 7) + y15) ",
+                "z9 = y9 ⊕ ((y5 + y1) <<< 7) ⊕ ((y8 ⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9) ⊕ ((y11 ⊕ ((y7 ⊕ ((y3 ⊕ ",
+                "z10 = y10 ⊕ ((y6 ⊕ ((y2 ⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9) + y14 ⊕ ((y10 + y6) <<< 7)) <<< 1",
+                "z11 = y11 ⊕ ((y7 ⊕ ((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9) + y3 ⊕ ((y15 + y11) <<< 7)) <<< 13) ⊕ ((",
+                "z12 = y12 ⊕ ((y8 ⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9) + y4 ⊕ ((y0 + y12) <<< 7)) <<< 13) ⊕ ((y15",
+                "z13 = y13 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9) ⊕ ((y12 ⊕ ((y8 ⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <",
+                "z14 = y14 ⊕ ((y10 + y6) <<< 7) ⊕ ((y13 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9) ⊕ ((y12 ⊕ ((y8 ⊕ ((y4",
+                "z15 = y15 ⊕ ((y11 ⊕ ((y7 ⊕ ((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9) + y3 ⊕ ((y15 + y11) <<< 7)) <<< "]
+
+        -- Expected output for the last 100 chars of each line of the equations output.
+        let expectedEquationsOutputEnd = [
+                "⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)",
+                "⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9)) <<< 18) + y9 ⊕ ((y5 + y1) <<< 7)) <<< 7)) <<< 7)) <<< 7)",
+                "13) + y8 ⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)",
+                " ((y10 + y6) <<< 7) + y10) <<< 9)) <<< 18) + y9 ⊕ ((y5 + y1) <<< 7)) <<< 7)) <<< 7)) <<< 7)) <<< 13)",
+                "y15 + y11) <<< 7) + y15) <<< 9)) <<< 18) + y14 ⊕ ((y10 + y6) <<< 7)) <<< 7)) <<< 7)) <<< 7)) <<< 13)",
+                " ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)",
+                "((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9)) <<< 18) + y14 ⊕ ((y10 + y6) <<< 7)) <<< 7)) <<< 7)) <<< 7)",
+                "13) + y13 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)",
+                ") + y2 ⊕ ((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)",
+                "((y0 + y12) <<< 7) + y0) <<< 9)) <<< 18) + y3 ⊕ ((y15 + y11) <<< 7)) <<< 7)) <<< 7)) <<< 7)) <<< 13)",
+                "((y14 ⊕ ((y10 + y6) <<< 7) + y10) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)",
+                "⊕ ((y4 ⊕ ((y0 + y12) <<< 7) + y0) <<< 9)) <<< 18) + y3 ⊕ ((y15 + y11) <<< 7)) <<< 7)) <<< 7)) <<< 7)",
+                "3 ⊕ ((y9 ⊕ ((y5 + y1) <<< 7) + y5) <<< 9)) <<< 18) + y4 ⊕ ((y0 + y12) <<< 7)) <<< 7)) <<< 7)) <<< 7)",
+                ") + y7 ⊕ ((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)",
+                "⊕ ((y5 + y1) <<< 7) + y5) <<< 9)) <<< 18) + y4 ⊕ ((y0 + y12) <<< 7)) <<< 7)) <<< 7)) <<< 7)) <<< 13)",
+                "((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)"]
+
+        let actualDisplayOutput = doubleroundRDisplay ["y0", "y1", "y2", "y3", "y4", "y5", "y6", "y7", "y8", "y9", "y10", "y11", "y12", "y13", "y14", "y15"] 2
+        let actualEquationsOutput = doubleroundREquations ["y0", "y1", "y2", "y3", "y4", "y5", "y6", "y7", "y8", "y9", "y10", "y11", "y12", "y13", "y14", "y15"] 2
+
+        isEqualFirstNList expectedDisplayOutputStart actualDisplayOutput @?= True
+        isEqualLastNList expectedDisplayOutputEnd actualDisplayOutput @?= True
+
+        isEqualFirstNList expectedEquationsOutputStart actualEquationsOutput @?= True
+        isEqualLastNList expectedEquationsOutputEnd actualEquationsOutput @?= True
+    ]
+
 main :: IO Counts
 main = do
     -- Run tests
@@ -200,6 +290,27 @@ main = do
     putStrLn "Running doubleround display tests:"
     _ <- runTestTT doubleroundDisplayTests
 
+    putStrLn "Running doubleround with rounds variable display tests:"
+    _ <- runTestTT doubleroundRDisplayTests
 
     -- just return an empty `Count` so we don't have to return the one from a specific test:
     return (Counts 0 0 0 0)
+
+-- Some utility functions
+
+-- Function to check if the first N characters of two strings are equal
+isEqualFirstN :: String -> String -> Bool
+isEqualFirstN s1 s2 = take (length s1) s1 == take (length s1) s2
+
+-- Function to check if the first N characters of each element in the list are equal
+isEqualFirstNList :: [String] -> [String] -> Bool
+isEqualFirstNList xs ys = and $ zipWith isEqualFirstN xs ys
+
+-- Function to check if the last N characters of two strings are equal
+isEqualLastN :: String -> String -> Bool
+isEqualLastN s1 s2 = drop (length s1 - n) s1 == drop (length s2 - n) s2
+  where n = min (length s1) (length s2)
+
+-- Function to check if the last N characters of each element in the list are equal
+isEqualLastNList :: [String] -> [String] -> Bool
+isEqualLastNList xs ys = and $ zipWith isEqualLastN xs ys
