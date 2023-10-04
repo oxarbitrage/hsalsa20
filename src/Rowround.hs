@@ -112,26 +112,26 @@ sort4_inv _ = error "input to `sort4_inv` must be a list of 4 objects"
 
 -- |The rowround expression computed.
 rowroundCompute :: [Word32] -> [Word32]
-rowroundCompute input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] =
-    concat [
+rowroundCompute input
+    | length input == 16 = concat [
         evalCompute $ quarterround1 $ numberListToEitherList input,
         sort2_inv $ evalCompute $ quarterround2 $ numberListToEitherList input,
         sort3_inv $ evalCompute $ quarterround3 $ numberListToEitherList input,
         sort4_inv $ evalCompute $ quarterround4 $ numberListToEitherList input]
-rowroundCompute _ = error "input to `rowroundCompute` must be a list of 16 `Word32` numbers"
+    | otherwise = error "input to `rowroundCompute` must be a list of 16 `Word32` numbers"
 
 -- |The rowround expression as a string.
 rowroundDisplay :: [String] -> [String]
-rowroundDisplay input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] =
-    concat [
+rowroundDisplay input
+    | length input == 16 = concat [
         evalDisplay $ quarterround1 $ stringListToEitherList input,
         sort2_inv $ evalDisplay $ quarterround2 $ stringListToEitherList input,
         sort3_inv $ evalDisplay $ quarterround3 $ stringListToEitherList input,
         sort4_inv $ evalDisplay $ quarterround4 $ stringListToEitherList input]
-rowroundDisplay _ = error "input to `rowroundCompute` must be a list of 16 `String` strings"
+    | otherwise = error "input to `rowroundCompute` must be a list of 16 `String` strings"
 
 -- |The rowround expression as a list of equations.
 rowroundEquations :: [String] -> [String]
-rowroundEquations input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] =
-    [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (rowroundDisplay input)]
-rowroundEquations _ = error "input to `rowroundEquations` must be a list of 16 `String` strings"
+rowroundEquations input
+    | length input == 16 = [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (rowroundDisplay input)]
+    | otherwise = error "input to `rowroundEquations` must be a list of 16 `String` strings"
