@@ -23,6 +23,7 @@ dependencies:
 - base >= 4.7 && < 5
 - split
 - text
+- keelung
 
 ghc-options:
 - -Wall
@@ -101,6 +102,16 @@ tests:
   salsa20-display-unit-tests:
     main:                Spec.hs
     source-dirs:         test/unit/display
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - salsa20
+    - HUnit
+  salsa20-keelung-unit-tests:
+    main:                Spec.hs
+    source-dirs:         test/unit/keelung
     ghc-options:
     - -threaded
     - -rtsopts

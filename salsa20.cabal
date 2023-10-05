@@ -30,6 +30,7 @@ library
       Doubleround
       Expansion
       Hash
+      KeelungUtils
       Operators
       Quarterround
       Rowround
@@ -41,6 +42,7 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , keelung
     , split
     , text
   default-language: Haskell2010
@@ -54,6 +56,7 @@ executable salsa20-exe
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , keelung
     , salsa20
     , split
     , text
@@ -70,6 +73,7 @@ test-suite salsa20-display-unit-tests
   build-depends:
       HUnit
     , base >=4.7 && <5
+    , keelung
     , salsa20
     , split
     , text
@@ -89,6 +93,7 @@ test-suite salsa20-ecrypt128-tests
     , bytestring
     , containers
     , hex-text
+    , keelung
     , salsa20
     , split
     , text
@@ -108,6 +113,7 @@ test-suite salsa20-ecrypt256-tests
     , bytestring
     , containers
     , hex-text
+    , keelung
     , salsa20
     , split
     , text
@@ -123,6 +129,24 @@ test-suite salsa20-fast-unit-tests
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , keelung
+    , salsa20
+    , split
+    , text
+  default-language: Haskell2010
+
+test-suite salsa20-keelung-unit-tests
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_salsa20
+  hs-source-dirs:
+      test/unit/keelung
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      HUnit
+    , base >=4.7 && <5
+    , keelung
     , salsa20
     , split
     , text
@@ -138,6 +162,7 @@ test-suite salsa20-slow-unit-test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , keelung
     , salsa20
     , split
     , text

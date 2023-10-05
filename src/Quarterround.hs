@@ -16,9 +16,13 @@ We evaluate 3 things:
 - The equations.
 
 -}
+{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE ImportQualifiedPost #-}
+
 module Quarterround
     (
-        quarterroundCompute, quarterroundDisplay, quarterroundEquations,
+        quarterroundCompute, quarterroundDisplay, quarterroundEquations, quarterroundKeelung,
     )
 where
 
@@ -27,7 +31,11 @@ import Data.Word
 import Text.Printf
 import Data.Either
 
+
 import Utils
+
+import Keelung
+import KeelungUtils
 
 -- |The quarterround endofunctor to compute a value or a string type.
 data ExprF a = Const (Either Word32 String)
@@ -61,10 +69,10 @@ cata algebra = algebra . fmap (cata algebra) . unFix
 algMapsCompute :: ExprF Word32 -> Word32
 algMapsCompute (Const i) = fromLeft 0 i
 algMapsCompute (a `Mod` b) = a + b
-algMapsCompute (Rotl7 a) = rotate a 7
-algMapsCompute (Rotl9 a) = rotate a 9
-algMapsCompute (Rotl13 a) = rotate a 13
-algMapsCompute (Rotl18 a) = rotate a 18
+algMapsCompute (Rotl7 a) = Data.Bits.rotate a 7
+algMapsCompute (Rotl9 a) = Data.Bits.rotate a 9
+algMapsCompute (Rotl13 a) = Data.Bits.rotate a 13
+algMapsCompute (Rotl18 a) = Data.Bits.rotate a 18
 algMapsCompute (a `Xor2` b) = xor a b
 
 -- |The F-algebra maps for a `String` evaluator.
@@ -148,3 +156,7 @@ quarterroundEquations :: [String] -> [String]
 quarterroundEquations input@[_, _, _, _] =
     [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (quarterroundDisplay input)]
 quarterroundEquations _ = error "input to `quarterroundEquations` must be a list of 4 `String` strings"
+
+-- | The quarterround expression as a keelung computation.
+quarterroundKeelung :: [Word32] -> Comp (ArrM W32M)
+quarterroundKeelung inputs = fromWord32List $ quarterroundCompute inputs

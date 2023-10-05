@@ -3,7 +3,29 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
+packages:
+- completed:
+    commit: d7d0da6b5df8045afdfb820ba8d08f34dc4c3e58
+    git: https://github.com/btq-ag/galois-field.git
+    name: galois-field
+    pantry-tree:
+      sha256: 0b9cd01ab0ed19b29bc34aed4157dbb05eef1dabb543b349c9720dbc743aca72
+      size: 4656
+    version: 1.0.4
+  original:
+    commit: d7d0da6b5df8045afdfb820ba8d08f34dc4c3e58
+    git: https://github.com/btq-ag/galois-field.git
+- completed:
+    commit: 8856a21477eaf252827746b41c5366979123b6c6
+    git: https://github.com/btq-ag/keelung.git
+    name: keelung
+    pantry-tree:
+      sha256: 1a58ebe574f9731806ed12e08f2686a53123200d411d0e2db98ba43bf6c8e4c1
+      size: 1877
+    version: 0.17.0
+  original:
+    commit: 8856a21477eaf252827746b41c5366979123b6c6
+    git: https://github.com/btq-ag/keelung.git
 snapshots:
 - completed:
     sha256: 401a0e813162ba62f04517f60c7d25e93a0f867f94a902421ebf07d1fb5a8c46
