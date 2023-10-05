@@ -6,7 +6,9 @@ License     : MIT
 Stability   : experimental
 Portability : POSIX
 
-The two forms of expansion supported by Salsa20 are given by key size.
+There are two forms of expansion supported by Salsa20 given by key size. The 16 bytes (128 bits) key version is called
+`expand16` and the 32 bytes (256 bits) key version is called `expand32`. The 32 bytes version seems to be the most
+used one.
 -}
 module Expansion
     (
