@@ -8,6 +8,7 @@ Portability : POSIX
 
 General utility functions to work with Keelung.
 -}
+
 module KeelungUtils
     (
         W32M, fromWord32List

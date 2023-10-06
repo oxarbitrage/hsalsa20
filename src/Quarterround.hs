@@ -16,9 +16,7 @@ We evaluate 3 things:
 - The equations.
 
 -}
-{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE ImportQualifiedPost #-}
 
 module Quarterround
     (
