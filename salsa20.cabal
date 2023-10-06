@@ -29,7 +29,6 @@ library
       Doubleround
       Expansion
       Hash
-      KeelungUtils
       Operators
       Quarterround
       Rowround
