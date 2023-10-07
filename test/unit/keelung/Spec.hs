@@ -2,6 +2,7 @@
 
 import Quarterround
 import Rowround
+import Columnround
 
 import Test.HUnit
 import Keelung
@@ -56,6 +57,14 @@ main = do
     rowround_interpreted2 <- interpret gf181 (rowroundKeelung rowroundInputUInt) [] []
     putStrLn "Rowround simulated for input rowroundInputUInt:"
     print rowround_interpreted2
+
+    let columnround_computed = columnroundCompute rowroundInputWord32
+    putStrLn "Columnround computed for input rowroundInputWord32:"
+    print columnround_computed
+
+    columnround_interpreted2 <- interpret gf181 (columnroundKeelung rowroundInputUInt) [] []
+    putStrLn "Columnround simulated for input rowroundInputUInt:"
+    print columnround_interpreted2
 
     -- just return an empty `Count` so we don't have to return the one from a specific test:
     return (Counts 0 0 0 0)
