@@ -26,20 +26,21 @@ import Utils
 
 -- |The core expression computed.
 coreCompute :: [Word32] -> Int -> [Word32]
-coreCompute input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] rounds = modMatrix (doubleroundRCompute input rounds) input
-coreCompute _ _ = error "input to `coreCompute` must be a list of 16 `Word32` numbers"
+coreCompute input rounds
+    | length input == 16 = modMatrix (doubleroundRCompute input rounds) input
+    | otherwise = error "input to `coreCompute` must be a list of 16 `Word32` numbers"
 
 -- |The core expression as a string.
 coreDisplay :: [String] -> Int -> [String]
-coreDisplay input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] rounds =
-    modMatrixDisplay (doubleroundRDisplay input rounds) input
-coreDisplay _ _ = error "input to `coreDisplay` must be a list of 16 `String` strings"
+coreDisplay input rounds
+    | length input == 16 = modMatrixDisplay (doubleroundRDisplay input rounds) input
+    | otherwise = error "input to `coreDisplay` must be a list of 16 `String` strings"
 
 -- |The core expression as a list of equations.
 coreEquations :: [String] -> Int -> [String]
-coreEquations input@[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _] rounds =
-    [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (coreDisplay input rounds)]
-coreEquations _ _ = error "input to `core2Equations` must be a list of 16 `String` strings"
+coreEquations input rounds
+    | length input == 16 = [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (coreDisplay input rounds)]
+    | otherwise = error "input to `core2Equations` must be a list of 16 `String` strings"
 
 -- | The salsa20 expression computed.
 salsa20Compute :: [Word32] -> [Word32]
