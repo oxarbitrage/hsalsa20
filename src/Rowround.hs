@@ -36,7 +36,7 @@ import Keelung hiding (input, eq)
 -- |The rowround endofunctor.
 data ExprF a = Const [Either Word32 String] | Quarterround a
 
--- |The rowround endofunctor.
+-- |The rowround endofunctor for Keelung.
 data ExprFKeelung a = ConstK [UInt 32] | QuarterroundK a
 
 -- |Functor instance.
@@ -44,7 +44,7 @@ instance Functor ExprF where
     fmap _ (Const i) = Const i
     fmap f (Quarterround a) = Quarterround (f a)
 
--- |Functor instance.
+-- |Functor instance for Keelung.
 instance Functor ExprFKeelung where
     fmap _ (ConstK i) = ConstK i
     fmap f (QuarterroundK a) = QuarterroundK (f a)
@@ -68,7 +68,7 @@ algMapsDisplay :: ExprF [String] -> [String]
 algMapsDisplay (Const i) = map (printf "%s") (eitherListToStringList i)
 algMapsDisplay (Quarterround a) = Quarterround.quarterroundDisplay a
 
--- |The algebra maps for Keelung computation.
+-- |The algebra maps for Keelung.
 algMapsKeelung :: ExprFKeelung (Comp [UInt 32]) -> Comp [UInt 32]
 algMapsKeelung (ConstK i) = return i
 algMapsKeelung (QuarterroundK a) = Quarterround.quarterroundKeelung =<< a
@@ -81,7 +81,7 @@ evalCompute = cata algMapsCompute
 evalDisplay :: Fix ExprF -> [String]
 evalDisplay = cata algMapsDisplay
 
--- |The rowround evaluator.
+-- |The rowround evaluator as a Keelung expression.
 evalKeelung :: Fix ExprFKeelung -> Comp [UInt 32]
 evalKeelung = cata algMapsKeelung
 
