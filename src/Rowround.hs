@@ -16,9 +16,11 @@ We evaluate 3 things:
 - The equations.
 
 -}
+{-# LANGUAGE DataKinds #-}
+
 module Rowround
     (
-        rowroundCompute, rowroundDisplay, rowroundEquations,
+        rowroundCompute, rowroundDisplay, rowroundEquations, rowroundKeelung,
     )
 where
 
@@ -29,13 +31,23 @@ import Data.List.Split (chunksOf)
 import Quarterround
 import Utils
 
+import Keelung
+
 -- |The rowround endofunctor.
 data ExprF a = Const [Either Word32 String] | Quarterround a
+
+-- |The rowround endofunctor.
+data ExprFKeelung a = ConstK [UInt 32] | QuarterroundK a
 
 -- |Functor instance.
 instance Functor ExprF where
     fmap _ (Const i) = Const i
     fmap f (Quarterround a) = Quarterround (f a)
+
+-- |Functor instance.
+instance Functor ExprFKeelung where
+    fmap _ (ConstK i) = ConstK i
+    fmap f (QuarterroundK a) = QuarterroundK (f a)
 
 -- |Fix and unFix.
 newtype Fix f = In (f (Fix f))
@@ -56,6 +68,11 @@ algMapsDisplay :: ExprF [String] -> [String]
 algMapsDisplay (Const i) = map (printf "%s") (eitherListToStringList i)
 algMapsDisplay (Quarterround a) = Quarterround.quarterroundDisplay a
 
+-- |The algebra maps for Keelung computation.
+algMapsKeelung :: ExprFKeelung (Comp [UInt 32]) -> Comp [UInt 32]
+algMapsKeelung (ConstK i) = return i
+algMapsKeelung (QuarterroundK a) = Quarterround.quarterroundKeelung =<< a
+
 -- |The rowround evaluator.
 evalCompute :: Fix ExprF -> [Word32]
 evalCompute = cata algMapsCompute
@@ -64,13 +81,25 @@ evalCompute = cata algMapsCompute
 evalDisplay :: Fix ExprF -> [String]
 evalDisplay = cata algMapsDisplay
 
+-- |The rowround evaluator.
+evalKeelung :: Fix ExprFKeelung -> Comp [UInt 32]
+evalKeelung = cata algMapsKeelung
+
 -- |The first quarterround expression.
 quarterround1 :: [Either Word32 String] -> Fix ExprF
 quarterround1 a = In $ Quarterround $ In $ Const $ head $ chunksOf 4 a
 
+-- |The first quarterround Keelung expression.
+quarterround1Keelung :: [UInt 32] -> Fix ExprFKeelung
+quarterround1Keelung a = In $ QuarterroundK $ In $ ConstK $ head $ chunksOf 4 a
+
 -- |The second quarterround expression.
 quarterround2 :: [Either Word32 String] -> Fix ExprF
 quarterround2 a = In $ Quarterround $ In $ Const $ sort2 $ chunksOf 4 a!!1
+
+-- |The second Keelung quarterround expression.
+quarterround2Keelung :: [UInt 32] -> Fix ExprFKeelung
+quarterround2Keelung a = In $ QuarterroundK $ In $ ConstK $ sort2 $ chunksOf 4 a!!1
 
 -- |Sort a second input for rowround.
 sort2 :: [a] -> [a]
@@ -86,6 +115,10 @@ sort2_inv _ = error "input to `sort2_inv` must be a list of 4 objects"
 quarterround3 :: [Either Word32 String] -> Fix ExprF
 quarterround3 a = In $ Quarterround $ In $ Const $ sort3 $ chunksOf 4 a!!2
 
+-- |The third quarterround Keelung expression.
+quarterround3Keelung :: [UInt 32] -> Fix ExprFKeelung
+quarterround3Keelung a = In $ QuarterroundK $ In $ ConstK $ sort3 $ chunksOf 4 a!!2
+
 -- |Sort a third input for rowround.
 sort3 :: [a] -> [a]
 sort3 [y8, y9, y10, y11] = [y10, y11, y8, y9] 
@@ -99,6 +132,10 @@ sort3_inv _ = error "input to `sort3_inv` must be a list of 4 objects"
 -- |The fourth quarterround expression.
 quarterround4 :: [Either Word32 String] -> Fix ExprF
 quarterround4 a = In $ Quarterround $ In $ Const $ sort4 $ chunksOf 4 a!!3
+
+-- |The fourth Keelung quarterround expression.
+quarterround4Keelung :: [UInt 32] -> Fix ExprFKeelung
+quarterround4Keelung a = In $ QuarterroundK $ In $ ConstK $ sort4 $ chunksOf 4 a!!3
 
 -- |Sort a fourth input for rowround.
 sort4 :: [a] -> [a]
@@ -135,3 +172,15 @@ rowroundEquations :: [String] -> [String]
 rowroundEquations input
     | length input == 16 = [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (rowroundDisplay input)]
     | otherwise = error "input to `rowroundEquations` must be a list of 16 `String` strings"
+
+-- |The rowround Keelung expression.
+rowroundKeelung :: [UInt 32] -> Comp [UInt 32]
+rowroundKeelung input
+    | length input == 16 = do
+        q1 <- evalKeelung $ quarterround1Keelung input
+        q2 <- evalKeelung $ quarterround2Keelung input
+        q3 <- evalKeelung $ quarterround3Keelung input
+        q4 <- evalKeelung $ quarterround4Keelung input
+
+        return $ concat [q1,  sort2_inv q2, sort3_inv q3, sort4_inv q4]
+    | otherwise = error "input to `rowroundKeelung` must be a list of 16 `UInt 32` numbers"
