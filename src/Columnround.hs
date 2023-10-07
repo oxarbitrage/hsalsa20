@@ -49,4 +49,4 @@ columnroundKeelung input
         let new_input = transpose input
         k <- rowroundKeelung new_input
         return $ transpose k
-    | otherwise = error "input to `columnroundCompute` must be a list of 16 `Word32` numbers"
+    | otherwise = error "input to `columnroundKeelung` must be a list of 16 `UInt 32` numbers"

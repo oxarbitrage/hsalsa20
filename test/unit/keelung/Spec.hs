@@ -3,21 +3,22 @@
 import Quarterround
 import Rowround
 import Columnround
+import Doubleround
 
 import Test.HUnit
 import Keelung
 
 import Data.Word
 
-rowroundInputUInt :: [UInt 32]
-rowroundInputUInt = [
+demoInputUInt32 :: [UInt 32]
+demoInputUInt32 = [
     0x08521bd6, 0x1fe88837, 0xbb2aa576, 0x3aa26365,
     0xc54c6a5b, 0x2fc74c2f, 0x6dd39cc3, 0xda0a64f6,
     0x90a2f23d, 0x067f95a6, 0x06b35f61, 0x41e4732e,
     0xe859c100, 0xea4d84b7, 0x0f619bff, 0xbc6e965a]
 
-rowroundInputWord32 :: [Word32]
-rowroundInputWord32 = [
+demoInputWord32 :: [Word32]
+demoInputWord32 = [
     0x08521bd6, 0x1fe88837, 0xbb2aa576, 0x3aa26365,
     0xc54c6a5b, 0x2fc74c2f, 0x6dd39cc3, 0xda0a64f6,
     0x90a2f23d, 0x067f95a6, 0x06b35f61, 0x41e4732e,
@@ -50,21 +51,37 @@ main = do
     --putStrLn "Quarterround compiled:"
     --print quarterround_compiled
 
-    let rowround_computed = rowroundCompute rowroundInputWord32
-    putStrLn "Rowround computed for input rowroundInputWord32:"
+    let rowround_computed = rowroundCompute demoInputWord32
+    putStrLn "Rowround computed for input demoInput:"
     print rowround_computed
 
-    rowround_interpreted2 <- interpret gf181 (rowroundKeelung rowroundInputUInt) [] []
-    putStrLn "Rowround simulated for input rowroundInputUInt:"
+    rowround_interpreted2 <- interpret gf181 (rowroundKeelung demoInputUInt32) [] []
+    putStrLn "Rowround simulated for input demoInput:"
     print rowround_interpreted2
 
-    let columnround_computed = columnroundCompute rowroundInputWord32
-    putStrLn "Columnround computed for input rowroundInputWord32:"
+    let columnround_computed = columnroundCompute demoInputWord32
+    putStrLn "Columnround computed for input demoInput:"
     print columnround_computed
 
-    columnround_interpreted2 <- interpret gf181 (columnroundKeelung rowroundInputUInt) [] []
-    putStrLn "Columnround simulated for input rowroundInputUInt:"
+    columnround_interpreted2 <- interpret gf181 (columnroundKeelung demoInputUInt32) [] []
+    putStrLn "Columnround simulated for input demoInput:"
     print columnround_interpreted2
+
+    let doubleround_computed = doubleroundCompute demoInputWord32
+    putStrLn "Doubleround computed for input demoInput:"
+    print doubleround_computed
+
+    doubleround_interpreted2 <- interpret gf181 (doubleroundKeelung demoInputUInt32) [] []
+    putStrLn "Doubleround simulated for input demoInput:"
+    print doubleround_interpreted2
+
+    let doubleroundR_computed = doubleroundRCompute demoInputWord32 3
+    putStrLn "Doubleround computed for input demoInput and 2 rounds:"
+    print doubleroundR_computed
+
+    doubleroundR_interpreted2 <- interpret gf181 (doubleroundRKeelung demoInputUInt32 2) [] []
+    putStrLn "DoubleroundR simulated for input demoInput and 2 rounds:"
+    print doubleroundR_interpreted2
 
     -- just return an empty `Count` so we don't have to return the one from a specific test:
     return (Counts 0 0 0 0)

@@ -11,15 +11,19 @@ We define the doubleround function as the composition of rowround and columnroun
 In addition we define `doubleroundR`, which is the `doubleround` function applied R times,
 as specified in the salsa20 spec.
 -}
+{-# LANGUAGE DataKinds #-}
+
 module Doubleround
     (
-        doubleroundCompute, doubleroundDisplay, doubleroundEquations,
-        doubleroundRCompute, doubleroundRDisplay, doubleroundREquations,
+        doubleroundCompute, doubleroundDisplay, doubleroundEquations, doubleroundKeelung,
+        doubleroundRCompute, doubleroundRDisplay, doubleroundREquations, doubleroundRKeelung,
     )
 where
 
 import Data.Word
 import Text.Printf
+
+import Keelung hiding (input, eq)
 
 import Rowround
 import Columnround
@@ -42,6 +46,12 @@ doubleroundEquations input
     | length input == 16 = [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (doubleroundDisplay input)]
     | otherwise = error "input to `doubleroundEquations` must be a list of 16 `String` strings"
 
+-- |The doubleround Keelung expression.
+doubleroundKeelung :: [UInt 32] -> Comp [UInt 32]
+doubleroundKeelung input
+    | length input == 16 = rowroundKeelung =<< columnroundKeelung input
+    | otherwise = error "input to `doubleroundKeelung` must be a list of 16 `UInt 32` numbers"
+
 -- |The doubleroundR expression computed.
 doubleroundRCompute :: [Word32] -> Int -> [Word32]
 doubleroundRCompute input r
@@ -62,3 +72,10 @@ doubleroundREquations input r
     | length input == 16 && r == 0 = input
     | length input == 16 && r > 0 = [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (doubleroundRDisplay input r)]
     | otherwise = error "arguments of `doubleroundREquations` must be a list of 16 `String` strings and a number `Int` of rounds"
+
+-- |The doubleroundR Keelung expression.
+doubleroundRKeelung :: [UInt 32] -> Int -> Comp [UInt 32]
+doubleroundRKeelung input r
+    | length input == 16 && r == 0 = return input
+    | length input == 16 && r > 0 = doubleroundKeelung input >>= \dr -> doubleroundRKeelung dr (r - 1)
+    | otherwise = error "arguments of `doubleroundRKeelung` must be a list of 16 `UInt 32` numbers and a number `Int` of rounds"
