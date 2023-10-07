@@ -31,7 +31,7 @@ import Data.List.Split (chunksOf)
 import Quarterround
 import Utils
 
-import Keelung
+import Keelung hiding (input, eq)
 
 -- |The rowround endofunctor.
 data ExprF a = Const [Either Word32 String] | Quarterround a

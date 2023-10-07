@@ -31,7 +31,7 @@ import Data.Either
 
 import Utils
 
-import Keelung
+import Keelung hiding (input, eq)
 
 -- |The quarterround endofunctor to compute a value or a string type.
 data ExprF a = Const (Either Word32 String)
