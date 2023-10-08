@@ -228,6 +228,10 @@ quarterroundEquations _ = error "input to `quarterroundEquations` must be a list
 
 -- | The quarterround expression as a keelung computation.
 quarterroundKeelung :: [UInt 32] -> Comp [UInt 32]
-quarterroundKeelung input = 
-    return [evalKeelung $ z0Keelung input, evalKeelung $ z1Keelung input,
-            evalKeelung $ z2Keelung input, evalKeelung $ z3Keelung input]
+quarterroundKeelung input = do
+    z1' <- reuse . evalKeelung . z1Keelung $ input
+    z2' <- reuse . evalKeelung . z2Keelung $ input
+    z3' <- reuse . evalKeelung . z3Keelung $ input
+    z0' <- reuse . evalKeelung . z0Keelung $ input
+
+    return [z0', z1', z2', z3']

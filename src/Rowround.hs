@@ -70,7 +70,7 @@ algMapsDisplay (Quarterround a) = Quarterround.quarterroundDisplay a
 
 -- |The algebra maps for Keelung.
 algMapsKeelung :: ExprFKeelung (Comp [UInt 32]) -> Comp [UInt 32]
-algMapsKeelung (ConstK i) = return i
+algMapsKeelung (ConstK i) =  return i
 algMapsKeelung (QuarterroundK a) = Quarterround.quarterroundKeelung =<< a
 
 -- |The rowround evaluator.
