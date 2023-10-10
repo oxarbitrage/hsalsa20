@@ -4,6 +4,7 @@ import Quarterround
 import Rowround
 import Columnround
 import Doubleround
+import Hash
 
 import Test.HUnit
 import Keelung
@@ -12,19 +13,38 @@ import Data.Word
 import Data.Either (fromRight)
 import Keelung.Constraint.R1CS (toR1Cs)
 
-demoInputUInt32 :: [UInt 32]
-demoInputUInt32 = [
-    0x08521bd6, 0x1fe88837, 0xbb2aa576, 0x3aa26365,
-    0xc54c6a5b, 0x2fc74c2f, 0x6dd39cc3, 0xda0a64f6,
-    0x90a2f23d, 0x067f95a6, 0x06b35f61, 0x41e4732e,
-    0xe859c100, 0xea4d84b7, 0x0f619bff, 0xbc6e965a]
-
 demoInputWord32 :: [Word32]
 demoInputWord32 = [
     0x08521bd6, 0x1fe88837, 0xbb2aa576, 0x3aa26365,
     0xc54c6a5b, 0x2fc74c2f, 0x6dd39cc3, 0xda0a64f6,
     0x90a2f23d, 0x067f95a6, 0x06b35f61, 0x41e4732e,
     0xe859c100, 0xea4d84b7, 0x0f619bff, 0xbc6e965a]
+
+demoInputUInt32 :: [UInt 32]
+demoInputUInt32 = map fromIntegral demoInputWord32
+
+demoSalsa20InputWord32 :: [Word32]
+demoSalsa20InputWord32 = [
+    88, 118, 104, 54,
+    79, 201, 235, 79,
+    3, 81, 156, 47,
+    203, 26, 244, 243,
+    191, 187, 234, 136,
+    211, 159, 13, 115,
+    76, 55, 82, 183,
+    3, 117, 222, 37,
+    86, 16, 179, 207,
+    49, 237, 179, 48,
+    1, 106, 178, 219,
+    175, 199, 166, 48,
+    238, 55, 204, 36,
+    31, 240, 32, 63,
+    15, 83, 93, 161,
+    116, 147, 48, 113]
+
+demoSalsa20InputUInt32 :: [UInt 32]
+demoSalsa20InputUInt32 = map fromIntegral demoSalsa20InputWord32
+
 
 main :: IO Counts
 main = do
@@ -70,13 +90,13 @@ main = do
     let douleround_constraints = length $ toR1Cs (fromRight (error "error parsing r1cs") doubleround_compiled)
     putStrLn $ if douleround_constraints == 18644 then "OK" else "FAIL!"
 
-    let doubleroundR_computed = doubleroundRCompute demoInputWord32 2
-    doubleroundR_interpreted <- interpret gf181 (doubleroundRKeelung demoInputUInt32 2) [] []
+    let doubleroundR_computed = doubleroundRCompute demoInputWord32 10
+    doubleroundR_interpreted <- interpret gf181 (doubleroundRKeelung demoInputUInt32 10) [] []
     putStrLn $ if doubleroundR_computed == map fromIntegral doubleroundR_interpreted then "OK" else "FAIL!"
 
-    doubleroundR_compiled <- compile bn128 (doubleroundRKeelung demoInputUInt32 2)
-    let douleroundR_constraints = length $ toR1Cs (fromRight (error "error parsing r1cs") doubleroundR_compiled)
-    putStrLn $ if douleroundR_constraints == 36788 then "OK" else "FAIL!"
+    doubleround2_compiled <- compile bn128 (doubleroundRKeelung demoInputUInt32 2)
+    let douleround2_constraints = length $ toR1Cs (fromRight (error "error parsing r1cs") doubleround2_compiled)
+    putStrLn $ if douleround2_constraints == 36788 then "OK" else "FAIL!"
 
     let doubleround10_computed = doubleroundRCompute demoInputWord32 10
     doubleround10_interpreted <- interpret gf181 (doubleroundRKeelung demoInputUInt32 10) [] []
@@ -85,6 +105,25 @@ main = do
     doubleround10_compiled <- compile bn128 (doubleroundRKeelung demoInputUInt32 10)
     let douleround10_constraints = length $ toR1Cs (fromRight (error "error parsing r1cs") doubleround10_compiled)
     putStrLn $ if douleround10_constraints == 181940 then "OK" else "FAIL!"
+
+    let core_computed = coreCompute demoInputWord32 10
+    core_interpreted <- interpret gf181 (coreKeelung demoInputUInt32 10) [] []
+    putStrLn $ if core_computed == map fromIntegral core_interpreted then "OK" else "FAIL!"
+
+    core_compiled <- compile bn128 (coreKeelung demoInputUInt32 10)
+    let core_constraints = length $ toR1Cs (fromRight (error "error parsing r1cs") core_compiled)
+    putStrLn $ if core_constraints == 181956 then "OK" else "FAIL!"
+
+    let salsa20_computed = salsa20Compute demoSalsa20InputWord32
+    salsa20_interpreted <- interpret gf181 (salsa20Keelung demoSalsa20InputUInt32) [] []
+    putStrLn $ if salsa20_computed == map fromIntegral salsa20_interpreted then "OK" else "FAIL!"
+
+    salsa20_compiled <- compile bn128 (salsa20Keelung demoSalsa20InputUInt32)
+    let salsa20_constraints = length $ toR1Cs (fromRight (error "error parsing r1cs") salsa20_compiled)
+    putStrLn $ if salsa20_constraints == 853440 then "OK" else "FAIL!"
+
+    -- witness creation
+    -- _ <- witness gf181 (coreKeelung demoInputUInt32 2) [] []
 
     -- just return an empty `Count` so we don't have to return the one from a specific test:
     return (Counts 0 0 0 0)
