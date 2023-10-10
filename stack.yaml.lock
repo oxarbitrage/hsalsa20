@@ -5,15 +5,15 @@
 
 packages:
 - completed:
-    commit: a1d314d4ecafa1e91708e2e9faad57d780988938
+    commit: d7d0da6b5df8045afdfb820ba8d08f34dc4c3e58
     git: https://github.com/btq-ag/galois-field.git
     name: galois-field
     pantry-tree:
-      sha256: f3c029c8d05403a27eff6098e8cc0af7f45d9a7ef394008a2acc39ddfbac90d7
+      sha256: 0b9cd01ab0ed19b29bc34aed4157dbb05eef1dabb543b349c9720dbc743aca72
       size: 4656
     version: 1.0.4
   original:
-    commit: a1d314d4ecafa1e91708e2e9faad57d780988938
+    commit: d7d0da6b5df8045afdfb820ba8d08f34dc4c3e58
     git: https://github.com/btq-ag/galois-field.git
 - completed:
     commit: 8856a21477eaf252827746b41c5366979123b6c6
