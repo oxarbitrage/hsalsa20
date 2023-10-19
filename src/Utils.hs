@@ -1,12 +1,13 @@
 {-|
 Module      : Utils
-Description : Utilities
+Description : General utilities for Salsa20 cipher implementation.
 Copyright   : (c) Alfredo Garcia, 2023
 License     : MIT
 Stability   : experimental
 Portability : POSIX
 
-General utility functions used to create the salsa20 cipher.
+This module provides general utility functions used in the creation of the Salsa20 cipher.
+
 -}
 {-# LANGUAGE DataKinds #-}
 
@@ -33,12 +34,12 @@ import Operators()
 littleendian :: [Word32] -> Word32
 littleendian bytes = sum [byte `Data.Bits.shiftL` (8 * i) | (i, byte) <- zip [0..] bytes]
 
--- |The littleendian expression as a string.
+-- |The `littleendian` expression as a string.
 littleendianDisplay :: [String] -> String
 littleendianDisplay [b0, b1, b2, b3] = printf "%s + 2^8 * %s + 2^16 * %s + 2^24 * %s" b0 b1 b2 b3
 littleendianDisplay _ = ""
 
--- | Encode a vector as a word using little-endian byte order.
+-- | Encode a vector as a word using little-endian byte order using Keelung expressions.
 littleendianKeelung :: [UInt 32] -> UInt 32
 littleendianKeelung bytes = sum [byte `Keelung.shiftL` (8 * i) | (i, byte) <- zip [0..] bytes]
 
@@ -53,7 +54,7 @@ displayBytes numBytes w =
     [ printf "%s & 255" w | _ <- [1 .. numBytes] ] ++
     [ printf "%d >>> %s & 255" (8 * i) w | i <- [numBytes .. 7] ]
 
--- | Extract a specified number of bytes from a Word32.
+-- | Extract a specified number of bytes from a Word32 using Keelung expressions.
 extractBytesKeelung :: Int -> UInt 32 -> [UInt 32]
 extractBytesKeelung numBytes w =
     [ Keelung.shiftR w (8 * i) Keelung..&. 0xff | i <- [0 .. numBytes - 1] ]
@@ -66,19 +67,19 @@ reduce input = map littleendian $ chunksOf 4 input
 reduceDisplay :: [String] -> [String]
 reduceDisplay input = map littleendianDisplay $ chunksOf 4 input
 
--- |Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendian` encoding.
+-- |Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendianKeelung` encoding.
 reduceKeelung :: [UInt 32] -> [UInt 32]
 reduceKeelung input = map littleendianKeelung $ chunksOf 4 input
 
--- |Aument a matrix of 16 elements to one of 64 elements by using `littleendianInv`.
+-- |Aument a matrix of 16 elements to one of 64 elements by using `extractBytes`.
 aument :: [Word32] -> [Word32]
 aument = concatMap $ extractBytes 4
 
--- |Aument a matrix of 16 elements to one of 64 elements by using `littleendianInvDisplay`.
+-- |Aument a matrix of 16 elements to one of 64 elements by using `displayBytes`.
 aumentDisplay :: [String] -> [String]
 aumentDisplay = concatMap $ displayBytes 4
 
--- |Aument a matrix of 16 elements to one of 64 elements by using `littleendianInv`.
+-- |Aument a matrix of 16 elements to one of 64 elements by using `extractBytesKeelung`.
 aumentKeelung :: [UInt 32] -> [UInt 32]
 aumentKeelung = concatMap $ extractBytesKeelung 4
 
@@ -86,11 +87,11 @@ aumentKeelung = concatMap $ extractBytesKeelung 4
 modMatrix :: [Word32] -> [Word32] -> [Word32]
 modMatrix = zipWith (+)
 
--- |Given two matrices, do modulo addition on each of the elements.
+-- |Given two matrices, display the modulo addition on each of the elements.
 modMatrixDisplay :: [String] -> [String] -> [String]
 modMatrixDisplay = zipWith displayMod
 
--- |Given two matrices, do modulo addition on each of the elements.
+-- |Given two matrices, do modulo addition on each of the elements using Keelung types.
 modMatrixKeelung :: [UInt 32] -> [UInt 32] -> [UInt 32]
 modMatrixKeelung = zipWith (+)
 

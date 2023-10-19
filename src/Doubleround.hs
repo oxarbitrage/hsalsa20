@@ -1,15 +1,39 @@
 {-|
 Module      : Doubleround
-Description : Doubleround related code
+Description : Implementation of the Salsa20 stream cipher doubleround expressions.
 Copyright   : (c) Alfredo Garcia, 2023
 License     : MIT
 Stability   : experimental
 Portability : POSIX
 
-We define the doubleround function as the composition of rowround and columnround.
-
-In addition we define `doubleroundR`, which is the `doubleround` function applied R times,
+This module defines the doubleround function as the composition of rowround and columnround. 
+Additionally, it introduces `doubleroundR`, which represents the `doubleround` function applied R times,
 as specified in the salsa20 spec.
+
+The module provides functionalities to:
+
+- Compute numeric values resulting from doubleround expressions.
+- Generate string representations of doubleround expressions.
+- Produce a list of equations corresponding to doubleround expressions.
+- Perform Keelung specific computations using the UInt 32 type.
+
+The doubleround function applies rowround to the result of columnround, creating a comprehensive cryptographic operation.
+The iterated version, doubleroundR, repeats the doubleround operation R times, enhancing security and complexity.
+
+Exported functions:
+
+- 'doubleroundCompute': Computes numeric values for a doubleround expression.
+- 'doubleroundDisplay': Generates string representations of a doubleround expression.
+- 'doubleroundEquations': Produces a list of equations for a doubleround expression.
+- 'doubleroundKeelung': Performs Keelung-specific computations for a doubleround expression.
+
+The 'doubleroundR' variant:
+
+- 'doubleroundRCompute': Computes numeric values for an iterated doubleround expression.
+- 'doubleroundRDisplay': Generates string representations of an iterated doubleround expression.
+- 'doubleroundREquations': Produces a list of equations for an iterated doubleround expression.
+- 'doubleroundRKeelung': Performs Keelung-specific computations for an iterated doubleround expression.
+
 -}
 {-# LANGUAGE DataKinds #-}
 

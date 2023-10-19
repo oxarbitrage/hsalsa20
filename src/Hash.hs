@@ -1,15 +1,33 @@
 {-|
 Module      : Hash
-Description : Salsa20 hash function
+Description : Implementation of the Salsa20 hash function using the core function and hash expressions.
 Copyright   : (c) Alfredo Garcia, 2023
 License     : MIT
 Stability   : experimental
 Portability : POSIX
 
-The salsa20 `core` function and what we call the `hash` expressions.
+This module encapsulates the Salsa20 `core` function and introduces what is referred to as the `hash` or `salsa20` 
+expressions.
 
-The `hash` expression is the extended `core` expression. It is formed by reducing the input from 64
-to 16 using `littleendian` functions and then aument the result back to 64.
+The `core` function performs cryptographic operations by applying the `doubleround` function iteratively for a 
+specified number of rounds.
+The `salsa20` expression extends the `core` expression by reducing the input from 64 to 16 using `littleendian` functions
+and then augmenting the result back to 64.
+
+Exported functions:
+
+- 'coreCompute': Computes numeric values for the core expression.
+- 'coreDisplay': Generates string representations of the core expression.
+- 'coreEquations': Produces a list of equations for the core expression.
+- 'coreKeelung': Performs Keelung-specific computations for the core expression.
+
+- 'salsa20Compute': Computes numeric values for the salsa20 expression.
+- 'salsa20Display': Generates string representations of the salsa20 expression.
+- 'salsa20Equations': Produces a list of equations for the salsa20 expression.
+- 'salsa20Keelung': Performs Keelung-specific computations for the salsa20 expression.
+
+- 'salsa20powerCompute': Executes the salsa20 function a specified number of times.
+
 -}
 {-# LANGUAGE DataKinds #-}
 
@@ -47,7 +65,7 @@ coreEquations input rounds
     | length input == 16 = [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (coreDisplay input rounds)]
     | otherwise = error "input to `core2Equations` must be a list of 16 `String` strings"
 
--- |The core expression computed.
+-- |The core Keelung expression computed.
 coreKeelung :: [UInt 32] -> Int -> Comp [UInt 32]
 coreKeelung input rounds
     | length input == 16 = do
@@ -73,7 +91,7 @@ salsa20Equations input
     | length input == 64 = [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (salsa20Display input)]
     | otherwise = error "input to `salsa20Equations` must be a list of 64 `String` strings"
 
--- | The salsa20 expression computed.
+-- | The salsa20 Keelung expression computed.
 salsa20Keelung :: [UInt 32] -> Comp [UInt 32]
 salsa20Keelung input
     | length input == 64 = do
@@ -86,4 +104,3 @@ salsa20Keelung input
 salsa20powerCompute :: [Word32] -> Int -> [Word32]
 salsa20powerCompute input 0 = input
 salsa20powerCompute input power = salsa20powerCompute (salsa20Compute input) (power - 1)
-

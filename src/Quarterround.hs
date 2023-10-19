@@ -1,19 +1,22 @@
 {-|
 Module      : Quarterround
-Description : Quarterround related code
+Description : Implementation of the Salsa20 stream cipher quarterround expressions.
 Copyright   : (c) Alfredo Garcia, 2023
 License     : MIT
 Stability   : experimental
 Portability : POSIX
 
-We implement the quarterround equations defined in the spec as an F-Algebra where `Mod`, `Rotl` and `Xor2` are operations.
-This allow us to form quarterround expressions and evaluate them.
+This module provides the implementation of the quarterround function, a core element in the Salsa20 stream cipher.
+The quarterround function manipulates a 1x4 matrix, performing a series of modular arithmetic and bitwise operations,
+including addition (`Mod`), rotation (`Rotl`), and bitwise XOR (`Xor`).
+These operations are expressed as an F-Algebra, allowing the construction and evaluation of quarterround expressions.
 
-We evaluate 3 things:
+The module offers functionalities to:
 
-- The numeric values.
-- The type string.
-- The equations.
+- Compute numeric values resulting from quarterround expressions.
+- Generate string representations of quarterround expressions.
+- Produce a list of equations corresponding to quarterround expressions.
+- Perform Keelung specific computations using the `UInt 32` type.
 
 -}
 {-# LANGUAGE DataKinds #-}
@@ -33,7 +36,7 @@ import Utils
 
 import Keelung hiding (input, eq)
 
--- |The quarterround endofunctor to compute a value or a string type.
+-- |The quarterround endofunctor to compute a Haskell `Word32` or a Haskell `String` type.
 data ExprF a = Const (Either Word32 String)
         | Mod a a
         | Rotl7 a
@@ -42,7 +45,7 @@ data ExprF a = Const (Either Word32 String)
         | Rotl18 a
         | Xor2 a a -- `2` needed to avoid ambiguity with Data.Bits.Xor
 
--- |The quarterround endofunctor to compute a Keelung value.
+-- |The quarterround endofunctor to compute a Keelung `UInt 32` type.
 data ExprFKeelung a = ConstK (UInt 32)
         | ModK a a
         | Rotl7K a
@@ -51,7 +54,7 @@ data ExprFKeelung a = ConstK (UInt 32)
         | Rotl18K a
         | XorK a a
 
--- |Quarterround functor instance for computing a value or displaying a type string.
+-- |Quarterround functor instance for computing a Haskell value or displaying a Haskell string.
 instance Functor ExprF where
     fmap _ (Const i) = Const i
     fmap f (left `Mod` right) = f left `Mod` f right
@@ -61,7 +64,7 @@ instance Functor ExprF where
     fmap f (Rotl13 a) = Rotl13 (f a)
     fmap f (Rotl18 a) = Rotl18 (f a)
 
--- |Quarterround functor instance for computing a Keelung value.
+-- |Quarterround functor instance for computing a Keelung type.
 instance Functor ExprFKeelung where
     fmap _ (ConstK i) = ConstK i
     fmap f (left `ModK` right) = f left `ModK` f right
@@ -100,7 +103,7 @@ algMapsDisplay (Rotl13 a) = printf "(%s <<< 13)" a
 algMapsDisplay (Rotl18 a) = printf "(%s <<< 18)" a
 algMapsDisplay (a `Xor2` b) = printf "%s ⊕ %s" a b
 
--- |The F-algebra maps for a `Keelung` evaluator.
+-- |The F-algebra maps for a `UInt 32` Keelung evaluator.
 algMapsKeelung :: ExprFKeelung (UInt 32) -> UInt 32
 algMapsKeelung (ConstK i) = i
 algMapsKeelung (a `ModK` b) = Keelung.AddU a b
@@ -167,7 +170,7 @@ rhs3 :: [Either Word32 String] -> Fix ExprF
 rhs3 [y0, y1, y2, y3] = In $ Rotl13 (In $ z2 [y0, y1, y2, y3]  `Mod` z1 [y0, y1, y2, y3])
 rhs3 _ = error "input to `rhs3` must be a list of 4 `Word32` numbers"
 
--- |The right hand side of the `z3` expression as an expression. `(z2 + z1) <<< 13)`
+-- |The right hand side of the `z3` expression as a Keelung expression. `(z2 + z1) <<< 13)`
 rhs3Keelung :: [UInt 32] -> Fix ExprFKeelung
 rhs3Keelung [y0, y1, y2, y3] = In $ Rotl13K (In $ z2Keelung [y0, y1, y2, y3]  `ModK` z1Keelung [y0, y1, y2, y3])
 rhs3Keelung _ = error "input to `rhs3Keelung` must be a list of 4 `UInt 32` numbers"
@@ -177,7 +180,7 @@ z3 :: [Either Word32 String] -> Fix ExprF
 z3 [y0, y1, y2, y3] = In $ In (Const y3) `Xor2` rhs3 [y0, y1, y2, y3]
 z3 _ = error "input to `z3` must be a list of 4 `Word32` numbers"
 
--- |The `z3` expression. `y3 ⊕ ((z2 + z1) <<< 13)`
+-- |The `z3` Keelung expression. `y3 ⊕ ((z2 + z1) <<< 13)`
 z3Keelung :: [UInt 32] -> Fix ExprFKeelung
 z3Keelung [y0, y1, y2, y3] = In $ In (ConstK y3) `XorK` rhs3Keelung [y0, y1, y2, y3]
 z3Keelung _ = error "input to `z3Keelung` must be a list of 4 `UInt 32` numbers"
@@ -187,7 +190,7 @@ rhs0 :: [Either Word32 String] -> Fix ExprF
 rhs0 [y0, y1, y2, y3] = In $ Rotl18 (In $ z3 [y0, y1, y2, y3] `Mod` z2 [y0, y1, y2, y3])
 rhs0 _ = error "input to `rhs0`  must be a list of 4 `Word32` numbers"
 
--- |The right hand side of the `z0` expression as an expression. `((z3 + z2) <<< 18)`
+-- |The right hand side of the `z0` expression a Keelung expression. `((z3 + z2) <<< 18)`
 rhs0Keelung :: [UInt 32] -> Fix ExprFKeelung
 rhs0Keelung [y0, y1, y2, y3] = In $ Rotl18K (In $ z3Keelung [y0, y1, y2, y3] `ModK` z2Keelung [y0, y1, y2, y3])
 rhs0Keelung _ = error "input to `rhs0Keelung`  must be a list of 4 `UInt 32` numbers"
@@ -197,7 +200,7 @@ z0 :: [Either Word32 String] -> Fix ExprF
 z0 [y0, y1, y2, y3] = In $ In (Const y0) `Xor2` rhs0 [y0, y1, y2, y3]
 z0 _ = error "input to `z0` must be a list of 4 `Word32` numbers"
 
--- |The `z0` expression. `y0 ⊕ ((z3 + z2) <<< 18)`
+-- |The `z0` Keelung expression. `y0 ⊕ ((z3 + z2) <<< 18)`
 z0Keelung :: [UInt 32] -> Fix ExprFKeelung
 z0Keelung [y0, y1, y2, y3] = In $ In (ConstK y0) `XorK` rhs0Keelung [y0, y1, y2, y3]
 z0Keelung _ = error "input to `z0` must be a list of 4 `Word32` numbers"
@@ -226,7 +229,7 @@ quarterroundEquations input@[_, _, _, _] =
     [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (quarterroundDisplay input)]
 quarterroundEquations _ = error "input to `quarterroundEquations` must be a list of 4 `String` strings"
 
--- | The quarterround expression as a keelung computation.
+-- | The quarterround expression as a Keelung computation.
 quarterroundKeelung :: [UInt 32] -> Comp [UInt 32]
 quarterroundKeelung input = do
     z1' <- reuse . evalKeelung . z1Keelung $ input

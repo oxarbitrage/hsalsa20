@@ -1,19 +1,25 @@
 {-|
 Module      : Rowround
-Description : Rowround related code
+Description : Implementation of the Salsa20 stream cipher rowround expressions.
 Copyright   : (c) Alfredo Garcia, 2023
 License     : MIT
 Stability   : experimental
 Portability : POSIX
 
-We implement the rowround equations as an F-Algebra where `Quarterround` is its single operation.
-This allow us to form rowround expressions and evaluate them.
+This module implements the rowround function, a fundamental operation in the Salsa20 stream cipher.
+The rowround function processes a 4x4 matrix, employing the quarterround function as its single operation.
+The quarterround expressions are formed and evaluated through F-Algebra operations, including modular arithmetic,
+rotation, and bitwise XOR.
 
-We evaluate 3 things:
+The module offers functionalities to:
 
-- The numeric value.
-- The type string.
-- The equations.
+- Compute numeric values resulting from rowround expressions.
+- Generate string representations of rowround expressions.
+- Produce a list of equations corresponding to rowround expressions.
+- Perform Keelung specific computations using the UInt 32 type.
+
+The rowround function is divided into four quarterround operations, each applying unique sorting strategies
+to manipulate the input matrix.
 
 -}
 {-# LANGUAGE DataKinds #-}
@@ -33,18 +39,18 @@ import Utils
 
 import Keelung hiding (input, eq)
 
--- |The rowround endofunctor.
+-- |The rowround endofunctor for Haskell types.
 data ExprF a = Const [Either Word32 String] | Quarterround a
 
--- |The rowround endofunctor for Keelung.
+-- |The rowround endofunctor for Keelung types.
 data ExprFKeelung a = ConstK [UInt 32] | QuarterroundK a
 
--- |Functor instance.
+-- |Functor instance for Haskell types.
 instance Functor ExprF where
     fmap _ (Const i) = Const i
     fmap f (Quarterround a) = Quarterround (f a)
 
--- |Functor instance for Keelung.
+-- |Functor instance for Keelung types.
 instance Functor ExprFKeelung where
     fmap _ (ConstK i) = ConstK i
     fmap f (QuarterroundK a) = QuarterroundK (f a)
