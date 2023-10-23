@@ -2,4 +2,19 @@
 
 [skip to module list](#module-list)
 
-This site contains Haskell documentation of the category theory implementation of the salsa20 crypto cipher.
+Salsa20 is a widely used stream cipher designed for fast and secure encryption. This project contains a pure Haskell implementation of the Salsa20 cipher, organized into several sub-modules.
+
+The implementation is organized into the following modules:
+
+- 'Quarterround': Defines the quarterround operation used in the Salsa20 cipher.
+- 'Rowround': Implements the rowround operation, a component of the Salsa20 cipher.
+- 'Columnround': Implements the columnround operation, treating it as rowround expressions with the input transposed.
+- 'Doubleround': Defines the doubleround function as the composition of rowround and columnround. Also, provides a variant 'doubleroundR' for a specified number of rounds.
+- 'Hash': Implements the Salsa20 core function and the extended hash expressions.
+- 'Utils': Provides utility functions used in the Salsa20 cipher, such as little-endian encoding, matrix operations, and reduction functions.
+- 'Expansion': Implements functions for Salsa20 key expansion and matrix generation.
+- 'Crypt': Provides functions for Salsa20 encryption and decryption.
+
+The Salsa20 cipher itself is a stream cipher that operates on 64-byte blocks, producing a keystream that is XORed with the plaintext to generate ciphertext. It is known for its efficiency and security.
+
+For usage instructions and additional details, refer to the documentation in each module.

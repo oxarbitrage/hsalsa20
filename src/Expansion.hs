@@ -6,9 +6,22 @@ License     : MIT
 Stability   : experimental
 Portability : POSIX
 
-There are two forms of expansion supported by Salsa20 given by key size. The 16 bytes (128 bits) key version is called
-`expand16` and the 32 bytes (256 bits) key version is called `expand32`. The 32 bytes version seems to be the most
-used one.
+This module implements the Salsa20 expansion function, which is an essential part of the Salsa20 stream cipher.
+The expansion function derives the internal key schedule from the provided key and nonce, preparing the cipher for
+ data encryption and decryption.
+
+There are two variants of the expansion function based on the key size:
+
+1. 'expand32': Used with 32-byte (256-bit) keys.
+2. 'expand16': Used with 16-byte (128-bit) keys.
+
+Each of these functions takes a key and nonce as input and produces the Salsa20 keystream as output.
+The 32-byte version is the most commonly used variant in practice.
+
+The module provides functions for computing, displaying, and generating equations for both 'expand32' and
+'expand16' operations. The internal order and constants used in these functions are also defined within this module
+for clarity.
+
 -}
 module Expansion
     (

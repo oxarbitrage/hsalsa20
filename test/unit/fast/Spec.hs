@@ -432,22 +432,22 @@ main = do
 
     putStrLn "Encrypt/Decrypt tests:"
 
-    let encrypted1 = cryptBlockV1 message1 key1 nonce1 0
-    let decrypted1 = cryptBlockV1 encrypted1 key1 nonce1 0
+    let encrypted1 = cryptBlock16Compute message1 key1 nonce1 0
+    let decrypted1 = cryptBlock16Compute encrypted1 key1 nonce1 0
 
     putStrLn $ if length encrypted1 == length message1 then "OK" else "FAIL!"
     putStrLn $ if encrypted1 /= message1 then "OK" else "FAIL!"
     putStrLn $ if decrypted1 == message1 then "OK" else "FAIL!"
 
-    let encrypted2 = cryptBlockV1 message2 key1 nonce1 0
-    let decrypted2 = cryptBlockV1 encrypted2 key1 nonce1 0
+    let encrypted2 = cryptBlock16Compute message2 key1 nonce1 0
+    let decrypted2 = cryptBlock16Compute encrypted2 key1 nonce1 0
 
     putStrLn $ if length encrypted2 == length message2 then "OK" else "FAIL!"
     putStrLn $ if encrypted2 /= message2 then "OK" else "FAIL!"
     putStrLn $ if decrypted2 == message2 then "OK" else "FAIL!"
     
-    let encrypted3 = cryptBlockV1 message3 key1 nonce1 0
-    let decrypted3 = cryptBlockV1 encrypted3 key1 nonce1 0
+    let encrypted3 = cryptBlock16Compute message3 key1 nonce1 0
+    let decrypted3 = cryptBlock16Compute encrypted3 key1 nonce1 0
 
     putStrLn $ if length encrypted3 == length message3 then "OK" else "FAIL!"
     putStrLn $ if encrypted3 /= message3 then "OK" else "FAIL!"
@@ -455,8 +455,8 @@ main = do
     
     -- one more than 64
     let message4 = message3 ++ [0]
-    let encrypted4 = cryptBlockV1 message4 key1 nonce1 0
-    let decrypted4 = cryptBlockV1 encrypted4 key1 nonce1 0
+    let encrypted4 = cryptBlock16Compute message4 key1 nonce1 0
+    let decrypted4 = cryptBlock16Compute encrypted4 key1 nonce1 0
 
     putStrLn $ if length encrypted4 == length message4 then "OK" else "FAIL!"
     putStrLn $ if encrypted4 /= message4 then "OK" else "FAIL!"
@@ -464,17 +464,25 @@ main = do
     
     -- one more than 129
     let message5 = message3 ++ message3 ++ [0]
-    let encrypted5 = cryptBlockV1 message5 key1 nonce1 0
-    let decrypted5 = cryptBlockV1 encrypted5 key1 nonce1 0
+    let encrypted5 = cryptBlock16Compute message5 key1 nonce1 0
+    let decrypted5 = cryptBlock16Compute encrypted5 key1 nonce1 0
 
     putStrLn $ if length encrypted5 == length message5 then "OK" else "FAIL!"
     putStrLn $ if encrypted5 /= message5 then "OK" else "FAIL!"
     putStrLn $ if decrypted5 == message5 then "OK" else "FAIL!"
 
+    let encrypted6 = cryptBlock16Compute message6 key1 nonce1 0
+    let decrypted6 = cryptBlock16Compute encrypted6 key1 nonce1 0
+
+    putStrLn $ if length encrypted6 == length message6 then "OK" else "FAIL!"
+    putStrLn $ if encrypted6 /= message6 then "OK" else "FAIL!"
+    putStrLn $ if encrypted6 == message6_crypted then "OK" else "FAIL!"
+    putStrLn $ if decrypted6 == message6 then "OK" else "FAIL!"
+
     -- the other version (2 keys)
 
-    let v2encrypted1 = cryptBlockV2 message1 key1 key2 nonce1 0
-    let v2decrypted1 = cryptBlockV2 v2encrypted1 key1 key2 nonce1 0
+    let v2encrypted1 = cryptBlock32Compute message1 key1 key2 nonce1 0
+    let v2decrypted1 = cryptBlock32Compute v2encrypted1 key1 key2 nonce1 0
 
     putStrLn $ if length v2encrypted1 == length message1 then "OK" else "FAIL!"
     putStrLn $ if v2encrypted1 /= message1 then "OK" else "FAIL!"
@@ -482,8 +490,8 @@ main = do
     putStrLn $ if v2encrypted1 /= encrypted1 then "OK" else "FAIL!"
     putStrLn $ if v2decrypted1 == decrypted1 then "OK" else "FAIL!"
 
-    let v2encrypted2 = cryptBlockV2 message2 key1 key2 nonce1 0
-    let v2decrypted2 = cryptBlockV2 v2encrypted2 key1 key2 nonce1 0
+    let v2encrypted2 = cryptBlock32Compute message2 key1 key2 nonce1 0
+    let v2decrypted2 = cryptBlock32Compute v2encrypted2 key1 key2 nonce1 0
 
     putStrLn $ if length v2encrypted2 == length message2 then "OK" else "FAIL!"
     putStrLn $ if v2encrypted2 /= message2 then "OK" else "FAIL!"
@@ -491,8 +499,8 @@ main = do
     putStrLn $ if v2encrypted2 /= encrypted2 then "OK" else "FAIL!"
     putStrLn $ if v2decrypted2 == decrypted2 then "OK" else "FAIL!"
 
-    let v2encrypted3 = cryptBlockV2 message3 key1 key2 nonce1 0
-    let v2decrypted3 = cryptBlockV2 v2encrypted3 key1 key2 nonce1 0
+    let v2encrypted3 = cryptBlock32Compute message3 key1 key2 nonce1 0
+    let v2decrypted3 = cryptBlock32Compute v2encrypted3 key1 key2 nonce1 0
 
     putStrLn $ if length v2encrypted3 == length message3 then "OK" else "FAIL!"
     putStrLn $ if v2encrypted3 /= message3 then "OK" else "FAIL!"
@@ -500,8 +508,8 @@ main = do
     putStrLn $ if v2encrypted3 /= encrypted3 then "OK" else "FAIL!"
     putStrLn $ if v2decrypted3 == decrypted3 then "OK" else "FAIL!"
 
-    let v2encrypted4 = cryptBlockV2 message4 key1 key2 nonce1 0
-    let v2decrypted4 = cryptBlockV2 v2encrypted4 key1 key2 nonce1 0
+    let v2encrypted4 = cryptBlock32Compute message4 key1 key2 nonce1 0
+    let v2decrypted4 = cryptBlock32Compute v2encrypted4 key1 key2 nonce1 0
 
     putStrLn $ if length v2encrypted4 == length message4 then "OK" else "FAIL!"
     putStrLn $ if v2encrypted1 /= message4 then "OK" else "FAIL!"
@@ -509,22 +517,13 @@ main = do
     putStrLn $ if v2encrypted4 /= encrypted4 then "OK" else "FAIL!"
     putStrLn $ if v2decrypted4 == decrypted4 then "OK" else "FAIL!"
 
-    let v2encrypted5 = cryptBlockV2 message5 key1 key2 nonce1 0
-    let v2decrypted5 = cryptBlockV2 v2encrypted5 key1 key2 nonce1 0
+    let v2encrypted5 = cryptBlock32Compute message5 key1 key2 nonce1 0
+    let v2decrypted5 = cryptBlock32Compute v2encrypted5 key1 key2 nonce1 0
 
     putStrLn $ if length v2encrypted5 == length message5 then "OK" else "FAIL!"
     putStrLn $ if v2encrypted5 /= message5 then "OK" else "FAIL!"
     putStrLn $ if v2decrypted5 == message5 then "OK" else "FAIL!"
     putStrLn $ if v2encrypted5 /= encrypted5 then "OK" else "FAIL!"
     putStrLn $ if v2decrypted5 == decrypted5 then "OK" else "FAIL!"
-
-    let encrypted6 = cryptBlockV1 message6 key1 nonce1 0
-    let decrypted6 = cryptBlockV1 encrypted6 key1 nonce1 0
-
-    putStrLn $ if length encrypted6 == length message6 then "OK" else "FAIL!"
-    putStrLn $ if encrypted6 /= message6 then "OK" else "FAIL!"
-    putStrLn $ if encrypted6 == message6_crypted then "OK" else "FAIL!"
-    putStrLn $ if decrypted6 == message6 then "OK" else "FAIL!"
-
 
     return ()

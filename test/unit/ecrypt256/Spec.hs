@@ -117,7 +117,7 @@ processTestVectors message collected = do
 
     forM_ zipped $ \(testName, idx) -> do
         let runTest streamIndex getExpected = do
-                let output = cryptBlockV2 message
+                let output = cryptBlock32Compute message
                         (encodeHexString (key1_list collected !! idx))
                         (encodeHexString (key2_list collected !! idx))
                         (encodeHexString (iv_list collected !! idx))
