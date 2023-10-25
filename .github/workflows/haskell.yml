@@ -49,4 +49,5 @@ jobs:
     - name: Run display tests
       run: cabal test salsa20-display-unit-tests
     - name: Run keelung tests
+      if: matrix.os == 'ubuntu-latest'
       run: cabal test salsa20-keelung-unit-tests
