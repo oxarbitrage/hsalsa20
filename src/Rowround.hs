@@ -174,9 +174,9 @@ rowroundDisplay input
     | otherwise = error "input to `rowroundCompute` must be a list of 16 `String` strings"
 
 -- |The rowround expression as a list of equations.
-rowroundEquations :: [String] -> [String]
+rowroundEquations :: [String] -> IO ()
 rowroundEquations input
-    | length input == 16 = [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (rowroundDisplay input)]
+    | length input == 16 = mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (rowroundDisplay input)]
     | otherwise = error "input to `rowroundEquations` must be a list of 16 `String` strings"
 
 -- |The rowround Keelung expression.

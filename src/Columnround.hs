@@ -50,9 +50,9 @@ columnroundDisplay input
     | otherwise = error "input to `columnroundDisplay` must be a list of 16 `String` strings"
 
 -- |The columnround expression as a list of equations.
-columnroundEquations :: [String] -> [String]
+columnroundEquations :: [String] -> IO ()
 columnroundEquations input
-    | length input == 16 = [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (columnroundDisplay input)]
+    | length input == 16 = mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (columnroundDisplay input)]
     | otherwise = error "input to `columnroundEquations` must be a list of 16 `String` strings"
 
 -- |The Keelung columnround expression.

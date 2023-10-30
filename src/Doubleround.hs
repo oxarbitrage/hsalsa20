@@ -65,9 +65,9 @@ doubleroundDisplay input
     | otherwise = error "input to `doubleroundDisplay` must be a list of 16 `String` strings"
 
 -- |The doubleround expression as a list of equations.
-doubleroundEquations :: [String] -> [String]
+doubleroundEquations :: [String] -> IO ()
 doubleroundEquations input
-    | length input == 16 = [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (doubleroundDisplay input)]
+    | length input == 16 = mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (doubleroundDisplay input)]
     | otherwise = error "input to `doubleroundEquations` must be a list of 16 `String` strings"
 
 -- |The doubleround Keelung expression.
@@ -91,10 +91,10 @@ doubleroundRDisplay input r
     | otherwise = error "arguments of `doubleroundRDisplay` must be a list of 16 `String` strings and a number `Int` of rounds"
 
 -- |The doubleroundR expression as a list of equations.
-doubleroundREquations :: [String] -> Int -> [String]
+doubleroundREquations :: [String] -> Int -> IO ()
 doubleroundREquations input r
-    | length input == 16 && r == 0 = input
-    | length input == 16 && r > 0 = [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (doubleroundRDisplay input r)]
+    | length input == 16 && r == 0 = mapM_ putStrLn input
+    | length input == 16 && r > 0 = mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (doubleroundRDisplay input r)]
     | otherwise = error "arguments of `doubleroundREquations` must be a list of 16 `String` strings and a number `Int` of rounds"
 
 -- |The doubleroundR Keelung expression.

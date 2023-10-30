@@ -224,9 +224,9 @@ quarterroundDisplay input@[_, _, _, _] = [
 quarterroundDisplay _ = error "input to `quarterroundDisplay` must be a list of 4 `String` strings"
 
 -- |The quarterround expression as a list of equations.
-quarterroundEquations :: [String] -> [String]
-quarterroundEquations input@[_, _, _, _] =
-    [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (quarterroundDisplay input)]
+quarterroundEquations :: [String] -> IO ()
+quarterroundEquations input@[_, _, _, _] = 
+    mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (quarterroundDisplay input)]
 quarterroundEquations _ = error "input to `quarterroundEquations` must be a list of 4 `String` strings"
 
 -- | The quarterround expression as a Keelung computation.

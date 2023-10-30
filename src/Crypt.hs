@@ -126,10 +126,10 @@ cryptBlock16Display (x:xs) key nonce index
 cryptBlock16Display _ _ _ _ = []
 
 -- |Display the encryption or decryption of a message with a single 16 bytes key as a list of equations.
-cryptBlock16Equations :: [String] -> [String] -> [String] -> Int -> [String]
+cryptBlock16Equations :: [String] -> [String] -> [String] -> Int -> IO ()
 cryptBlock16Equations message key nonce index
     | length key == 16 && length nonce == 8 =
-        [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (cryptBlock16Display message key nonce index)]
+        mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (cryptBlock16Display message key nonce index)]
     | otherwise = error "first input to `cryptBlock16Equations` must be a list of 16 `String` strings and the second a list of 8 `String` strings"
 
 {-|
@@ -180,8 +180,8 @@ cryptBlock32Display (x:xs) key0 key1 nonce index
 cryptBlock32Display _ _ _ _ _ = []
 
 -- |Display the encryption or decryption of a message with a two 16 bytes key as a list of equations.
-cryptBlock32Equations :: [String] -> [String] -> [String] -> [String] -> Int -> [String]
+cryptBlock32Equations :: [String] -> [String] -> [String] -> [String] -> Int -> IO ()
 cryptBlock32Equations message key0 key1 nonce index
     | length key0 == 16 && length key1 == 16 && length nonce == 8 =
-        [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (cryptBlock32Display message key0 key1 nonce index)]
+        mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (cryptBlock32Display message key0 key1 nonce index)]
     | otherwise = error "first input to `cryptBlock32Equations` must be a list of 16 `String` strings, the second a list of 16 `String` strings and the third a list of 8 `String` strings"

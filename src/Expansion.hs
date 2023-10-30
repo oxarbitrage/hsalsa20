@@ -83,10 +83,10 @@ expand32Display k0 k1 n
         \list of 16 `String` strings as an `n`"
 
 -- |The expansion function equations where we have two 16 bytes (k0 and k1).
-expand32Equations :: [String] -> [String] -> [String] -> [String]
+expand32Equations :: [String] -> [String] -> [String] -> IO ()
 expand32Equations k0 k1 n
     | length k0 == 16 && length k1 == 16 && length n == 16 =
-        [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (expand32Display k0 k1 n)]
+        mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (expand32Display k0 k1 n)]
     | otherwise = error "inputs to `expand32Equations` must be 2 lists of 16 `String` strings as a k0 and k1;  and a \
         \list of 16 `String` strings as an `n`"
 
@@ -114,10 +114,10 @@ expand16Display k n
         \list of 16 `String` strings as an `n`"
 
 -- |The expansion function equations where we have one 16 bytes (k).
-expand16Equations :: [String] -> [String] -> [String]
+expand16Equations :: [String] -> [String] -> IO ()
 expand16Equations k n
     | length k == 16 && length n == 16 =
-        [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (expand16Display k n)]
+        mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (expand16Display k n)]
     | otherwise = error "inputs to `expand16Equations` must be a list of 16 `String` strings as a key and a \
         \list of 16 `String` strings as an `n`"
 
