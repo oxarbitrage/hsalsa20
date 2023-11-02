@@ -14,7 +14,6 @@ The module provides functionalities to:
 
 - Compute numeric values resulting from doubleround expressions.
 - Generate string representations of doubleround expressions.
-- Produce a list of equations corresponding to doubleround expressions.
 - Perform Keelung specific computations using the UInt 32 type.
 
 The doubleround function applies rowround to the result of columnround, creating a comprehensive cryptographic operation.
@@ -24,14 +23,12 @@ Exported functions:
 
 - 'doubleroundCompute': Computes numeric values for a doubleround expression.
 - 'doubleroundDisplay': Generates string representations of a doubleround expression.
-- 'doubleroundEquations': Produces a list of equations for a doubleround expression.
 - 'doubleroundKeelung': Performs Keelung-specific computations for a doubleround expression.
 
 The 'doubleroundR' variant:
 
 - 'doubleroundRCompute': Computes numeric values for an iterated doubleround expression.
 - 'doubleroundRDisplay': Generates string representations of an iterated doubleround expression.
-- 'doubleroundREquations': Produces a list of equations for an iterated doubleround expression.
 - 'doubleroundRKeelung': Performs Keelung-specific computations for an iterated doubleround expression.
 
 -}
@@ -39,13 +36,12 @@ The 'doubleroundR' variant:
 
 module Doubleround
     (
-        doubleroundCompute, doubleroundDisplay, doubleroundEquations, doubleroundKeelung,
-        doubleroundRCompute, doubleroundRDisplay, doubleroundREquations, doubleroundRKeelung,
+        doubleroundCompute, doubleroundDisplay, doubleroundKeelung,
+        doubleroundRCompute, doubleroundRDisplay, doubleroundRKeelung,
     )
 where
 
 import Data.Word
-import Text.Printf
 
 import Keelung hiding (input, eq)
 
@@ -63,12 +59,6 @@ doubleroundDisplay :: [String] -> [String]
 doubleroundDisplay input
     | length input == 16 = rowroundDisplay $ columnroundDisplay input
     | otherwise = error "input to `doubleroundDisplay` must be a list of 16 `String` strings"
-
--- |The doubleround expression as a list of equations.
-doubleroundEquations :: [String] -> IO ()
-doubleroundEquations input
-    | length input == 16 = mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (doubleroundDisplay input)]
-    | otherwise = error "input to `doubleroundEquations` must be a list of 16 `String` strings"
 
 -- |The doubleround Keelung expression.
 doubleroundKeelung :: [UInt 32] -> Comp [UInt 32]
@@ -89,13 +79,6 @@ doubleroundRDisplay input r
     | length input == 16 && r == 0 = input
     | length input == 16 && r > 0 = doubleroundRDisplay (doubleroundDisplay input) (r - 1)
     | otherwise = error "arguments of `doubleroundRDisplay` must be a list of 16 `String` strings and a number `Int` of rounds"
-
--- |The doubleroundR expression as a list of equations.
-doubleroundREquations :: [String] -> Int -> IO ()
-doubleroundREquations input r
-    | length input == 16 && r == 0 = mapM_ putStrLn input
-    | length input == 16 && r > 0 = mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (doubleroundRDisplay input r)]
-    | otherwise = error "arguments of `doubleroundREquations` must be a list of 16 `String` strings and a number `Int` of rounds"
 
 -- |The doubleroundR Keelung expression.
 doubleroundRKeelung :: [UInt 32] -> Int -> Comp [UInt 32]

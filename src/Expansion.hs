@@ -25,13 +25,12 @@ for clarity.
 -}
 module Expansion
     (
-        expand32Compute, expand32Display, expand32Equations,
-        expand16Compute, expand16Display, expand16Equations,
+        expand32Compute, expand32Display,
+        expand16Compute, expand16Display,
     )
 where
 
 import Data.Word
-import Text.Printf
 
 import Hash
 import Utils
@@ -82,14 +81,6 @@ expand32Display k0 k1 n
     | otherwise = error "inputs to `expand32Display` must be 2 lists of 16 `String` strings as a k0 and k1; and a \
         \list of 16 `String` strings as an `n`"
 
--- |The expansion function equations where we have two 16 bytes (k0 and k1).
-expand32Equations :: [String] -> [String] -> [String] -> IO ()
-expand32Equations k0 k1 n
-    | length k0 == 16 && length k1 == 16 && length n == 16 =
-        mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (expand32Display k0 k1 n)]
-    | otherwise = error "inputs to `expand32Equations` must be 2 lists of 16 `String` strings as a k0 and k1;  and a \
-        \list of 16 `String` strings as an `n`"
-
 -- |The order needed for the 32 bytes k version of the expansion function `expand32`.
 sort32Compute :: [Word32] -> [Word32] -> [Word32] -> [Word32]
 sort32Compute k0 k1 n = o0 ++ k0 ++ o1 ++ n ++ o2 ++ k1 ++ o3 
@@ -111,14 +102,6 @@ expand16Display :: [String] -> [String] -> [String]
 expand16Display k n
     | length k == 16 && length n == 16 = salsa20Display (sort16Display k n) 10
     | otherwise = error "inputs to `expand16Display` must be a list of 16 `String` strings as a key and a \
-        \list of 16 `String` strings as an `n`"
-
--- |The expansion function equations where we have one 16 bytes (k).
-expand16Equations :: [String] -> [String] -> IO ()
-expand16Equations k n
-    | length k == 16 && length n == 16 =
-        mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (expand16Display k n)]
-    | otherwise = error "inputs to `expand16Equations` must be a list of 16 `String` strings as a key and a \
         \list of 16 `String` strings as an `n`"
 
 -- |Expand for computation of the 16 bytes k version of the expansion function `expand16`.

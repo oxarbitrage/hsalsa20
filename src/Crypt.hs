@@ -19,8 +19,8 @@ Please refer to the individual function documentation for specific details and u
 -}
 module Crypt
     (
-        cryptBlock16Compute, cryptBlock16Display, cryptBlock16Equations,
-        cryptBlock32Compute, cryptBlock32Display, cryptBlock32Equations,
+        cryptBlock16Compute, cryptBlock16Display,
+        cryptBlock32Compute, cryptBlock32Display,
     )
 where
 
@@ -125,13 +125,6 @@ cryptBlock16Display (x:xs) key nonce index
     | otherwise = error "first input to `cryptBlock16Display` must be a list of 16 `String` strings and the second a list of 8 `String` strings"
 cryptBlock16Display _ _ _ _ = []
 
--- |Display the encryption or decryption of a message with a single 16 bytes key as a list of equations.
-cryptBlock16Equations :: [String] -> [String] -> [String] -> Int -> IO ()
-cryptBlock16Equations message key nonce index
-    | length key == 16 && length nonce == 8 =
-        mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (cryptBlock16Display message key nonce index)]
-    | otherwise = error "first input to `cryptBlock16Equations` must be a list of 16 `String` strings and the second a list of 8 `String` strings"
-
 {-|
 Generate the Salsa20 expansion matrix for a 32-byte key.
 This function computes the Salsa20 expansion matrix for two given 16-byte keys and nonce, 
@@ -178,10 +171,3 @@ cryptBlock32Display (x:xs) key0 key1 nonce index
             cryptBlock32Display xs key0 key1 nonce (index+1)
     | otherwise = error "first input to `cryptBlock32Display` must be a list of 16 `String` strings, the second a list of 16 `String` strings and the third a list of 8 `String` strings"
 cryptBlock32Display _ _ _ _ _ = []
-
--- |Display the encryption or decryption of a message with a two 16 bytes key as a list of equations.
-cryptBlock32Equations :: [String] -> [String] -> [String] -> [String] -> Int -> IO ()
-cryptBlock32Equations message key0 key1 nonce index
-    | length key0 == 16 && length key1 == 16 && length nonce == 8 =
-        mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (cryptBlock32Display message key0 key1 nonce index)]
-    | otherwise = error "first input to `cryptBlock32Equations` must be a list of 16 `String` strings, the second a list of 16 `String` strings and the third a list of 8 `String` strings"

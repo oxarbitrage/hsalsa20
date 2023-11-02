@@ -15,7 +15,6 @@ The module offers functionalities to:
 
 - Compute numeric values resulting from columnround expressions.
 - Generate string representations of columnround expressions.
-- Produce a list of equations corresponding to columnround expressions.
 - Perform Keelung specific computations using the UInt 32 type.
 
 The columnround function mirrors the rowround structure, providing consistency in the cryptographic operations.
@@ -25,7 +24,7 @@ The columnround function mirrors the rowround structure, providing consistency i
 
 module Columnround
     (
-        columnroundCompute, columnroundDisplay, columnroundEquations, columnroundKeelung,
+        columnroundCompute, columnroundDisplay, columnroundKeelung,
     )
 where
 
@@ -33,7 +32,6 @@ import Rowround
 import Utils
 
 import Data.Word
-import Text.Printf
 
 import Keelung hiding (input, eq)
 
@@ -48,12 +46,6 @@ columnroundDisplay :: [String] -> [String]
 columnroundDisplay input
     | length input == 16 = transpose $ rowroundDisplay $ transpose input
     | otherwise = error "input to `columnroundDisplay` must be a list of 16 `String` strings"
-
--- |The columnround expression as a list of equations.
-columnroundEquations :: [String] -> IO ()
-columnroundEquations input
-    | length input == 16 = mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (columnroundDisplay input)]
-    | otherwise = error "input to `columnroundEquations` must be a list of 16 `String` strings"
 
 -- |The Keelung columnround expression.
 columnroundKeelung :: [UInt 32] -> Comp [UInt 32]

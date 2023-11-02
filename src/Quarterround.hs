@@ -15,7 +15,6 @@ The module offers functionalities to:
 
 - Compute numeric values resulting from quarterround expressions.
 - Generate string representations of quarterround expressions.
-- Produce a list of equations corresponding to quarterround expressions.
 - Perform Keelung specific computations using the `UInt 32` type.
 
 -}
@@ -23,7 +22,7 @@ The module offers functionalities to:
 
 module Quarterround
     (
-        quarterroundCompute, quarterroundDisplay, quarterroundEquations, quarterroundKeelung,
+        quarterroundCompute, quarterroundDisplay, quarterroundKeelung,
     )
 where
 
@@ -222,12 +221,6 @@ quarterroundDisplay input@[_, _, _, _] = [
     evalDisplay $ z2 $ stringListToEitherList input,
     evalDisplay $ z3 $ stringListToEitherList input]
 quarterroundDisplay _ = error "input to `quarterroundDisplay` must be a list of 4 `String` strings"
-
--- |The quarterround expression as a list of equations.
-quarterroundEquations :: [String] -> IO ()
-quarterroundEquations input@[_, _, _, _] = 
-    mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (quarterroundDisplay input)]
-quarterroundEquations _ = error "input to `quarterroundEquations` must be a list of 4 `String` strings"
 
 -- | The quarterround expression as a Keelung computation.
 quarterroundKeelung :: [UInt 32] -> Comp [UInt 32]

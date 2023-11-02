@@ -15,7 +15,6 @@ The module offers functionalities to:
 
 - Compute numeric values resulting from rowround expressions.
 - Generate string representations of rowround expressions.
-- Produce a list of equations corresponding to rowround expressions.
 - Perform Keelung specific computations using the UInt 32 type.
 
 The rowround function is divided into four quarterround operations, each applying unique sorting strategies
@@ -26,7 +25,7 @@ to manipulate the input matrix.
 
 module Rowround
     (
-        rowroundCompute, rowroundDisplay, rowroundEquations, rowroundKeelung,
+        rowroundCompute, rowroundDisplay, rowroundKeelung,
     )
 where
 
@@ -172,12 +171,6 @@ rowroundDisplay input
         sort3_inv $ evalDisplay $ quarterround3 $ stringListToEitherList input,
         sort4_inv $ evalDisplay $ quarterround4 $ stringListToEitherList input]
     | otherwise = error "input to `rowroundCompute` must be a list of 16 `String` strings"
-
--- |The rowround expression as a list of equations.
-rowroundEquations :: [String] -> IO ()
-rowroundEquations input
-    | length input == 16 = mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (rowroundDisplay input)]
-    | otherwise = error "input to `rowroundEquations` must be a list of 16 `String` strings"
 
 -- |The rowround Keelung expression.
 rowroundKeelung :: [UInt 32] -> Comp [UInt 32]

@@ -18,12 +18,10 @@ Exported functions:
 
 - 'coreCompute': Computes numeric values for the core expression.
 - 'coreDisplay': Generates string representations of the core expression.
-- 'coreEquations': Produces a list of equations for the core expression.
 - 'coreKeelung': Performs Keelung-specific computations for the core expression.
 
 - 'salsa20Compute': Computes numeric values for the salsa20 expression.
 - 'salsa20Display': Generates string representations of the salsa20 expression.
-- 'salsa20Equations': Produces a list of equations for the salsa20 expression.
 - 'salsa20Keelung': Performs Keelung-specific computations for the salsa20 expression.
 
 - 'salsa20powerCompute': Executes the salsa20 function a specified number of times.
@@ -33,14 +31,13 @@ Exported functions:
 
 module Hash
     (
-        coreCompute, coreDisplay, coreEquations, coreKeelung,
-        salsa20Compute, salsa20Display, salsa20Equations, salsa20Keelung,
+        coreCompute, coreDisplay, coreKeelung,
+        salsa20Compute, salsa20Display, salsa20Keelung,
         salsa20powerCompute,
     )
 where
 
 import Data.Word
-import Text.Printf
 
 import Keelung hiding (input, eq)
 
@@ -58,12 +55,6 @@ coreDisplay :: [String] -> Int -> [String]
 coreDisplay input rounds
     | length input == 16 = modMatrixDisplay (doubleroundRDisplay input rounds) input
     | otherwise = error "input to `coreDisplay` must be a list of 16 `String` strings"
-
--- |The core expression as a list of equations.
-coreEquations :: [String] -> Int -> IO ()
-coreEquations input rounds
-    | length input == 16 = mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (coreDisplay input rounds)]
-    | otherwise = error "input to `core2Equations` must be a list of 16 `String` strings"
 
 -- |The core Keelung expression computed.
 coreKeelung :: [UInt 32] -> Int -> Comp [UInt 32]
@@ -84,12 +75,6 @@ salsa20Display :: [String] -> Int -> [String]
 salsa20Display input rounds
     | length input == 64 = aumentDisplay $ coreDisplay (reduceDisplay input) rounds
     | otherwise = error "input to `salsa20Display` must be a list of 64 `String` strings"
-
--- |The salsa20 expression as a list of equations.
-salsa20Equations :: [String] -> Int -> IO ()
-salsa20Equations input rounds
-    | length input == 64 = mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (salsa20Display input rounds)]
-    | otherwise = error "input to `salsa20Equations` must be a list of 64 `String` strings"
 
 -- | The salsa20 Keelung expression computed.
 salsa20Keelung :: [UInt 32] -> Comp [UInt 32]
