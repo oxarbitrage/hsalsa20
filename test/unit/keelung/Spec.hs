@@ -120,7 +120,7 @@ main = do
     putStrLn $ if core_constraints == 181956 then "OK" else "FAIL!"
     -}
 
-    let salsa20_computed = salsa20Compute demoSalsa20InputWord32
+    let salsa20_computed = salsa20Compute demoSalsa20InputWord32 10
     salsa20_interpreted <- interpret gf181 (salsa20Keelung demoSalsa20InputUInt32) [] []
     putStrLn $ if salsa20_computed == map fromIntegral salsa20_interpreted then "OK" else "FAIL!"
 

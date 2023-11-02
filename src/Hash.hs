@@ -74,21 +74,21 @@ coreKeelung input rounds
     | otherwise = error "input to `coreCompute` must be a list of 16 `Word32` numbers"
 
 -- | The salsa20 expression computed.
-salsa20Compute :: [Word32] -> [Word32]
-salsa20Compute input
-    | length input == 64 = aument $ coreCompute (Utils.reduce input) 10
+salsa20Compute :: [Word32] -> Int -> [Word32]
+salsa20Compute input rounds
+    | length input == 64 = aument $ coreCompute (Utils.reduce input) rounds
     | otherwise = error "input to `salsa20Compute` must be a list of 64 `Word32` numbers"
 
 -- |The salsa20 expression as a string using `core1Display` which is only one round of doubleround.
-salsa20Display :: [String] -> [String]
-salsa20Display input 
-    | length input == 64 = aumentDisplay $ coreDisplay (reduceDisplay input) 10
+salsa20Display :: [String] -> Int -> [String]
+salsa20Display input rounds
+    | length input == 64 = aumentDisplay $ coreDisplay (reduceDisplay input) rounds
     | otherwise = error "input to `salsa20Display` must be a list of 64 `String` strings"
 
 -- |The salsa20 expression as a list of equations.
-salsa20Equations :: [String] -> IO ()
-salsa20Equations input
-    | length input == 64 = mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (salsa20Display input)]
+salsa20Equations :: [String] -> Int -> IO ()
+salsa20Equations input rounds
+    | length input == 64 = mapM_ putStrLn $ [printf "z%d = %s" (idx :: Int) eq | (idx, eq) <- zip [0..] (salsa20Display input rounds)]
     | otherwise = error "input to `salsa20Equations` must be a list of 64 `String` strings"
 
 -- | The salsa20 Keelung expression computed.
@@ -103,4 +103,4 @@ salsa20Keelung input
 -- |Execute `salsa20` a specified number of times, this is not part of the protocol and just used in a test case. 
 salsa20powerCompute :: [Word32] -> Int -> [Word32]
 salsa20powerCompute input 0 = input
-salsa20powerCompute input power = salsa20powerCompute (salsa20Compute input) (power - 1)
+salsa20powerCompute input power = salsa20powerCompute (salsa20Compute input 10) (power - 1)
