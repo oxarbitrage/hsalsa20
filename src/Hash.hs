@@ -70,7 +70,7 @@ salsa20Compute input rounds
     | length input == 64 = aument $ coreCompute (Utils.reduce input) rounds
     | otherwise = error "input to `salsa20Compute` must be a list of 64 `Word32` numbers"
 
--- |The salsa20 expression as a string using `core1Display` which is only one round of doubleround.
+-- |The salsa20 expression as a string using `coreDisplay`. Call with r = 1, which is one round of doubleround.
 salsa20Display :: [String] -> Int -> [String]
 salsa20Display input rounds
     | length input == 64 = aumentDisplay $ coreDisplay (reduceDisplay input) rounds

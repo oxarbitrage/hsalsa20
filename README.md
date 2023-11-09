@@ -12,6 +12,8 @@ This codebase is primarily a personal project, initiated for the purpose of lear
 
 ## Features
 
+- Salsa20 Encryption and Decryption Demo: Explore the Salsa20 encryption and decryption application by running the `stack run` command.
+
 - Extensive Testing: The project includes a comprehensive suite of tests to ensure code quality. You can run the tests locally using `stack test` or `cabal test`. The CI (Continuous Integration) pipeline also runs most of these tests.
 
 ## Tutorial

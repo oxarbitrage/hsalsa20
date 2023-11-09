@@ -50,6 +50,10 @@ executables:
     dependencies:
     - salsa20
     - split
+    - cryptohash-sha256
+    - bytestring
+    - nonce
+    - base64-bytestring
 
 tests:
   salsa20-fast-unit-tests:
