@@ -45,18 +45,21 @@ import Doubleround
 import Utils
 
 -- |The core expression computed.
+{-@ ignore coreCompute @-}
 coreCompute :: [Word32] -> Int -> [Word32]
 coreCompute input rounds
     | length input == 16 = modMatrix (doubleroundRCompute input rounds) input
     | otherwise = error "input to `coreCompute` must be a list of 16 `Word32` numbers"
 
 -- |The core expression as a string.
+{-@ ignore coreDisplay @-}
 coreDisplay :: [String] -> Int -> [String]
 coreDisplay input rounds
     | length input == 16 = modMatrixDisplay (doubleroundRDisplay input rounds) input
     | otherwise = error "input to `coreDisplay` must be a list of 16 `String` strings"
 
 -- |The core Keelung expression computed.
+{-@ ignore coreKeelung @-}
 coreKeelung :: [UInt 32] -> Int -> Comp [UInt 32]
 coreKeelung input rounds
     | length input == 16 = do
@@ -65,18 +68,21 @@ coreKeelung input rounds
     | otherwise = error "input to `coreCompute` must be a list of 16 `Word32` numbers"
 
 -- | The salsa20 expression computed.
+{-@ ignore salsa20Compute @-}
 salsa20Compute :: [Word32] -> Int -> [Word32]
 salsa20Compute input rounds
     | length input == 64 = aument $ coreCompute (Utils.reduce input) rounds
     | otherwise = error "input to `salsa20Compute` must be a list of 64 `Word32` numbers"
 
 -- |The salsa20 expression as a string using `coreDisplay`. Call with r = 1, which is one round of doubleround.
+{-@ ignore salsa20Display @-}
 salsa20Display :: [String] -> Int -> [String]
 salsa20Display input rounds
     | length input == 64 = aumentDisplay $ coreDisplay (reduceDisplay input) rounds
     | otherwise = error "input to `salsa20Display` must be a list of 64 `String` strings"
 
 -- | The salsa20 Keelung expression computed.
+{-@ ignore salsa20Keelung @-}
 salsa20Keelung :: [UInt 32] -> Comp [UInt 32]
 salsa20Keelung input
     | length input == 64 = do
@@ -85,7 +91,8 @@ salsa20Keelung input
         return $ aumentKeelung core
     | otherwise = error "input to `salsa20Compute` must be a list of 64 `Word32` numbers"
 
--- |Execute `salsa20` a specified number of times, this is not part of the protocol and just used in a test case. 
+-- |Execute `salsa20` a specified number of times, this is not part of the protocol and just used in a test case.
+{-@ ignore salsa20powerCompute @-}
 salsa20powerCompute :: [Word32] -> Int -> [Word32]
 salsa20powerCompute input 0 = input
 salsa20powerCompute input power = salsa20powerCompute (salsa20Compute input 10) (power - 1)

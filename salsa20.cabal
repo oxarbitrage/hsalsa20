@@ -37,10 +37,11 @@ library
       Paths_salsa20
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -fplugin=LiquidHaskell
   build-depends:
       base >=4.7 && <5
     , keelung
+    , liquidhaskell
     , split
     , text
   default-language: Haskell2010
@@ -51,13 +52,14 @@ executable salsa20-exe
       Paths_salsa20
   hs-source-dirs:
       app
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -fplugin=LiquidHaskell -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , base64-bytestring
     , bytestring
     , cryptohash-sha256
     , keelung
+    , liquidhaskell
     , nonce
     , salsa20
     , split
@@ -71,11 +73,12 @@ test-suite salsa20-display-unit-tests
       Paths_salsa20
   hs-source-dirs:
       test/unit/display
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -fplugin=LiquidHaskell -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       HUnit
     , base >=4.7 && <5
     , keelung
+    , liquidhaskell
     , salsa20
     , split
     , text
@@ -88,7 +91,7 @@ test-suite salsa20-ecrypt128-tests
       Paths_salsa20
   hs-source-dirs:
       test/unit/ecrypt128
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -fplugin=LiquidHaskell -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
     , base >=4.7 && <5
@@ -96,6 +99,7 @@ test-suite salsa20-ecrypt128-tests
     , containers
     , hex-text
     , keelung
+    , liquidhaskell
     , salsa20
     , split
     , text
@@ -108,7 +112,7 @@ test-suite salsa20-ecrypt256-tests
       Paths_salsa20
   hs-source-dirs:
       test/unit/ecrypt256
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -fplugin=LiquidHaskell -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       aeson
     , base >=4.7 && <5
@@ -116,6 +120,7 @@ test-suite salsa20-ecrypt256-tests
     , containers
     , hex-text
     , keelung
+    , liquidhaskell
     , salsa20
     , split
     , text
@@ -128,10 +133,11 @@ test-suite salsa20-fast-unit-tests
       Paths_salsa20
   hs-source-dirs:
       test/unit/fast
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -fplugin=LiquidHaskell -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , keelung
+    , liquidhaskell
     , salsa20
     , split
     , text
@@ -144,11 +150,12 @@ test-suite salsa20-keelung-unit-tests
       Paths_salsa20
   hs-source-dirs:
       test/unit/keelung
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -fplugin=LiquidHaskell -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       HUnit
     , base >=4.7 && <5
     , keelung
+    , liquidhaskell
     , salsa20
     , split
     , text
@@ -161,10 +168,11 @@ test-suite salsa20-slow-unit-test
       Paths_salsa20
   hs-source-dirs:
       test/unit/slow
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -fplugin=LiquidHaskell -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
     , keelung
+    , liquidhaskell
     , salsa20
     , split
     , text

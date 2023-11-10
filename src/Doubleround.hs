@@ -49,24 +49,28 @@ import Rowround
 import Columnround
 
 -- |The doubleround expression computed.
+{-@ ignore doubleroundCompute @-}
 doubleroundCompute :: [Word32] -> [Word32]
 doubleroundCompute input
     | length input == 16 = rowroundCompute $ columnroundCompute input
     | otherwise = error "input to `doubleroundCompute` must be a list of 16 `Word32` numbers"
 
 -- |The doubleround expression as a string.
+{-@ ignore doubleroundDisplay @-}
 doubleroundDisplay :: [String] -> [String]
 doubleroundDisplay input
     | length input == 16 = rowroundDisplay $ columnroundDisplay input
     | otherwise = error "input to `doubleroundDisplay` must be a list of 16 `String` strings"
 
 -- |The doubleround Keelung expression.
+{-@ ignore doubleroundKeelung @-}
 doubleroundKeelung :: [UInt 32] -> Comp [UInt 32]
 doubleroundKeelung input
     | length input == 16 = rowroundKeelung =<< columnroundKeelung input
     | otherwise = error "input to `doubleroundKeelung` must be a list of 16 `UInt 32` numbers"
 
 -- |The doubleroundR expression computed.
+{-@ ignore doubleroundRCompute @-}
 doubleroundRCompute :: [Word32] -> Int -> [Word32]
 doubleroundRCompute input r
     | length input == 16 && r == 0 = input
@@ -74,6 +78,7 @@ doubleroundRCompute input r
     | otherwise = error "arguments of `doubleroundRCompute` must be a list of 16 `Word32` numbers and a number `Int` of rounds"
 
 -- |The doubleroundR expression as a string.
+{-@ ignore doubleroundRDisplay @-}
 doubleroundRDisplay :: [String] -> Int -> [String]
 doubleroundRDisplay input r
     | length input == 16 && r == 0 = input
@@ -81,6 +86,7 @@ doubleroundRDisplay input r
     | otherwise = error "arguments of `doubleroundRDisplay` must be a list of 16 `String` strings and a number `Int` of rounds"
 
 -- |The doubleroundR Keelung expression.
+{-@ ignore doubleroundRKeelung @-}
 doubleroundRKeelung :: [UInt 32] -> Int -> Comp [UInt 32]
 doubleroundRKeelung input r
     | length input == 16 && r == 0 = return input

@@ -22,6 +22,7 @@ import Data.List.Split
 
 import Crypt
 
+{-@ ignore main @-}
 main :: IO ()
 main = do
     putStrLn "---Salsa20 encryption and decryption"

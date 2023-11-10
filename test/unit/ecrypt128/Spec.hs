@@ -108,6 +108,7 @@ collect json_file = CollectedTestData
     cleanupField field = cleanup $ concatMap (getelementlist . getField field) decoded
 
 -- Process all test vectors
+{-@ ignore processTestVectors @-}
 processTestVectors :: [Word32] -> CollectedTestData -> IO ()
 processTestVectors message collected = do
     let zipped = zip (test_name_list collected) [0..]

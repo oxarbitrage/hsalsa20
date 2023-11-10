@@ -19,6 +19,9 @@ The module offers functionalities to:
 
 -}
 {-# LANGUAGE DataKinds #-}
+{-@ LIQUID "--no-positivity-check" @-}
+{-@ LIQUID "--prune-unsorted" @-}
+{-@ LIQUID "--no-termination" @-}
 
 module Quarterround
     (
@@ -125,86 +128,103 @@ evalKeelung :: Fix ExprFKeelung -> UInt 32
 evalKeelung = cata algMapsKeelung
 
 -- |The right hand side of the `z1` expression as an expression. `((y0 + y3) <<< 7)`
+{-@ ignore rhs1 @-}
 rhs1 :: [Either Word32 String] -> Fix ExprF
 rhs1 [y0, _, _, y3] = In $ Rotl7 (In $ In (Const y0) `Mod` In (Const y3))
 rhs1 _ = error "input to `rhs1` must be a list of 4 `Word32` numbers"
 
 -- |The right hand side of the `z1` expression as a Keelung expression. `((y0 + y3) <<< 7)`
+{-@ ignore rhs1Keelung @-}
 rhs1Keelung :: [UInt 32] -> Fix ExprFKeelung
 rhs1Keelung [y0, _, _, y3] = In $ Rotl7K (In $ In (ConstK y0) `ModK` In (ConstK y3))
 rhs1Keelung _ = error "input to `rhs1Keelung` must be a list of 4 `UInt 32` numbers"
 
 -- |The `z1` expression. `z1 = y1 ⊕ ((y0 + y3) <<< 7)`
+{-@ ignore z1 @-}
 z1 :: [Either Word32 String] -> Fix ExprF
 z1 [y0, y1, y2, y3] = In $ In (Const y1) `Xor2` rhs1 [y0, y1, y2, y3]
 z1 _ = error "input to `z1` must be a list of 4 `Word32` numbers"
 
 -- |The `z1` Keelung expression. `z1 = y1 ⊕ ((y0 + y3) <<< 7)`
+{-@ ignore z1Keelung @-}
 z1Keelung :: [UInt 32] -> Fix ExprFKeelung
 z1Keelung [y0, y1, y2, y3] = In $ In (ConstK y1) `XorK` rhs1Keelung [y0, y1, y2, y3]
 z1Keelung _ = error "input to `z1Keelung` must be a list of 4 `UInt 32` numbers"
 
 -- |The right hand side of the `z2` expression as an expression. `((z1 + y0) <<< 9)`
+{-@ ignore rhs2 @-}
 rhs2 :: [Either Word32 String] -> Fix ExprF
 rhs2 [y0, y1, y2, y3] = In $ Rotl9 (In $ z1 [y0, y1, y2, y3] `Mod` In (Const y0))
 rhs2 _ = error "input to `rhs2` must be a list of 4 `Word32` numbers"
 
 -- |The right hand side of the `z2` expression as a Keelung expression. `((z1 + y0) <<< 9)`
+{-@ ignore rhs2Keelung @-}
 rhs2Keelung :: [UInt 32] -> Fix ExprFKeelung
 rhs2Keelung [y0, y1, y2, y3] = In $ Rotl9K (In $ z1Keelung [y0, y1, y2, y3] `ModK` In (ConstK y0))
 rhs2Keelung _ = error "input to `rhs2Keelung` must be a list of 4 `UInt 32` numbers"
 
 -- |The `z2` expression. `y2 ⊕ ((z1 + y0) <<< 9)`
+{-@ ignore z2 @-}
 z2 :: [Either Word32 String] -> Fix ExprF
 z2 [y0, y1, y2, y3] = In $ In (Const y2) `Xor2` rhs2 [y0, y1, y2, y3]
 z2 _ = error "input to `z2` must be a list of 4 `Word32` numbers"
 
 -- |The `z2` Keelung expression. `y2 ⊕ ((z1 + y0) <<< 9)`
+{-@ ignore z2Keelung @-}
 z2Keelung :: [UInt 32] -> Fix ExprFKeelung
 z2Keelung [y0, y1, y2, y3] = In $ In (ConstK y2) `XorK` rhs2Keelung [y0, y1, y2, y3]
 z2Keelung _ = error "input to `z2Keelung` must be a list of 4 `UInt 32` numbers"
 
 -- |The right hand side of the `z3` expression as an expression. `(z2 + z1) <<< 13)`
+{-@ ignore rhs3 @-}
 rhs3 :: [Either Word32 String] -> Fix ExprF
 rhs3 [y0, y1, y2, y3] = In $ Rotl13 (In $ z2 [y0, y1, y2, y3]  `Mod` z1 [y0, y1, y2, y3])
 rhs3 _ = error "input to `rhs3` must be a list of 4 `Word32` numbers"
 
 -- |The right hand side of the `z3` expression as a Keelung expression. `(z2 + z1) <<< 13)`
+{-@ ignore rhs3Keelung @-}
 rhs3Keelung :: [UInt 32] -> Fix ExprFKeelung
 rhs3Keelung [y0, y1, y2, y3] = In $ Rotl13K (In $ z2Keelung [y0, y1, y2, y3]  `ModK` z1Keelung [y0, y1, y2, y3])
 rhs3Keelung _ = error "input to `rhs3Keelung` must be a list of 4 `UInt 32` numbers"
 
 -- |The `z3` expression. `y3 ⊕ ((z2 + z1) <<< 13)`
+{-@ ignore z3 @-}
 z3 :: [Either Word32 String] -> Fix ExprF
 z3 [y0, y1, y2, y3] = In $ In (Const y3) `Xor2` rhs3 [y0, y1, y2, y3]
 z3 _ = error "input to `z3` must be a list of 4 `Word32` numbers"
 
 -- |The `z3` Keelung expression. `y3 ⊕ ((z2 + z1) <<< 13)`
+{-@ ignore z3Keelung @-}
 z3Keelung :: [UInt 32] -> Fix ExprFKeelung
 z3Keelung [y0, y1, y2, y3] = In $ In (ConstK y3) `XorK` rhs3Keelung [y0, y1, y2, y3]
 z3Keelung _ = error "input to `z3Keelung` must be a list of 4 `UInt 32` numbers"
 
 -- |The right hand side of the `z0` expression as an expression. `((z3 + z2) <<< 18)`
+{-@ ignore rhs0 @-}
 rhs0 :: [Either Word32 String] -> Fix ExprF
 rhs0 [y0, y1, y2, y3] = In $ Rotl18 (In $ z3 [y0, y1, y2, y3] `Mod` z2 [y0, y1, y2, y3])
 rhs0 _ = error "input to `rhs0`  must be a list of 4 `Word32` numbers"
 
 -- |The right hand side of the `z0` expression a Keelung expression. `((z3 + z2) <<< 18)`
+{-@ ignore rhs0Keelung @-}
 rhs0Keelung :: [UInt 32] -> Fix ExprFKeelung
 rhs0Keelung [y0, y1, y2, y3] = In $ Rotl18K (In $ z3Keelung [y0, y1, y2, y3] `ModK` z2Keelung [y0, y1, y2, y3])
 rhs0Keelung _ = error "input to `rhs0Keelung`  must be a list of 4 `UInt 32` numbers"
 
 -- |The `z0` expression. `y0 ⊕ ((z3 + z2) <<< 18)`
+{-@ ignore z0 @-}
 z0 :: [Either Word32 String] -> Fix ExprF
 z0 [y0, y1, y2, y3] = In $ In (Const y0) `Xor2` rhs0 [y0, y1, y2, y3]
 z0 _ = error "input to `z0` must be a list of 4 `Word32` numbers"
 
 -- |The `z0` Keelung expression. `y0 ⊕ ((z3 + z2) <<< 18)`
+{-@ ignore z0Keelung @-}
 z0Keelung :: [UInt 32] -> Fix ExprFKeelung
 z0Keelung [y0, y1, y2, y3] = In $ In (ConstK y0) `XorK` rhs0Keelung [y0, y1, y2, y3]
 z0Keelung _ = error "input to `z0` must be a list of 4 `Word32` numbers"
 
 -- |The quarterround expression computed.
+{-@ ignore quarterroundCompute @-}
 quarterroundCompute :: [Word32] -> [Word32]
 quarterroundCompute input@[_, _, _, _] = [
     evalCompute $ z0 $ numberListToEitherList input,
@@ -214,6 +234,7 @@ quarterroundCompute input@[_, _, _, _] = [
 quarterroundCompute _ = error "input to `quarterroundCompute` must be a list of 4 `Word32` numbers"
 
 -- |The quarterround expression as a string.
+{-@ ignore quarterroundDisplay @-}
 quarterroundDisplay :: [String] -> [String]
 quarterroundDisplay input@[_, _, _, _] = [
     evalDisplay $ z0 $ stringListToEitherList input,

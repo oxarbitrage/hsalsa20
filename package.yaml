@@ -35,10 +35,12 @@ ghc-options:
 - -Wmissing-home-modules
 - -Wpartial-fields
 - -Wredundant-constraints
+- -fplugin=LiquidHaskell
 
 library:
   source-dirs: src
-  
+  dependencies:
+  - liquidhaskell
 executables:
   salsa20-exe:
     main:                Main.hs
@@ -54,7 +56,7 @@ executables:
     - bytestring
     - nonce
     - base64-bytestring
-
+    - liquidhaskell
 tests:
   salsa20-fast-unit-tests:
     main:                Spec.hs
@@ -66,6 +68,7 @@ tests:
     dependencies:
     - salsa20
     - text
+    - liquidhaskell
   salsa20-slow-unit-test:
     main:                Spec.hs
     source-dirs:         test/unit/slow
@@ -75,6 +78,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - salsa20
+    - liquidhaskell
   salsa20-ecrypt256-tests:
     main:                Spec.hs
     source-dirs:         test/unit/ecrypt256
@@ -89,6 +93,7 @@ tests:
     - bytestring
     - aeson
     - containers
+    - liquidhaskell
   salsa20-ecrypt128-tests:
     main:                Spec.hs
     source-dirs:         test/unit/ecrypt128
@@ -103,6 +108,7 @@ tests:
     - bytestring
     - aeson
     - containers
+    - liquidhaskell
   salsa20-display-unit-tests:
     main:                Spec.hs
     source-dirs:         test/unit/display
@@ -113,6 +119,7 @@ tests:
     dependencies:
     - salsa20
     - HUnit
+    - liquidhaskell
   salsa20-keelung-unit-tests:
     main:                Spec.hs
     source-dirs:         test/unit/keelung
@@ -123,3 +130,4 @@ tests:
     dependencies:
     - salsa20
     - HUnit
+    - liquidhaskell

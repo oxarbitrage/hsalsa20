@@ -45,6 +45,7 @@ demoSalsa20InputWord32 = [
 demoSalsa20InputUInt32 :: [UInt 32]
 demoSalsa20InputUInt32 = map fromIntegral demoSalsa20InputWord32
 
+{-@ ignore main @-}
 main :: IO Counts
 main = do
     let quarterround_computed = quarterroundCompute [1, 0, 0, 0]
