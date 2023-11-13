@@ -9,7 +9,6 @@ Portability : POSIX
 This module provides general utility functions used in the creation of the Salsa20 cipher.
 
 -}
-{-@ LIQUID "no-positivity-check" @-}
 {-# LANGUAGE DataKinds #-}
 
 module Utils
