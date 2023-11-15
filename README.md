@@ -26,7 +26,7 @@ Explore the API documentation for a deeper understanding of the project. Visit [
 
 ## Experimental: Keelung Code
 
-One experimental aspect of this project is the Keelung code. The current plan involves compiling the core function into an `r1cs` circuit using Keelung for educational purposes. This experimental feature is designed to explore new possibilities and enhance learning.
+One experimental aspect of this project is the Keelung code. The current plan involves compiling the core function into an `r1cs` circuit using Keelung for educational purposes. This experimental feature is designed to explore new possibilities and enhance learning. Read the [keelung chapter from the book](book/keelung.md) for examples.
 
 ## Get Involved
 
