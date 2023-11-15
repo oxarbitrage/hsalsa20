@@ -78,9 +78,12 @@ ghci>
 
 Some of those equallity tests are done in the [keelung tests](../test/unit/keelung/Spec.hs). 
 
-Finally, the keelung implementation of hsalsa is available from quarterround up to the hash module:
+Finally, the keelung implementation of hsalsa20 is available from quarterround up to the hash module:
 
 ```
+ghci> :load Hash
+...
+ghci> input = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 ghci> coreCompute input 10
 [1404140658,617196034,2156026741,1598378282,1320572937,2911795930,848484521,1720253549,2259298508,1446763222,3297210283,2542453712,1082050453,992640523,3623268820,2227813485]
 ghci> interpret gf181 (coreKeelung input 10) [] []
