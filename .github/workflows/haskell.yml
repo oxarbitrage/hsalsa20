@@ -55,7 +55,8 @@ jobs:
       run: cabal test salsa20-ecrypt256-tests
     - name: Run display tests
       run: cabal test salsa20-display-unit-tests
-    - name: Run keelung tests
-      # Error in macos: Cannot locate the Keelung compiler
-      if: matrix.os == 'ubuntu-latest'
-      run: cabal test salsa20-keelung-unit-tests
+    # Error in ubuntu: The version of the Keelung compiler is not supported, disabling test.
+    #- name: Run keelung tests
+    #  # Error in macos: Cannot locate the Keelung compiler
+    #  if: matrix.os == 'ubuntu-latest'
+    #  run: cabal test salsa20-keelung-unit-tests
