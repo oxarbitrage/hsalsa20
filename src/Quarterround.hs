@@ -134,8 +134,8 @@ rhs1 [y0, _, _, y3] = In $ Rotl7 (In $ In (Const y0) `Mod` In (Const y3))
 rhs1 _ = error "input to `rhs1` must be a list of 4 `Word32` numbers"
 
 -- |The right hand side of the `z1` expression as a Keelung expression. `((y0 + y3) <<< 7)`
-{-@ ignore rhs1Keelung @-}
-rhs1Keelung :: [UInt 32] -> Fix ExprFKeelung
+{-@ rhs1Keelung :: {v:[UInt32] | (len v) = 4 } -> Fix ExprFKeelung @-}
+rhs1Keelung :: [UInt32] -> Fix ExprFKeelung
 rhs1Keelung [y0, _, _, y3] = In $ Rotl7K (In $ In (ConstK y0) `ModK` In (ConstK y3))
 rhs1Keelung _ = error "input to `rhs1Keelung` must be a list of 4 `UInt 32` numbers"
 
@@ -146,7 +146,7 @@ z1 [y0, y1, y2, y3] = In $ In (Const y1) `Xor2` rhs1 [y0, y1, y2, y3]
 z1 _ = error "input to `z1` must be a list of 4 `Word32` numbers"
 
 -- |The `z1` Keelung expression. `z1 = y1 ⊕ ((y0 + y3) <<< 7)`
-{-@ ignore z1Keelung @-}
+{-@ z1Keelung :: {v:[UInt32] | (len v) = 4 } -> Fix ExprFKeelung @-}
 z1Keelung :: [UInt 32] -> Fix ExprFKeelung
 z1Keelung [y0, y1, y2, y3] = In $ In (ConstK y1) `XorK` rhs1Keelung [y0, y1, y2, y3]
 z1Keelung _ = error "input to `z1Keelung` must be a list of 4 `UInt 32` numbers"
@@ -158,7 +158,7 @@ rhs2 [y0, y1, y2, y3] = In $ Rotl9 (In $ z1 [y0, y1, y2, y3] `Mod` In (Const y0)
 rhs2 _ = error "input to `rhs2` must be a list of 4 `Word32` numbers"
 
 -- |The right hand side of the `z2` expression as a Keelung expression. `((z1 + y0) <<< 9)`
-{-@ ignore rhs2Keelung @-}
+{-@ rhs2Keelung :: {v:[UInt32] | (len v) = 4 } -> Fix ExprFKeelung @-}
 rhs2Keelung :: [UInt 32] -> Fix ExprFKeelung
 rhs2Keelung [y0, y1, y2, y3] = In $ Rotl9K (In $ z1Keelung [y0, y1, y2, y3] `ModK` In (ConstK y0))
 rhs2Keelung _ = error "input to `rhs2Keelung` must be a list of 4 `UInt 32` numbers"
@@ -170,7 +170,7 @@ z2 [y0, y1, y2, y3] = In $ In (Const y2) `Xor2` rhs2 [y0, y1, y2, y3]
 z2 _ = error "input to `z2` must be a list of 4 `Word32` numbers"
 
 -- |The `z2` Keelung expression. `y2 ⊕ ((z1 + y0) <<< 9)`
-{-@ ignore z2Keelung @-}
+{-@ z2Keelung :: {v:[UInt32] | (len v) = 4 } -> Fix ExprFKeelung @-}
 z2Keelung :: [UInt 32] -> Fix ExprFKeelung
 z2Keelung [y0, y1, y2, y3] = In $ In (ConstK y2) `XorK` rhs2Keelung [y0, y1, y2, y3]
 z2Keelung _ = error "input to `z2Keelung` must be a list of 4 `UInt 32` numbers"
@@ -182,7 +182,7 @@ rhs3 [y0, y1, y2, y3] = In $ Rotl13 (In $ z2 [y0, y1, y2, y3]  `Mod` z1 [y0, y1,
 rhs3 _ = error "input to `rhs3` must be a list of 4 `Word32` numbers"
 
 -- |The right hand side of the `z3` expression as a Keelung expression. `(z2 + z1) <<< 13)`
-{-@ ignore rhs3Keelung @-}
+{-@ rhs3Keelung :: {v:[UInt32] | (len v) = 4 } -> Fix ExprFKeelung @-}
 rhs3Keelung :: [UInt 32] -> Fix ExprFKeelung
 rhs3Keelung [y0, y1, y2, y3] = In $ Rotl13K (In $ z2Keelung [y0, y1, y2, y3]  `ModK` z1Keelung [y0, y1, y2, y3])
 rhs3Keelung _ = error "input to `rhs3Keelung` must be a list of 4 `UInt 32` numbers"
@@ -194,7 +194,7 @@ z3 [y0, y1, y2, y3] = In $ In (Const y3) `Xor2` rhs3 [y0, y1, y2, y3]
 z3 _ = error "input to `z3` must be a list of 4 `Word32` numbers"
 
 -- |The `z3` Keelung expression. `y3 ⊕ ((z2 + z1) <<< 13)`
-{-@ ignore z3Keelung @-}
+{-@ z3Keelung :: {v:[UInt32] | (len v) = 4 } -> Fix ExprFKeelung @-}
 z3Keelung :: [UInt 32] -> Fix ExprFKeelung
 z3Keelung [y0, y1, y2, y3] = In $ In (ConstK y3) `XorK` rhs3Keelung [y0, y1, y2, y3]
 z3Keelung _ = error "input to `z3Keelung` must be a list of 4 `UInt 32` numbers"
@@ -206,7 +206,7 @@ rhs0 [y0, y1, y2, y3] = In $ Rotl18 (In $ z3 [y0, y1, y2, y3] `Mod` z2 [y0, y1, 
 rhs0 _ = error "input to `rhs0`  must be a list of 4 `Word32` numbers"
 
 -- |The right hand side of the `z0` expression a Keelung expression. `((z3 + z2) <<< 18)`
-{-@ ignore rhs0Keelung @-}
+{-@ rhs0Keelung :: {v:[UInt32] | (len v) = 4 } -> Fix ExprFKeelung @-}
 rhs0Keelung :: [UInt 32] -> Fix ExprFKeelung
 rhs0Keelung [y0, y1, y2, y3] = In $ Rotl18K (In $ z3Keelung [y0, y1, y2, y3] `ModK` z2Keelung [y0, y1, y2, y3])
 rhs0Keelung _ = error "input to `rhs0Keelung`  must be a list of 4 `UInt 32` numbers"
@@ -218,32 +218,34 @@ z0 [y0, y1, y2, y3] = In $ In (Const y0) `Xor2` rhs0 [y0, y1, y2, y3]
 z0 _ = error "input to `z0` must be a list of 4 `Word32` numbers"
 
 -- |The `z0` Keelung expression. `y0 ⊕ ((z3 + z2) <<< 18)`
-{-@ ignore z0Keelung @-}
+{-@ z0Keelung :: {v:[UInt32] | (len v) = 4 } -> Fix ExprFKeelung @-}
 z0Keelung :: [UInt 32] -> Fix ExprFKeelung
 z0Keelung [y0, y1, y2, y3] = In $ In (ConstK y0) `XorK` rhs0Keelung [y0, y1, y2, y3]
 z0Keelung _ = error "input to `z0` must be a list of 4 `Word32` numbers"
 
 -- |The quarterround expression computed.
-{-@ ignore quarterroundCompute @-}
+{-@ quarterroundCompute :: {v:[Word32] | (len v) = 4 } -> [Word32] @-}
 quarterroundCompute :: [Word32] -> [Word32]
 quarterroundCompute input@[_, _, _, _] = [
-    evalCompute $ z0 $ numberListToEitherList input,
-    evalCompute $ z1 $ numberListToEitherList input,
-    evalCompute $ z2 $ numberListToEitherList input,
-    evalCompute $ z3 $ numberListToEitherList input]
+    evalCompute $ z0 $ map Left input,
+    evalCompute $ z1 $ map Left input,
+    evalCompute $ z2 $ map Left input,
+    evalCompute $ z3 $ map Left input]
 quarterroundCompute _ = error "input to `quarterroundCompute` must be a list of 4 `Word32` numbers"
 
 -- |The quarterround expression as a string.
-{-@ ignore quarterroundDisplay @-}
+{-@ quarterroundDisplay :: {v:[String] | (len v) = 4 } -> [String] @-}
 quarterroundDisplay :: [String] -> [String]
 quarterroundDisplay input@[_, _, _, _] = [
-    evalDisplay $ z0 $ stringListToEitherList input,
-    evalDisplay $ z1 $ stringListToEitherList input,
-    evalDisplay $ z2 $ stringListToEitherList input,
-    evalDisplay $ z3 $ stringListToEitherList input]
+    evalDisplay $ z0 $ map Right input,
+    evalDisplay $ z1 $ map Right input,
+    evalDisplay $ z2 $ map Right input,
+    evalDisplay $ z3 $ map Right input]
 quarterroundDisplay _ = error "input to `quarterroundDisplay` must be a list of 4 `String` strings"
 
 -- | The quarterround expression as a Keelung computation.
+--{-@ ignore quarterroundKeelung @-}
+{-@ quarterroundKeelung :: {v:[UInt32] | (len v) = 4 } -> Comp [UInt32] @-}
 quarterroundKeelung :: [UInt 32] -> Comp [UInt 32]
 quarterroundKeelung input = do
     z1' <- reuse . evalKeelung . z1Keelung $ input

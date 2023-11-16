@@ -17,6 +17,7 @@ module Utils
         aument, aumentDisplay, aumentKeelung,
         modMatrix, numberListToStringList, transpose, modMatrixDisplay, modMatrixKeelung,
         numberListToEitherList, stringListToEitherList, eitherListToNumberList, eitherListToStringList,
+        UInt32,
     )
 where
 
@@ -125,3 +126,8 @@ eitherListToNumberList = map (fromLeft 0)
 -- |Convert a list of `Either` type to a list of strings. 
 eitherListToStringList :: [Either Word32 String] -> [String]
 eitherListToStringList = map (fromRight "0")
+
+-- LiquidHaskell stuff:
+
+-- | An alias for `UInt 32` friendly with liquidhaskell annotations.
+type UInt32 = UInt 32
