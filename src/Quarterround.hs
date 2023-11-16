@@ -244,7 +244,6 @@ quarterroundDisplay input@[_, _, _, _] = [
 quarterroundDisplay _ = error "input to `quarterroundDisplay` must be a list of 4 `String` strings"
 
 -- | The quarterround expression as a Keelung computation.
---{-@ ignore quarterroundKeelung @-}
 {-@ quarterroundKeelung :: {v:[UInt32] | (len v) = 4 } -> Comp [UInt32] @-}
 quarterroundKeelung :: [UInt 32] -> Comp [UInt 32]
 quarterroundKeelung input = do

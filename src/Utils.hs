@@ -16,7 +16,7 @@ module Utils
         littleendian, extractBytes, displayBytes, Utils.reduce, reduceDisplay, reduceKeelung,
         aument, aumentDisplay, aumentKeelung,
         modMatrix, numberListToStringList, transpose, modMatrixDisplay, modMatrixKeelung,
-        numberListToEitherList, stringListToEitherList, eitherListToNumberList, eitherListToStringList,
+        eitherListToNumberList, eitherListToStringList,
         UInt32,
     )
 where
@@ -110,14 +110,6 @@ transpose _ = error "input to `transpose` must be a list of 16 objects"
 -- |Convert a list of numbers to a list of strings. This is always possible. 
 numberListToStringList :: [Word32] -> [String]
 numberListToStringList = map (\x -> printf "%d" x)
-
--- |Convert a list of numbers to an list of `Either` type.
-numberListToEitherList :: [Word32] -> [Either Word32 String]
-numberListToEitherList = map Left
-
--- |Convert a list of strings to a list of `Either` type.
-stringListToEitherList :: [String] -> [Either Word32 String]
-stringListToEitherList = map Right
 
 -- |Convert a list of `Either` type to an list of numbers.
 eitherListToNumberList :: [Either Word32 String] -> [Word32]

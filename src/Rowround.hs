@@ -173,10 +173,10 @@ sort4_inv _ = error "input to `sort4_inv` must be a list of 4 objects"
 rowroundCompute :: [Word32] -> [Word32]
 rowroundCompute input
     | length input == 16 = concat [
-        evalCompute $ quarterround1 $ numberListToEitherList input,
-        sort2_inv $ evalCompute $ quarterround2 $ numberListToEitherList input,
-        sort3_inv $ evalCompute $ quarterround3 $ numberListToEitherList input,
-        sort4_inv $ evalCompute $ quarterround4 $ numberListToEitherList input]
+        evalCompute $ quarterround1 $ map Left input,
+        sort2_inv $ evalCompute $ quarterround2 $ map Left input,
+        sort3_inv $ evalCompute $ quarterround3 $ map Left input,
+        sort4_inv $ evalCompute $ quarterround4 $ map Left input]
     | otherwise = error "input to `rowroundCompute` must be a list of 16 `Word32` numbers"
 
 -- |The rowround expression as a string.
@@ -184,10 +184,10 @@ rowroundCompute input
 rowroundDisplay :: [String] -> [String]
 rowroundDisplay input
     | length input == 16 = concat [
-        evalDisplay $ quarterround1 $ stringListToEitherList input,
-        sort2_inv $ evalDisplay $ quarterround2 $ stringListToEitherList input,
-        sort3_inv $ evalDisplay $ quarterround3 $ stringListToEitherList input,
-        sort4_inv $ evalDisplay $ quarterround4 $ stringListToEitherList input]
+        evalDisplay $ quarterround1 $ map Right input,
+        sort2_inv $ evalDisplay $ quarterround2 $ map Right input,
+        sort3_inv $ evalDisplay $ quarterround3 $ map Right input,
+        sort4_inv $ evalDisplay $ quarterround4 $ map Right input]
     | otherwise = error "input to `rowroundDisplay` must be a list of 16 `String` strings"
 
 -- |The rowround Keelung expression.
