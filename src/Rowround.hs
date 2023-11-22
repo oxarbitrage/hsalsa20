@@ -38,7 +38,7 @@ import Data.Word
 import Quarterround
 import Utils
 
-import Keelung hiding (input, eq)
+import Keelung ( UInt, Comp )
 
 -- |The rowround endofunctor for Haskell types.
 data ExprF a = Const [Either Word32 String] | Quarterround a
@@ -82,6 +82,7 @@ algMapsDisplay (Const i)
 algMapsDisplay (Quarterround a) = Quarterround.quarterroundDisplay a
 
 -- |The algebra maps for Keelung.
+{-@ ignore algMapsKeelung @-}
 algMapsKeelung :: ExprFKeelung (Comp [UInt 32]) -> Comp [UInt 32]
 algMapsKeelung (ConstK i) =  return i
 algMapsKeelung (QuarterroundK a) = Quarterround.quarterroundKeelung =<< a
