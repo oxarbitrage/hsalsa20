@@ -34,7 +34,6 @@ where
 
 import Text.Printf
 import Data.Word
-import Data.List.Split (chunksOf)
 
 import Quarterround
 import Utils
@@ -67,13 +66,19 @@ cata :: Functor f => (f a -> a) -> Fix f -> a
 cata algebra = algebra . fmap (cata algebra) . unFix
 
 -- |The algebra maps for computation.
+{-@ algMapsCompute :: _ -> { o:[_] | (len o) == 4 } @-}
 algMapsCompute :: ExprF [Word32] -> [Word32]
-algMapsCompute (Const i) = eitherListToNumberList i
+algMapsCompute (Const i)
+    | length i == 4 = eitherListToNumberList i
+    | otherwise = [0, 0, 0, 0]
 algMapsCompute (Quarterround a) = Quarterround.quarterroundCompute a
 
 -- |The algebra maps for displaying.
+{-@ algMapsDisplay :: _ -> { o:[_] | (len o) == 4 } @-}
 algMapsDisplay :: ExprF [String] -> [String]
-algMapsDisplay (Const i) = map (printf "%s") (eitherListToStringList i)
+algMapsDisplay (Const i)
+    | length i == 4 = map (printf "%s") (eitherListToStringList i)
+    | otherwise = ["0", "0", "0", "0"]
 algMapsDisplay (Quarterround a) = Quarterround.quarterroundDisplay a
 
 -- |The algebra maps for Keelung.
@@ -94,82 +99,92 @@ evalKeelung :: Fix ExprFKeelung -> Comp [UInt 32]
 evalKeelung = cata algMapsKeelung
 
 -- |The first quarterround expression.
-{-@ ignore quarterround1 @-}
+{-@ quarterround1 :: { i:[_] | (len i) == 16 } -> _ @-}
 quarterround1 :: [Either Word32 String] -> Fix ExprF
-quarterround1 a = In $ Quarterround $ In $ Const $ head $ chunksOf 4 a
+quarterround1 [a0, a1, a2, a3, _, _, _, _, _, _, _, _, _, _, _, _] = In $ Quarterround $ In $ Const [a0, a1, a2, a3]
+quarterround1 _ = error "input to `quarterround1` must be a list of 16 `Either` objects"
 
 -- |The first quarterround Keelung expression.
-{-@ ignore quarterround1Keelung @-}
+{-@ quarterround1Keelung :: { v:[_] | (len v) == 16 } -> _ @-}
 quarterround1Keelung :: [UInt 32] -> Fix ExprFKeelung
-quarterround1Keelung a = In $ QuarterroundK $ In $ ConstK $ head $ chunksOf 4 a
+quarterround1Keelung [a0, a1, a2, a3, _, _, _, _, _, _, _, _, _, _, _, _] =  In $ QuarterroundK $ In $ ConstK [a0, a1, a2, a3]
+quarterround1Keelung _ = error "input to `quarterround1Keelung` must be a list of 16 `UInt 32` numbers"
 
 -- |The second quarterround expression.
-{-@ ignore quarterround2 @-}
+{-@ quarterround2 :: { v:[_] | (len v) == 16 } -> _ @-}
 quarterround2 :: [Either Word32 String] -> Fix ExprF
-quarterround2 a = In $ Quarterround $ In $ Const $ sort2 $ chunksOf 4 a!!1
+quarterround2 [_, _, _, _, a4, a5, a6, a7, _, _, _, _, _, _, _, _] = In $ Quarterround $ In $ Const $ sort2 [a4, a5, a6, a7]
+quarterround2 _ = error "input to `quarterround2` must be a list of 16 `Either` objects"
 
 -- |The second Keelung quarterround expression.
-{-@ ignore quarterround2Keelung @-}
+{-@ quarterround2Keelung :: { v:[_] | (len v) == 16 } -> _ @-}
 quarterround2Keelung :: [UInt 32] -> Fix ExprFKeelung
-quarterround2Keelung a = In $ QuarterroundK $ In $ ConstK $ sort2 $ chunksOf 4 a!!1
+quarterround2Keelung [_, _, _, _, a4, a5, a6, a7, _, _, _, _, _, _, _, _] = In $ QuarterroundK $ In $ ConstK $ sort2 [a4, a5, a6, a7]
+quarterround2Keelung _ = error "input to `quarterround2Keelung` must be a list of 16 `UInt 32` numbers"
 
 -- |Sort a second input for rowround.
+{-@ sort2 :: { v:[_] | (len v) == 4 } -> { v:[_] | (len v) == 4 } @-}
 sort2 :: [a] -> [a]
 sort2 [y4, y5, y6, y7] = [y5, y6, y7, y4]
 sort2 _ = error "input to `sort2` must be a list of 4 objects"
 
 -- |Inverse of `sort2`, used to order rowround output.
-{-@ ignore sort2_inv @-}
+{-@ sort2_inv :: { v:[_] | (len v) == 4 } -> { v:[_] | (len v) == 4 } @-}
 sort2_inv :: [a] -> [a]
 sort2_inv [z5, z6, z7, z4] = [z4, z5, z6, z7] 
 sort2_inv _ = error "input to `sort2_inv` must be a list of 4 objects"
 
 -- |The third quarterround expression.
-{-@ ignore quarterround3 @-}
+{-@ quarterround3 :: { v:[_] | (len v) == 16 } -> _ @-}
 quarterround3 :: [Either Word32 String] -> Fix ExprF
-quarterround3 a = In $ Quarterround $ In $ Const $ sort3 $ chunksOf 4 a!!2
+quarterround3 [_, _, _, _, _, _, _, _, a8, a9, a10, a11, _, _, _, _] = In $ Quarterround $ In $ Const $ sort3 [a8, a9, a10, a11]
+quarterround3 _ = error "input to `quarterround3` must be a list of 16 `Either` objects"
 
 -- |The third quarterround Keelung expression.
-{-@ ignore quarterround3Keelung @-}
+{-@ quarterround3Keelung :: { v:[_] | (len v) == 16 } -> _ @-}
 quarterround3Keelung :: [UInt 32] -> Fix ExprFKeelung
-quarterround3Keelung a = In $ QuarterroundK $ In $ ConstK $ sort3 $ chunksOf 4 a!!2
+quarterround3Keelung [_, _, _, _, _, _, _, _, a8, a9, a10, a11, _, _, _, _] = In $ QuarterroundK $ In $ ConstK $ sort3 [a8, a9, a10, a11]
+quarterround3Keelung _ = error "input to `quarterround3Keelung` must be a list of 16 `UInt 32` numbers"
 
 -- |Sort a third input for rowround.
-{-@ ignore sort3 @-}
+{-@ sort3 :: { v:[_] | (len v) == 4 } -> { v:[_] | (len v) == 4 } @-}
 sort3 :: [a] -> [a]
 sort3 [y8, y9, y10, y11] = [y10, y11, y8, y9] 
 sort3 _ = error "input to `sort3` must be a list of 4 objects"
 
 -- |Inverse of `sort3`, used to order rowround output.
-{-@ ignore sort3_inv @-}
+{-@ sort3_inv :: { v:[_] | (len v) == 4 } -> { v:[_] | (len v) == 4 } @-}
 sort3_inv :: [a] -> [a]
-sort3_inv [z10, z11, z8, z9] = [z8, z9, z10, z11] 
+sort3_inv [z10, z11, z8, z9] = [z8, z9, z10, z11]
 sort3_inv _ = error "input to `sort3_inv` must be a list of 4 objects"
 
 -- |The fourth quarterround expression.
-{-@ ignore quarterround4 @-}
+{-@ quarterround4 :: { v:[_] | (len v) == 16 } -> _ @-}
 quarterround4 :: [Either Word32 String] -> Fix ExprF
-quarterround4 a = In $ Quarterround $ In $ Const $ sort4 $ chunksOf 4 a!!3
+quarterround4 [_, _, _, _, _, _, _, _, _, _, _, _, a12, a13, a14, a15] = In $ Quarterround $ In $ Const $ sort4 [a12, a13, a14, a15]
+quarterround4 _ = error "input to `quarterround4` must be a list of 16 `Either` objects"
 
 -- |The fourth Keelung quarterround expression.
-{-@ ignore quarterround4Keelung @-}
+{-@ quarterround4Keelung :: { v:[_] | (len v) == 16 } -> _ @-}
 quarterround4Keelung :: [UInt 32] -> Fix ExprFKeelung
-quarterround4Keelung a = In $ QuarterroundK $ In $ ConstK $ sort4 $ chunksOf 4 a!!3
+quarterround4Keelung [_, _, _, _, _, _, _, _, _, _, _, _, a12, a13, a14, a15] = In $ QuarterroundK $ In $ ConstK $ sort4 [a12, a13, a14, a15]
+quarterround4Keelung _ = error "input to `quarterround4Keelung` must be a list of 16 `UInt 32` numbers"
 
 -- |Sort a fourth input for rowround.
-{-@ ignore sort4 @-}
+{-@ sort4 :: { v:[_] | (len v) == 4 } -> { v:[_] | (len v) == 4 } @-}
 sort4 :: [a] -> [a]
 sort4 [y12, y13, y14, y15] = [y15, y12, y13, y14] 
 sort4 _ = error "input to `sort4` must be a list of 4 objects"
 
 -- |Inverse of `sort4`, used to order rowround output.
-{-@ ignore sort4_inv @-}
+{-@ sort4_inv :: { v:[_] | (len v) == 4 } -> { v:[_] | (len v) == 4 } @-}
 sort4_inv :: [a] -> [a]
 sort4_inv [z15, z12, z13, z14] = [z12, z13, z14, z15]
 sort4_inv _ = error "input to `sort4_inv` must be a list of 4 objects"
 
 -- |The rowround expression computed.
-{-@ ignore rowroundCompute @-}
+--{-@ ignore rowroundCompute @-}
+{-@ rowroundCompute :: { i:[_] | (len i) == 16 } -> _  @-}
 rowroundCompute :: [Word32] -> [Word32]
 rowroundCompute input
     | length input == 16 = concat [
@@ -180,7 +195,8 @@ rowroundCompute input
     | otherwise = error "input to `rowroundCompute` must be a list of 16 `Word32` numbers"
 
 -- |The rowround expression as a string.
-{-@ ignore rowroundDisplay @-}
+--{-@ ignore rowroundDisplay @-}
+{-@ rowroundDisplay :: { i:[_] | (len i) == 16 } -> _  @-}
 rowroundDisplay :: [String] -> [String]
 rowroundDisplay input
     | length input == 16 = concat [

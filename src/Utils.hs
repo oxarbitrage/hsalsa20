@@ -112,10 +112,14 @@ numberListToStringList :: [Word32] -> [String]
 numberListToStringList = map (\x -> printf "%d" x)
 
 -- |Convert a list of `Either` type to an list of numbers.
+{-@ eitherListToNumberList :: { i:[_] | (len i) == 4 } -> { o:[_] | (len o) == 4 }  @-}
 eitherListToNumberList :: [Either Word32 String] -> [Word32]
-eitherListToNumberList = map (fromLeft 0)
+eitherListToNumberList input
+    | length input == 4 = map (fromLeft 0) input
+    | otherwise = error "input to `eitherListToNumberList` must be a list of 4 `Either` objects"
 
--- |Convert a list of `Either` type to a list of strings. 
+-- |Convert a list of `Either` type to a list of strings.
+{-@ eitherListToStringList :: { i:[_] | (len i) == 4 } -> { o:[_] | (len o) == 4 }  @-}
 eitherListToStringList :: [Either Word32 String] -> [String]
 eitherListToStringList = map (fromRight "0")
 
