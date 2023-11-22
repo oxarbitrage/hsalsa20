@@ -36,14 +36,14 @@ import Data.Word
 import Keelung hiding (input, eq)
 
 -- |The columnround expression computed.
-{-@ ignore columnroundCompute @-}
+{-@ columnroundCompute :: { i:[_] | (len i) == 16 } -> { o:[_] | (len o) == 16 }  @-}
 columnroundCompute :: [Word32] -> [Word32]
 columnroundCompute input
     | length input == 16 = transpose $ rowroundCompute $ transpose input
     | otherwise = error "input to `columnroundCompute` must be a list of 16 `Word32` numbers"
 
 -- |The columnround expression as a string.
-{-@ ignore columnroundDisplay @-}
+{-@ columnroundDisplay :: { i:[_] | (len i) == 16 } -> { o:[_] | (len o) == 16 }  @-}
 columnroundDisplay :: [String] -> [String]
 columnroundDisplay input
     | length input == 16 = transpose $ rowroundDisplay $ transpose input
