@@ -158,7 +158,7 @@ doubleroundRDisplayTests = test
                 "⊕ ((y5 + y1) <<< 7) + y5) <<< 9)) <<< 18) + y4 ⊕ ((y0 + y12) <<< 7)) <<< 7)) <<< 7)) <<< 7)) <<< 13)",
                 "((y3 ⊕ ((y15 + y11) <<< 7) + y15) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)) <<< 9)) <<< 18)"]
 
-        let actualDisplayOutput = doubleroundRDisplay ["y0", "y1", "y2", "y3", "y4", "y5", "y6", "y7", "y8", "y9", "y10", "y11", "y12", "y13", "y14", "y15"] 2
+        let actualDisplayOutput = doubleroundRDisplay 2 ["y0", "y1", "y2", "y3", "y4", "y5", "y6", "y7", "y8", "y9", "y10", "y11", "y12", "y13", "y14", "y15"]
 
         isEqualFirstNList expectedDisplayOutputStart actualDisplayOutput @?= True
         isEqualLastNList expectedDisplayOutputEnd actualDisplayOutput @?= True

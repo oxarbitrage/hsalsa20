@@ -48,14 +48,14 @@ import Utils
 {-@ ignore coreCompute @-}
 coreCompute :: [Word32] -> Int -> [Word32]
 coreCompute input rounds
-    | length input == 16 = modMatrix (doubleroundRCompute input rounds) input
+    | length input == 16 = modMatrix (doubleroundRCompute rounds input) input
     | otherwise = error "input to `coreCompute` must be a list of 16 `Word32` numbers"
 
 -- |The core expression as a string.
 {-@ ignore coreDisplay @-}
 coreDisplay :: [String] -> Int -> [String]
 coreDisplay input rounds
-    | length input == 16 = modMatrixDisplay (doubleroundRDisplay input rounds) input
+    | length input == 16 = modMatrixDisplay (doubleroundRDisplay rounds input) input
     | otherwise = error "input to `coreDisplay` must be a list of 16 `String` strings"
 
 -- |The core Keelung expression computed.

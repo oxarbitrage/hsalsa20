@@ -91,7 +91,7 @@ main = do
     -- From now on expressions are too big, compiling start to fail intermitenly, so we comment out the tests for now.
     -- https://github.com/btq-ag/keelung-compiler/issues/35
 
-    let doubleroundR_computed = doubleroundRCompute demoInputWord32 10
+    let doubleroundR_computed = doubleroundRCompute 10 demoInputWord32
     doubleroundR_interpreted <- interpret gf181 (doubleroundRKeelung demoInputUInt32 10) [] []
     putStrLn $ if doubleroundR_computed == map fromIntegral doubleroundR_interpreted then "OK" else "FAIL!"
 
@@ -101,7 +101,7 @@ main = do
     putStrLn $ if douleround2_constraints == 36788 then "OK" else "FAIL!"
     -}
 
-    let doubleround10_computed = doubleroundRCompute demoInputWord32 10
+    let doubleround10_computed = doubleroundRCompute 10 demoInputWord32
     doubleround10_interpreted <- interpret gf181 (doubleroundRKeelung demoInputUInt32 10) [] []
     putStrLn $ if doubleround10_computed == map fromIntegral doubleround10_interpreted then "OK" else "FAIL!"
 
