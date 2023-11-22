@@ -184,27 +184,25 @@ sort4_inv [z15, z12, z13, z14] = [z12, z13, z14, z15]
 sort4_inv _ = error "input to `sort4_inv` must be a list of 4 objects"
 
 -- |The rowround expression computed.
---{-@ ignore rowroundCompute @-}
-{-@ rowroundCompute :: { i:[_] | (len i) == 16 } -> _  @-}
+{-@ rowroundCompute :: { i:[_] | (len i) == 16 } -> { o:[_] | (len o) == 16 }  @-}
 rowroundCompute :: [Word32] -> [Word32]
 rowroundCompute input
-    | length input == 16 = concat [
-        evalCompute $ quarterround1 $ map Left input,
-        sort2_inv $ evalCompute $ quarterround2 $ map Left input,
-        sort3_inv $ evalCompute $ quarterround3 $ map Left input,
-        sort4_inv $ evalCompute $ quarterround4 $ map Left input]
+    | length input == 16 =
+        evalCompute (quarterround1 $ map Left input) ++
+        sort2_inv (evalCompute $ quarterround2 $ map Left input) ++
+        sort3_inv (evalCompute $ quarterround3 $ map Left input) ++
+        sort4_inv (evalCompute $ quarterround4 $ map Left input)
     | otherwise = error "input to `rowroundCompute` must be a list of 16 `Word32` numbers"
 
 -- |The rowround expression as a string.
---{-@ ignore rowroundDisplay @-}
-{-@ rowroundDisplay :: { i:[_] | (len i) == 16 } -> _  @-}
+{-@ rowroundDisplay :: { i:[_] | (len i) == 16 } -> { o:[_] | (len o) == 16 }  @-}
 rowroundDisplay :: [String] -> [String]
 rowroundDisplay input
-    | length input == 16 = concat [
-        evalDisplay $ quarterround1 $ map Right input,
-        sort2_inv $ evalDisplay $ quarterround2 $ map Right input,
-        sort3_inv $ evalDisplay $ quarterround3 $ map Right input,
-        sort4_inv $ evalDisplay $ quarterround4 $ map Right input]
+    | length input == 16 =
+        evalDisplay (quarterround1 $ map Right input) ++
+        sort2_inv (evalDisplay $ quarterround2 $ map Right input) ++
+        sort3_inv (evalDisplay $ quarterround3 $ map Right input) ++
+        sort4_inv (evalDisplay $ quarterround4 $ map Right input)
     | otherwise = error "input to `rowroundDisplay` must be a list of 16 `String` strings"
 
 -- |The rowround Keelung expression.
