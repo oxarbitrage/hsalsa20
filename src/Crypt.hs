@@ -39,7 +39,7 @@ The resulting sequence is used in the Salsa20 encryption process.
 -}
 {-@ ignore iOver64Compute @-}
 iOver64Compute :: Integral a => a -> [Word32]
-iOver64Compute index = extractBytes 8 $ floor (fromIntegral index / 64 :: Double)
+iOver64Compute index = extractBytes8 $ floor (fromIntegral index / 64 :: Double)
 
 -- |Display the calculation of an index over the scalar 64. See `iOver64Compute`.
 {-@ ignore iOver64Display @-}

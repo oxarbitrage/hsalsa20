@@ -414,15 +414,15 @@ main = do
     putStrLn ""
 
     putStrLn "Littleendian inverse tests:"
-    putStrLn $ if extractBytes 4 littleendianOutput1 == littleendianInput1 then "OK" else "FAIL!"
-    putStrLn $ if extractBytes 4 littleendianOutput2 == littleendianInput2 then "OK" else "FAIL!"
-    putStrLn $ if extractBytes 4 littleendianOutput3 == littleendianInput3 then "OK" else "FAIL!"
+    putStrLn $ if extractBytes4 littleendianOutput1 == littleendianInput1 then "OK" else "FAIL!"
+    putStrLn $ if extractBytes4 littleendianOutput2 == littleendianInput2 then "OK" else "FAIL!"
+    putStrLn $ if extractBytes4 littleendianOutput3 == littleendianInput3 then "OK" else "FAIL!"
     putStrLn ""
 
     putStrLn "Salsa20 tests:"
-    putStrLn $ if salsa20Compute salsa20Input1 10 == salsa20Output1 then "OK" else "FAIL!"
-    putStrLn $ if salsa20Compute salsa20Input2 10 == salsa20Output2 then "OK" else "FAIL!"
-    putStrLn $ if salsa20Compute salsa20Input3 10 == salsa20Output3 then "OK" else "FAIL!"
+    putStrLn $ if salsa20Compute 10 salsa20Input1 == salsa20Output1 then "OK" else "FAIL!"
+    putStrLn $ if salsa20Compute 10 salsa20Input2 == salsa20Output2 then "OK" else "FAIL!"
+    putStrLn $ if salsa20Compute 10 salsa20Input3 == salsa20Output3 then "OK" else "FAIL!"
     putStrLn ""
 
     putStrLn "Expanded Salsa20 tests:"

@@ -87,8 +87,8 @@ doubleroundRDisplay r input
 
 -- |The doubleroundR Keelung expression.
 {-@ ignore doubleroundRKeelung @-}
-doubleroundRKeelung :: [UInt 32] -> Int -> Comp [UInt 32]
-doubleroundRKeelung input r
+doubleroundRKeelung :: Int -> [UInt 32] -> Comp [UInt 32]
+doubleroundRKeelung r input
     | length input == 16 && r == 0 = return input
-    | length input == 16 && r > 0 = doubleroundKeelung input >>= \dr -> doubleroundRKeelung dr (r - 1)
+    | length input == 16 && r > 0 = doubleroundKeelung input >>= \dr -> doubleroundRKeelung (r - 1) dr
     | otherwise = error "arguments of `doubleroundRKeelung` must be a list of 16 `UInt 32` numbers and a number `Int` of rounds"

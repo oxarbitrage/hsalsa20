@@ -92,7 +92,7 @@ main = do
     -- https://github.com/btq-ag/keelung-compiler/issues/35
 
     let doubleroundR_computed = doubleroundRCompute 10 demoInputWord32
-    doubleroundR_interpreted <- interpret gf181 (doubleroundRKeelung demoInputUInt32 10) [] []
+    doubleroundR_interpreted <- interpret gf181 (doubleroundRKeelung 10 demoInputUInt32) [] []
     putStrLn $ if doubleroundR_computed == map fromIntegral doubleroundR_interpreted then "OK" else "FAIL!"
 
     {-
@@ -102,7 +102,7 @@ main = do
     -}
 
     let doubleround10_computed = doubleroundRCompute 10 demoInputWord32
-    doubleround10_interpreted <- interpret gf181 (doubleroundRKeelung demoInputUInt32 10) [] []
+    doubleround10_interpreted <- interpret gf181 (doubleroundRKeelung 10 demoInputUInt32) [] []
     putStrLn $ if doubleround10_computed == map fromIntegral doubleround10_interpreted then "OK" else "FAIL!"
 
     {-
@@ -111,8 +111,8 @@ main = do
     putStrLn $ if douleround10_constraints == 181940 then "OK" else "FAIL!"
     -}
 
-    let core_computed = coreCompute demoInputWord32 10
-    core_interpreted <- interpret gf181 (coreKeelung demoInputUInt32 10) [] []
+    let core_computed = coreCompute 10 demoInputWord32
+    core_interpreted <- interpret gf181 (coreKeelung 10 demoInputUInt32) [] []
     putStrLn $ if core_computed == map fromIntegral core_interpreted then "OK" else "FAIL!"
 
     {-
@@ -121,7 +121,7 @@ main = do
     putStrLn $ if core_constraints == 181956 then "OK" else "FAIL!"
     -}
 
-    let salsa20_computed = salsa20Compute demoSalsa20InputWord32 10
+    let salsa20_computed = salsa20Compute 10 demoSalsa20InputWord32
     salsa20_interpreted <- interpret gf181 (salsa20Keelung demoSalsa20InputUInt32) [] []
     putStrLn $ if salsa20_computed == map fromIntegral salsa20_interpreted then "OK" else "FAIL!"
 

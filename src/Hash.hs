@@ -45,40 +45,40 @@ import Doubleround
 import Utils
 
 -- |The core expression computed.
-{-@ ignore coreCompute @-}
-coreCompute :: [Word32] -> Int -> [Word32]
-coreCompute input rounds
+{-@ coreCompute ::  Nat -> { i:[_] | (len i) == 16 } -> { o:[_] | (len o) == 16 } @-}
+coreCompute :: Int -> [Word32] -> [Word32]
+coreCompute rounds input
     | length input == 16 = modMatrix (doubleroundRCompute rounds input) input
     | otherwise = error "input to `coreCompute` must be a list of 16 `Word32` numbers"
 
 -- |The core expression as a string.
-{-@ ignore coreDisplay @-}
-coreDisplay :: [String] -> Int -> [String]
-coreDisplay input rounds
+{-@ coreDisplay ::  Nat -> { i:[_] | (len i) == 16 } -> { o:[_] | (len o) == 16 } @-}
+coreDisplay :: Int -> [String] -> [String]
+coreDisplay rounds input
     | length input == 16 = modMatrixDisplay (doubleroundRDisplay rounds input) input
     | otherwise = error "input to `coreDisplay` must be a list of 16 `String` strings"
 
 -- |The core Keelung expression computed.
 {-@ ignore coreKeelung @-}
-coreKeelung :: [UInt 32] -> Int -> Comp [UInt 32]
-coreKeelung input rounds
+coreKeelung :: Int -> [UInt 32] -> Comp [UInt 32]
+coreKeelung rounds input
     | length input == 16 = do
-        dr <- doubleroundRKeelung input rounds
+        dr <- doubleroundRKeelung rounds input
         return $ modMatrixKeelung dr input
     | otherwise = error "input to `coreCompute` must be a list of 16 `Word32` numbers"
 
 -- | The salsa20 expression computed.
-{-@ ignore salsa20Compute @-}
-salsa20Compute :: [Word32] -> Int -> [Word32]
-salsa20Compute input rounds
-    | length input == 64 = aument $ coreCompute (Utils.reduce input) rounds
+{-@ salsa20Compute ::  Nat -> { i:[_] | (len i) == 64 } -> { o:[_] | (len o) == 64 } @-}
+salsa20Compute :: Int -> [Word32] -> [Word32]
+salsa20Compute rounds input
+    | length input == 64 && rounds >= 0 = aument $ coreCompute rounds (Utils.reduce input)
     | otherwise = error "input to `salsa20Compute` must be a list of 64 `Word32` numbers"
 
 -- |The salsa20 expression as a string using `coreDisplay`. Call with r = 1, which is one round of doubleround.
 {-@ ignore salsa20Display @-}
-salsa20Display :: [String] -> Int -> [String]
-salsa20Display input rounds
-    | length input == 64 = aumentDisplay $ coreDisplay (reduceDisplay input) rounds
+salsa20Display :: Int ->[String] -> [String]
+salsa20Display rounds input
+    | length input == 64 = aumentDisplay $ coreDisplay rounds (reduceDisplay input)
     | otherwise = error "input to `salsa20Display` must be a list of 64 `String` strings"
 
 -- | The salsa20 Keelung expression computed.
@@ -87,7 +87,7 @@ salsa20Keelung :: [UInt 32] -> Comp [UInt 32]
 salsa20Keelung input
     | length input == 64 = do
         let new_input = reduceKeelung input
-        core <- coreKeelung new_input 10
+        core <- coreKeelung 10 new_input
         return $ aumentKeelung core
     | otherwise = error "input to `salsa20Compute` must be a list of 64 `Word32` numbers"
 
@@ -95,4 +95,4 @@ salsa20Keelung input
 {-@ ignore salsa20powerCompute @-}
 salsa20powerCompute :: [Word32] -> Int -> [Word32]
 salsa20powerCompute input 0 = input
-salsa20powerCompute input power = salsa20powerCompute (salsa20Compute input 10) (power - 1)
+salsa20powerCompute input power = salsa20powerCompute (salsa20Compute 10 input) (power - 1)

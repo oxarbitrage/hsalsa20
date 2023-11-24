@@ -71,7 +71,7 @@ t3 = [116, 101, 32, 107]
 {-@ ignore expand32Compute @-}
 expand32Compute :: [Word32] -> [Word32] -> [Word32] -> [Word32]
 expand32Compute k0 k1 n
-    | length k0 == 16 && length k1 == 16 && length n == 16 = salsa20Compute (sort32Compute k0 k1 n) 10
+    | length k0 == 16 && length k1 == 16 && length n == 16 = salsa20Compute 10 (sort32Compute k0 k1 n)
     | otherwise = error "inputs to `expand32Compute` must be 2 lists of 16 `Word32` numbers as k0 and k1; and a \
         \list of 16 `Word32` numbers as an `n`"
 
@@ -79,7 +79,7 @@ expand32Compute k0 k1 n
 {-@ ignore expand32Display @-}
 expand32Display :: [String] -> [String] -> [String] -> [String]
 expand32Display k0 k1 n
-    | length k0 == 16 && length k1 == 16 && length n == 16 = salsa20Display (sort32Display k0 k1 n) 10
+    | length k0 == 16 && length k1 == 16 && length n == 16 = salsa20Display 10 (sort32Display k0 k1 n)
     | otherwise = error "inputs to `expand32Display` must be 2 lists of 16 `String` strings as a k0 and k1; and a \
         \list of 16 `String` strings as an `n`"
 
@@ -98,7 +98,7 @@ sort32Display k0 k1 n = numberListToStringList o0 ++ k0 ++ numberListToStringLis
 {-@ ignore expand16Compute @-}
 expand16Compute :: [Word32] -> [Word32] -> [Word32]
 expand16Compute k n
-    | length k == 16 && length n == 16 = salsa20Compute (sort16Compute k n) 10
+    | length k == 16 && length n == 16 = salsa20Compute 10 (sort16Compute k n)
     | otherwise = error "inputs to `expand16Compute` must be a list of 16 `Word32` numbers as a key and a \
         \list of 16 `Word32` numbers as an `n`"
 
@@ -106,7 +106,7 @@ expand16Compute k n
 {-@ ignore expand16Display @-}
 expand16Display :: [String] -> [String] -> [String]
 expand16Display k n
-    | length k == 16 && length n == 16 = salsa20Display (sort16Display k n) 10
+    | length k == 16 && length n == 16 = salsa20Display 10 (sort16Display k n)
     | otherwise = error "inputs to `expand16Display` must be a list of 16 `String` strings as a key and a \
         \list of 16 `String` strings as an `n`"
 
