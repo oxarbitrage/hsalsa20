@@ -34,8 +34,6 @@ import Data.Word
 import Text.Printf
 import Data.Either
 
-import Utils
-
 import Keelung hiding (input, eq)
 
 -- |The quarterround endofunctor to compute a Haskell `Word32` or a Haskell `String` type.
@@ -135,7 +133,7 @@ rhs1 _ = error "input to `rhs1` must be a list of 4 `Word32` numbers"
 
 -- |The right hand side of the `z1` expression as a Keelung expression. `((y0 + y3) <<< 7)`
 {-@ rhs1Keelung :: {v:[_] | (len v) == 4 } -> _ @-}
-rhs1Keelung :: [UInt32] -> Fix ExprFKeelung
+rhs1Keelung :: [UInt 32] -> Fix ExprFKeelung
 rhs1Keelung [y0, _, _, y3] = In $ Rotl7K (In $ In (ConstK y0) `ModK` In (ConstK y3))
 rhs1Keelung _ = error "input to `rhs1Keelung` must be a list of 4 `UInt 32` numbers"
 

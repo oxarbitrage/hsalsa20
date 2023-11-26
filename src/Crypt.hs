@@ -46,7 +46,7 @@ iOver64Compute index = extractBytes8 $ floor (fromIntegral index / 64 :: Double)
 iOver64Display :: String -> [String]
 -- TODO: is this the same?
 --iOver64Display index = [printf "_(%s/64)" index]
-iOver64Display index = displayBytes 8 $ printf "_(%s/64)" index
+iOver64Display index = displayBytes8 $ printf "_(%s/64)" index
 
 {-|
 Join the nonce with the calculated `iOver64Compute` to create an extended nonce.

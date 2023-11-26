@@ -75,10 +75,10 @@ salsa20Compute rounds input
     | otherwise = error "input to `salsa20Compute` must be a list of 64 `Word32` numbers"
 
 -- |The salsa20 expression as a string using `coreDisplay`. Call with r = 1, which is one round of doubleround.
-{-@ ignore salsa20Display @-}
+{-@ salsa20Display ::  Nat -> { i:[_] | (len i) == 64 } -> { o:[_] | (len o) == 64 } @-}
 salsa20Display :: Int ->[String] -> [String]
 salsa20Display rounds input
-    | length input == 64 = aumentDisplay $ coreDisplay rounds (reduceDisplay input)
+    | length input == 64 && rounds >= 0 = aumentDisplay $ coreDisplay rounds (reduceDisplay input)
     | otherwise = error "input to `salsa20Display` must be a list of 64 `String` strings"
 
 -- | The salsa20 Keelung expression computed.
