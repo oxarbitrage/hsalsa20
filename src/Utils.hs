@@ -249,6 +249,7 @@ transpose [y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, y13, y14, y15]
 transpose _ = error "input to `transpose` must be a list of 16 objects"
 
 -- |Convert a list of numbers to a list of strings. This is always possible. 
+{-@ numberListToStringList :: { i:[_] | (len i) == 4 } -> { o:[_] | (len o) == 4 }  @-}
 numberListToStringList :: [Word32] -> [String]
 numberListToStringList = map (\x -> printf "%d" x)
 

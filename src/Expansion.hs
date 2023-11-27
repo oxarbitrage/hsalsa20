@@ -35,40 +35,48 @@ import Data.Word
 import Hash
 import Utils
 
--- |`expa` in ascii. 
+-- |`expa` in ascii.
+{-@ o0 :: { o:[_] | (len o) == 4 } @-}
 o0 :: [Word32]
 o0 = [101, 120, 112, 97]
 
 -- |`nd 3` in ascii.
+{-@ o1 :: { o:[_] | (len o) == 4 } @-}
 o1 :: [Word32]
 o1 = [110, 100, 32, 51]
 
 -- |`2-by` in ascii.
+{-@ o2 :: { o:[_] | (len o) == 4 } @-}
 o2 :: [Word32]
 o2 = [50, 45, 98, 121]
 
 -- |`te k` in ascii.
+{-@ o3 :: { o:[_] | (len o) == 4 } @-}
 o3 :: [Word32]
 o3 = [116, 101, 32, 107]
 
 -- |`expa` in ascii. 
+{-@ t0 :: { o:[_] | (len o) == 4 } @-}
 t0 :: [Word32]
 t0 = [101, 120, 112, 97]
 
 -- |`nd 1` in ascii.
+{-@ t1 :: { o:[_] | (len o) == 4 } @-}
 t1 :: [Word32]
 t1 = [110, 100, 32, 49]
 
 -- |`6-by` in ascii.
+{-@ t2 :: { o:[_] | (len o) == 4 } @-}
 t2 :: [Word32]
 t2 = [54, 45, 98, 121]
 
 -- |`te k` in ascii.
+{-@ t3 :: { o:[_] | (len o) == 4 } @-}
 t3 :: [Word32]
 t3 = [116, 101, 32, 107]
 
 -- | The expansion function where we have two 16 bytes k's (k0 and k1).
-{-@ ignore expand32Compute @-}
+{-@ expand32Compute :: { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 64 } @-}
 expand32Compute :: [Word32] -> [Word32] -> [Word32] -> [Word32]
 expand32Compute k0 k1 n
     | length k0 == 16 && length k1 == 16 && length n == 16 = salsa20Compute 10 (sort32Compute k0 k1 n)
@@ -76,7 +84,7 @@ expand32Compute k0 k1 n
         \list of 16 `Word32` numbers as an `n`"
 
 -- |The expansion function displayed where we have two 16 bytes (k0 and k1).
-{-@ ignore expand32Display @-}
+{-@ expand32Display :: { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 64 } @-}
 expand32Display :: [String] -> [String] -> [String] -> [String]
 expand32Display k0 k1 n
     | length k0 == 16 && length k1 == 16 && length n == 16 = salsa20Display 10 (sort32Display k0 k1 n)
@@ -84,18 +92,18 @@ expand32Display k0 k1 n
         \list of 16 `String` strings as an `n`"
 
 -- |The order needed for the 32 bytes k version of the expansion function `expand32`.
-{-@ ignore sort32Compute @-}
+{-@ sort32Compute :: { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 64 } @-}
 sort32Compute :: [Word32] -> [Word32] -> [Word32] -> [Word32]
 sort32Compute k0 k1 n = o0 ++ k0 ++ o1 ++ n ++ o2 ++ k1 ++ o3 
 
 -- |The order needed for the 32 bytes k version of the expansion function `expand32`.
-{-@ ignore sort32Display @-}
+{-@ sort32Display :: { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 64 } @-}
 sort32Display :: [String] -> [String] -> [String] -> [String]
 sort32Display k0 k1 n = numberListToStringList o0 ++ k0 ++ numberListToStringList o1 ++ n ++
     numberListToStringList o2 ++ k1 ++ numberListToStringList o3
 
 -- |The expansion function computed where we have one 16 bytes (k).
-{-@ ignore expand16Compute @-}
+{-@ expand16Compute :: { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 64 } @-}
 expand16Compute :: [Word32] -> [Word32] -> [Word32]
 expand16Compute k n
     | length k == 16 && length n == 16 = salsa20Compute 10 (sort16Compute k n)
@@ -103,7 +111,7 @@ expand16Compute k n
         \list of 16 `Word32` numbers as an `n`"
 
 -- |The expansion function displayed where we have one 16 bytes (k).
-{-@ ignore expand16Display @-}
+{-@ expand16Display :: { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 64 } @-}
 expand16Display :: [String] -> [String] -> [String]
 expand16Display k n
     | length k == 16 && length n == 16 = salsa20Display 10 (sort16Display k n)
@@ -111,12 +119,12 @@ expand16Display k n
         \list of 16 `String` strings as an `n`"
 
 -- |Expand for computation of the 16 bytes k version of the expansion function `expand16`.
-{-@ ignore sort16Compute @-}
+{-@ sort16Compute :: { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 64 } @-}
 sort16Compute :: [Word32] -> [Word32] -> [Word32]
 sort16Compute k n = t0 ++ k ++ t1 ++ n ++ t2 ++ k ++ t3
 
 -- |Expand for display of the 16 bytes k version of the expansion function `expand16`.
-{-@ ignore sort16Display @-}
+{-@ sort16Display :: { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 16 } -> { o:[_] | (len o) == 64 } @-}
 sort16Display :: [String] -> [String] -> [String]
 sort16Display k n = numberListToStringList t0 ++ k ++ numberListToStringList t1 ++ n ++
     numberListToStringList t2 ++ k ++ numberListToStringList t3
