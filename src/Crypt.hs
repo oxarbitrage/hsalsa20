@@ -37,12 +37,12 @@ Given an index `i` representing the position of a message in a sequence of lengt
 this function computes the floor of `i / 64` and expresses the result as a unique sequence of 8 bytes.
 The resulting sequence is used in the Salsa20 encryption process.
 -}
-{-@ ignore iOver64Compute @-}
-iOver64Compute :: Integral a => a -> [Word32]
+{-@ iOver64Compute :: Nat -> { o:[_] | (len o) == 8 }  @-}
+iOver64Compute :: Int -> [Word32]
 iOver64Compute index = extractBytes8 $ floor (fromIntegral index / 64 :: Double)
 
 -- |Display the calculation of an index over the scalar 64. See `iOver64Compute`.
-{-@ ignore iOver64Display @-}
+{-@ iOver64Display :: _ -> { o:[_] | (len o) == 8 }  @-}
 iOver64Display :: String -> [String]
 -- TODO: is this the same?
 --iOver64Display index = [printf "_(%s/64)" index]
@@ -54,14 +54,14 @@ The `nonce` is an 8-byte sequence, and the `iOver64Compute` function produces an
 When combined, they form a 16-byte extended nonce. This extended nonce is used in Salsa20 encryption to ensure the
 uniqueness of the encryption keys.
 -}
-{-@ ignore nonceAndiOver64Compute @-}
+{-@ nonceAndiOver64Compute :: { i:[_] | (len i) == 8 } -> Nat -> { o:[_] | (len o) == 16 }  @-}
 nonceAndiOver64Compute :: [Word32] -> Int -> [Word32]
 nonceAndiOver64Compute nonce index
     | length nonce == 8 = nonce ++ iOver64Compute index
     | otherwise = error "First input to `nonceAndiOver64Compute` must be a list of 8 `Word32` numbers"
 
 -- |Join the nonce with the calculated `iOver64Display`. See `nonceAndiOver64Compute`.
-{-@ ignore nonceAndiOver64Display @-}
+{-@ nonceAndiOver64Display :: { i:[_] | (len i) == 8 } -> _ -> { o:[_] | (len o) == 16 }  @-}
 nonceAndiOver64Display :: [String] -> String -> [String]
 nonceAndiOver64Display nonce index
     | length nonce == 8 = nonce ++ iOver64Display index
@@ -73,14 +73,14 @@ Given an augmented key, this function extracts the byte at the specified index a
 The augmented key is an array of 64 `Word32` values, and the index should be within the range [0, 63] to access
 a valid byte.
 -}
-{-@ ignore keybyteCompute @-}
+{-@ keybyteCompute :: { i:[_] | (len i) == 64 } -> {index: Nat | index <= 63 } -> _  @-}
 keybyteCompute :: [Word32] -> Int -> Word32
 keybyteCompute aumented_key index
     | length aumented_key == 64 = aumented_key!!index
     | otherwise = error "first input to `keybyteCompute` must be a list of 64 `Word32` numbers"
 
 -- |Display a specific byte from the augmented key. See `keybyteCompute`.
-{-@ ignore keybyteDisplay @-}
+{-@ keybyteDisplay :: { i:[_] | (len i) == 64 } -> {index: Nat | index <= 63 } -> _  @-}
 keybyteDisplay :: [String] -> Int -> String
 keybyteDisplay aumented_key index
     | length aumented_key == 64 = aumented_key!!index
@@ -93,7 +93,8 @@ using an index to represent a message byte.
 The resulting matrix is generated based on the provided key and nonce, where the key should be a list of
 16 `Word32` values, and the nonce should be a list of 8 `Word32` values.
 -}
-{-@ ignore crypt16Compute @-}
+{-@ crypt16Compute :: { key:[_] | (len key) == 16 } -> { nonce:[_] | (len nonce) == 8 } -> 
+        Nat -> { o:[_] | (len o) == 64 }  @-}
 crypt16Compute :: [Word32] -> [Word32] -> Int -> [Word32]
 crypt16Compute key nonce index
     | length key == 16 && length nonce == 8 = expand16Compute key $ nonceAndiOver64Compute nonce index
@@ -106,7 +107,7 @@ using an index to represent a message byte. The resulting matrix is generated ba
 where the key should be a list of 16 `String` values, and the nonce should be a list of 8 `String` values. 
 The resulting matrix is returned as a list of strings.
 -}
-{-@ ignore crypt16Display @-}
+{-@ crypt16Display :: { key:[_] | (len key) == 16 } -> { nonce:[_] | (len nonce) == 8 } -> _ -> { o:[_] | (len o) == 64 }  @-}
 crypt16Display :: [String] -> [String] -> String -> [String]
 crypt16Display key nonce index
     | length key == 16 && length nonce == 8 = expand16Display key $ nonceAndiOver64Display nonce index
@@ -118,7 +119,7 @@ It takes a list of `Word32` values of any length (message block), a 16-byte key,
 the position of the message byte.
 The function performs XOR operations on the message block and the corresponding Salsa20 expansion matrix entry.
 -}
-{-@ ignore cryptBlock16Compute @-}
+{-@ cryptBlock16Compute :: _ -> { key:[_] | (len key) == 16 } -> { nonce:[_] | (len nonce) == 8 } -> Nat -> _  @-}
 cryptBlock16Compute :: [Word32] -> [Word32] -> [Word32] -> Int -> [Word32]
 cryptBlock16Compute (x:xs) key nonce index
     | length key == 16 && length nonce == 8 = xor x (keybyteCompute (crypt16Compute key nonce index) (index `mod` 64)) :
@@ -127,7 +128,7 @@ cryptBlock16Compute (x:xs) key nonce index
 cryptBlock16Compute _ _ _ _ = []
 
 -- |Display the encryption or decryption of a message with a single 16 bytes key as a list of strings.
-{-@ ignore cryptBlock16Display @-}
+{-@ cryptBlock16Display :: _ -> { key:[_] | (len key) == 16 } -> { nonce:[_] | (len nonce) == 8 } -> Nat -> _  @-}
 cryptBlock16Display :: [String] -> [String] -> [String] -> Int -> [String]
 cryptBlock16Display (x:xs) key nonce index
     | length key == 16 && length nonce == 8 = printf "%s ⊕ %s" x (keybyteDisplay (crypt16Display key nonce (show index)) (index `mod` 64)) :
@@ -142,7 +143,8 @@ using an index to represent a message byte.
 The resulting matrix is generated based on the provided key and nonce, where the key should be two lists of
 16 `Word32` values, and the nonce should be a list of 8 `Word32` values.
 -}
-{-@ ignore crypt32Compute @-}
+{-@ crypt32Compute :: { key1:[_] | (len key1) == 16 } -> {key2:[_] | (len key2) == 16 } -> 
+        { nonce:[_] | (len nonce) == 8 } -> Nat -> { o:[_] | (len o) == 64 }  @-}
 crypt32Compute :: [Word32] -> [Word32] -> [Word32] -> Int -> [Word32]
 crypt32Compute key0 key1 nonce index 
     | length key0 == 16 && length key1 == 16 && length nonce == 8 = expand32Compute key0 key1 $ nonceAndiOver64Compute nonce index
@@ -155,7 +157,8 @@ using an index to represent a message byte. The resulting matrix is generated ba
 where the key should be two lists of 16 `String` values, and the nonce should be a list of 8 `String` values. 
 The resulting matrix is returned as a list of strings.
 -}
-{-@ ignore crypt32Display @-}
+{-@ crypt32Display :: { key1:[_] | (len key1) == 16 } -> {key2:[_] | (len key2) == 16 } -> 
+        { nonce:[_] | (len nonce) == 8 } -> _ -> { o:[_] | (len o) == 64 }  @-}
 crypt32Display :: [String] -> [String] -> [String] -> String -> [String]
 crypt32Display key0 key1 nonce index
     | length key0 == 16 && length key1 == 16 && length nonce == 8 = expand32Display key0 key1 $ nonceAndiOver64Display nonce index
@@ -167,7 +170,8 @@ It takes a list of `Word32` values of any length (message block), two 16-byte ke
 the position of the message byte.
 The function performs XOR operations on the message block and the corresponding Salsa20 expansion matrix entry.
 -}
-{-@ ignore cryptBlock32Compute @-}
+{-@ cryptBlock32Compute :: _ -> { key1:[_] | (len key1) == 16 } -> {key2:[_] | (len key2) == 16 } -> 
+        { nonce:[_] | (len nonce) == 8 } -> Nat -> _  @-}
 cryptBlock32Compute :: [Word32] -> [Word32] -> [Word32] -> [Word32] -> Int -> [Word32]
 cryptBlock32Compute (x:xs) key0 key1 nonce index
     | length key0 == 16 && length key1 == 16 && length nonce == 8 =
@@ -177,7 +181,8 @@ cryptBlock32Compute (x:xs) key0 key1 nonce index
 cryptBlock32Compute _ _ _ _ _ = []
 
 -- |Display the encryption or decryption of a message with a two 16 bytes key as a list of strings.
-{-@ ignore cryptBlock32Display @-}
+{-@ cryptBlock32Display :: _ -> { key1:[_] | (len key1) == 16 } -> {key2:[_] | (len key2) == 16 } -> 
+        { nonce:[_] | (len nonce) == 8 } -> _ -> _  @-}
 cryptBlock32Display :: [String] -> [String] -> [String] -> [String] -> Int -> [String]
 cryptBlock32Display (x:xs) key0 key1 nonce index
     | length key0 == 16 && length key1 == 16 && length nonce == 8 =
