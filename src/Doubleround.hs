@@ -63,7 +63,7 @@ doubleroundDisplay input
     | otherwise = error "input to `doubleroundDisplay` must be a list of 16 `String` strings"
 
 -- |The doubleround Keelung expression.
-{-@ ignore doubleroundKeelung @-}
+{-@ doubleroundKeelung :: { i:[_] | (len i) == 16 } -> Comp { o:[_] | (len o) == 16 }  @-}
 doubleroundKeelung :: [UInt 32] -> Comp [UInt 32]
 doubleroundKeelung input
     | length input == 16 = rowroundKeelung =<< columnroundKeelung input
@@ -86,7 +86,7 @@ doubleroundRDisplay r input
     | otherwise = error "arguments of `doubleroundRDisplay` must be a number `Int` of rounds and a list of 16 `String` strings"
 
 -- |The doubleroundR Keelung expression.
-{-@ ignore doubleroundRKeelung @-}
+{-@ doubleroundRKeelung :: Nat -> { i:[_] | (len i) == 16 } -> Comp { o:[_] | (len o) == 16 }  @-}
 doubleroundRKeelung :: Int -> [UInt 32] -> Comp [UInt 32]
 doubleroundRKeelung r input
     | length input == 16 && r == 0 = return input

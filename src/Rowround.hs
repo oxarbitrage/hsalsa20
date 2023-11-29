@@ -65,7 +65,10 @@ unFix (In x) = x
 cata :: Functor f => (f a -> a) -> Fix f -> a
 cata algebra = algebra . fmap (cata algebra) . unFix
 
--- |The algebra maps for computation.
+{-| The algebra maps for computation.
+
+TODO: The `otherwise` case silently return `[0, 0, 0, 0]` instead of erroring out.
+-}
 {-@ algMapsCompute :: _ -> { o:[_] | (len o) == 4 } @-}
 algMapsCompute :: ExprF [Word32] -> [Word32]
 algMapsCompute (Const i)
@@ -73,7 +76,10 @@ algMapsCompute (Const i)
     | otherwise = [0, 0, 0, 0]
 algMapsCompute (Quarterround a) = Quarterround.quarterroundCompute a
 
--- |The algebra maps for displaying.
+{-| The algebra maps for displaying.
+
+TODO: The `otherwise` case silently return `["0", "0", "0", "0"]` instead of erroring out.
+-}
 {-@ algMapsDisplay :: _ -> { o:[_] | (len o) == 4 } @-}
 algMapsDisplay :: ExprF [String] -> [String]
 algMapsDisplay (Const i)
@@ -81,10 +87,15 @@ algMapsDisplay (Const i)
     | otherwise = ["0", "0", "0", "0"]
 algMapsDisplay (Quarterround a) = Quarterround.quarterroundDisplay a
 
--- |The algebra maps for Keelung.
-{-@ ignore algMapsKeelung @-}
+{-| The algebra maps for Keelung.
+
+TODO: The `otherwise` case silently return `[0, 0, 0, 0]` instead of erroring out.
+-}
+{-@ algMapsKeelung :: _ -> Comp { o:[_] | (len o) == 4 } @-}
 algMapsKeelung :: ExprFKeelung (Comp [UInt 32]) -> Comp [UInt 32]
-algMapsKeelung (ConstK i) =  return i
+algMapsKeelung (ConstK i)
+    | length i == 4 = return i
+    | otherwise = return [0, 0, 0, 0]
 algMapsKeelung (QuarterroundK a) = Quarterround.quarterroundKeelung =<< a
 
 -- |The rowround evaluator.
@@ -206,7 +217,7 @@ rowroundDisplay input
     | otherwise = error "input to `rowroundDisplay` must be a list of 16 `String` strings"
 
 -- |The rowround Keelung expression.
-{-@ ignore rowroundKeelung @-}
+{-@ rowroundKeelung :: { i:[_] | (len i) == 16 } -> Comp { o:[_] | (len o) == 16 }  @-}
 rowroundKeelung :: [UInt 32] -> Comp [UInt 32]
 rowroundKeelung input
     | length input == 16 = do
@@ -215,5 +226,6 @@ rowroundKeelung input
         q3 <- evalKeelung $ quarterround3Keelung input
         q4 <- evalKeelung $ quarterround4Keelung input
 
-        return $ concat [q1,  sort2_inv q2, sort3_inv q3, sort4_inv q4]
+        let res = q1 ++ sort2_inv q2 ++ sort3_inv q3 ++ sort4_inv q4
+        return res
     | otherwise = error "input to `rowroundKeelung` must be a list of 16 `UInt 32` numbers"

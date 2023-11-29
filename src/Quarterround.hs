@@ -242,7 +242,7 @@ quarterroundDisplay input@[_, _, _, _] = [
 quarterroundDisplay _ = error "input to `quarterroundDisplay` must be a list of 4 `String` strings"
 
 -- | The quarterround expression as a Keelung computation.
-{-@ quarterroundKeelung :: {v:[_] | (len v) == 4 } -> _ @-}
+{-@ quarterroundKeelung :: {v:[_] | (len v) == 4 } -> Comp {o:[_] | (len o) == 4 } @-}
 quarterroundKeelung :: [UInt 32] -> Comp [UInt 32]
 quarterroundKeelung input = do
     z1' <- reuse . evalKeelung . z1Keelung $ input

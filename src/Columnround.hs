@@ -50,7 +50,7 @@ columnroundDisplay input
     | otherwise = error "input to `columnroundDisplay` must be a list of 16 `String` strings"
 
 -- |The Keelung columnround expression.
-{-@ ignore columnroundKeelung @-}
+{-@ columnroundKeelung :: { i:[_] | (len i) == 16 } -> Comp { o:[_] | (len o) == 16 }  @-}
 columnroundKeelung :: [UInt 32] -> Comp [UInt 32]
 columnroundKeelung input
     | length input == 16 = do
