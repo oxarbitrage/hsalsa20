@@ -19,6 +19,7 @@ module Utils
         aument, aumentDisplay, aumentKeelung,
         modMatrix, numberListToStringList, transpose, modMatrixDisplay, modMatrixKeelung,
         eitherListToNumberList, eitherListToStringList,
+        elts,
     )
 where
 
@@ -28,6 +29,8 @@ import Text.Printf
 import Data.Either (fromLeft, fromRight)
 
 import Keelung hiding (input, eq)
+
+import Data.Set as Set
 
 import Operators()
 
@@ -113,7 +116,7 @@ refinements in list lengths.
 -}
 {-@ reduce :: { i:[_] | (len i) == 64 } -> { o:[_] | (len o) == 16 } @-}
 reduce :: [Word32] -> [Word32]
-reduce input = map littleendian [
+reduce input = Prelude.map littleendian [
     [input!!0, input!!1, input!!2, input!!3],
     [input!!4, input!!5, input!!6, input!!7],
     [input!!8, input!!9, input!!10, input!!11],
@@ -138,7 +141,7 @@ refinements in list lengths.
 -}
 {-@ reduceDisplay :: { i:[_] | (len i) == 64 } -> { o:[_] | (len o) == 16 } @-}
 reduceDisplay :: [String] -> [String]
-reduceDisplay input = map littleendianDisplay [
+reduceDisplay input = Prelude.map littleendianDisplay [
     [input!!0, input!!1, input!!2, input!!3],
     [input!!4, input!!5, input!!6, input!!7],
     [input!!8, input!!9, input!!10, input!!11],
@@ -159,7 +162,7 @@ reduceDisplay input = map littleendianDisplay [
 -- |Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendianKeelung` encoding.
 {-@ reduceKeelung :: { i:[_] | (len i) == 64 } -> { o:[_] | (len o) == 16 } @-}
 reduceKeelung :: [UInt 32] -> [UInt 32]
-reduceKeelung input = map littleendianKeelung [
+reduceKeelung input = Prelude.map littleendianKeelung [
     [input!!0, input!!1, input!!2, input!!3],
     [input!!4, input!!5, input!!6, input!!7],
     [input!!8, input!!9, input!!10, input!!11],
@@ -290,7 +293,7 @@ modMatrixKeelung a b = [
     Keelung.AddU (a!!12) (b!!12), Keelung.AddU (a!!13) (b!!13), Keelung.AddU (a!!14) (b!!14), Keelung.AddU (a!!15) (b!!15)]
 
 -- |Transpose a 4x4 matrix type.
-{-@ transpose :: {i:[_] | len i == 16} -> {o:[_] | len o == 16} @-}
+{-@ transpose :: {i:[a] | len i == 16} -> {o:[a] | len o == 16 && (elts i == elts o) } @-}
 transpose :: [a] -> [a]
 transpose [y0, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, y13, y14, y15] = 
     [y0, y4, y8, y12, y1, y5, y9, y13, y2, y6, y10, y14, y3, y7, y11, y15]
@@ -299,16 +302,23 @@ transpose _ = error "input to `transpose` must be a list of 16 objects"
 -- |Convert a list of numbers to a list of strings. This is always possible. 
 {-@ numberListToStringList :: { i:[_] | (len i) == 4 } -> { o:[_] | (len o) == 4 }  @-}
 numberListToStringList :: [Word32] -> [String]
-numberListToStringList = map (\x -> printf "%d" x)
+numberListToStringList = Prelude.map (\x -> printf "%d" x)
 
 -- |Convert a list of `Either` type to an list of numbers.
 {-@ eitherListToNumberList :: { i:[_] | (len i) == 4 } -> { o:[_] | (len o) == 4 }  @-}
 eitherListToNumberList :: [Either Word32 String] -> [Word32]
 eitherListToNumberList input
-    | length input == 4 = map (fromLeft 0) input
+    | length input == 4 = Prelude.map (fromLeft 0) input
     | otherwise = error "input to `eitherListToNumberList` must be a list of 4 `Either` objects"
 
 -- |Convert a list of `Either` type to a list of strings.
 {-@ eitherListToStringList :: { i:[_] | (len i) == 4 } -> { o:[_] | (len o) == 4 }  @-}
 eitherListToStringList :: [Either Word32 String] -> [String]
-eitherListToStringList = map (fromRight "0")
+eitherListToStringList = Prelude.map (fromRight "0")
+
+-- Stuff needed for liquidhaskell refinement types
+
+{-@ measure elts @-}
+elts        :: (Ord a) => [a] -> Set a
+elts []     = empty
+elts (x:xs) = singleton x `union` elts xs

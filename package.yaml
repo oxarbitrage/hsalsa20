@@ -41,6 +41,7 @@ library:
   source-dirs: src
   dependencies:
   - liquidhaskell
+  - containers
 executables:
   salsa20-exe:
     main:                Main.hs
