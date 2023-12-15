@@ -109,76 +109,44 @@ extractBytes4Keelung w = [ Keelung.shiftR w (8 * 0) Keelung..&. 0xff,
         Keelung.shiftR w (8 * 2) Keelung..&. 0xff,
         Keelung.shiftR w (8 * 3) Keelung..&. 0xff]
 
-{-| Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendian` encoding.
+-- | Get chunks of 4 elements from a list of 64 elements.
+{-@ chunksof4 :: { i:[_] | (len i) == 64 } -> { o:[{ inner_o:[_] | (len inner_o) == 4}] | (len o) == 16 } @-}
+chunksof4 :: [a] -> [[a]]
+chunksof4 input
+    | length input == 64 = [
+        Prelude.take 4 input,
+        Prelude.take 4 (Prelude.drop 4 input),
+        Prelude.take 4 (Prelude.drop 8 input),
+        Prelude.take 4 (Prelude.drop 12 input),
+        Prelude.take 4 (Prelude.drop 16 input),
+        Prelude.take 4 (Prelude.drop 20 input),
+        Prelude.take 4 (Prelude.drop 24 input),
+        Prelude.take 4 (Prelude.drop 28 input),
+        Prelude.take 4 (Prelude.drop 32 input),
+        Prelude.take 4 (Prelude.drop 36 input),
+        Prelude.take 4 (Prelude.drop 40 input),
+        Prelude.take 4 (Prelude.drop 44 input),
+        Prelude.take 4 (Prelude.drop 48 input),
+        Prelude.take 4 (Prelude.drop 52 input),
+        Prelude.take 4 (Prelude.drop 56 input),
+        Prelude.take 4 (Prelude.drop 60 input)]
 
-This function is implemented as simple haskell (no syntactic sugar) because of liquidhaskell
-refinements in list lengths.
--}
+    | otherwise = error "input to `chunksof4` must be a list of 64 elements"
+
+-- | Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendian` encoding.
 {-@ reduce :: { i:[_] | (len i) == 64 } -> { o:[_] | (len o) == 16 } @-}
 reduce :: [Word32] -> [Word32]
-reduce input = Prelude.map littleendian [
-    [input!!0, input!!1, input!!2, input!!3],
-    [input!!4, input!!5, input!!6, input!!7],
-    [input!!8, input!!9, input!!10, input!!11],
-    [input!!12, input!!13, input!!14, input!!15],
-    [input!!16, input!!17, input!!18, input!!19],
-    [input!!20, input!!21, input!!22, input!!23],
-    [input!!24, input!!25, input!!26, input!!27],
-    [input!!28, input!!29, input!!30, input!!31],
-    [input!!32, input!!33, input!!34, input!!35],
-    [input!!36, input!!37, input!!38, input!!39],
-    [input!!40, input!!41, input!!42, input!!43],
-    [input!!44, input!!45, input!!46, input!!47],
-    [input!!48, input!!49, input!!50, input!!51],
-    [input!!52, input!!53, input!!54, input!!55],
-    [input!!56, input!!57, input!!58, input!!59],
-    [input!!60, input!!61, input!!62, input!!63]]
+reduce input = Prelude.map littleendian (chunksof4 input)
 
-{-| Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendianDisplay` encoding.
-
-This function is implemented as simple haskell (no syntactic sugar) because of liquidhaskell
-refinements in list lengths.
--}
+-- | Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendianDisplay` encoding.
 {-@ reduceDisplay :: { i:[_] | (len i) == 64 } -> { o:[_] | (len o) == 16 } @-}
 reduceDisplay :: [String] -> [String]
-reduceDisplay input = Prelude.map littleendianDisplay [
-    [input!!0, input!!1, input!!2, input!!3],
-    [input!!4, input!!5, input!!6, input!!7],
-    [input!!8, input!!9, input!!10, input!!11],
-    [input!!12, input!!13, input!!14, input!!15],
-    [input!!16, input!!17, input!!18, input!!19],
-    [input!!20, input!!21, input!!22, input!!23],
-    [input!!24, input!!25, input!!26, input!!27],
-    [input!!28, input!!29, input!!30, input!!31],
-    [input!!32, input!!33, input!!34, input!!35],
-    [input!!36, input!!37, input!!38, input!!39],
-    [input!!40, input!!41, input!!42, input!!43],
-    [input!!44, input!!45, input!!46, input!!47],
-    [input!!48, input!!49, input!!50, input!!51],
-    [input!!52, input!!53, input!!54, input!!55],
-    [input!!56, input!!57, input!!58, input!!59],
-    [input!!60, input!!61, input!!62, input!!63]]
+reduceDisplay input = Prelude.map littleendianDisplay (chunksof4 input)
 
 -- |Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendianKeelung` encoding.
 {-@ reduceKeelung :: { i:[_] | (len i) == 64 } -> { o:[_] | (len o) == 16 } @-}
 reduceKeelung :: [UInt 32] -> [UInt 32]
-reduceKeelung input = Prelude.map littleendianKeelung [
-    [input!!0, input!!1, input!!2, input!!3],
-    [input!!4, input!!5, input!!6, input!!7],
-    [input!!8, input!!9, input!!10, input!!11],
-    [input!!12, input!!13, input!!14, input!!15],
-    [input!!16, input!!17, input!!18, input!!19],
-    [input!!20, input!!21, input!!22, input!!23],
-    [input!!24, input!!25, input!!26, input!!27],
-    [input!!28, input!!29, input!!30, input!!31],
-    [input!!32, input!!33, input!!34, input!!35],
-    [input!!36, input!!37, input!!38, input!!39],
-    [input!!40, input!!41, input!!42, input!!43],
-    [input!!44, input!!45, input!!46, input!!47],
-    [input!!48, input!!49, input!!50, input!!51],
-    [input!!52, input!!53, input!!54, input!!55],
-    [input!!56, input!!57, input!!58, input!!59],
-    [input!!60, input!!61, input!!62, input!!63]]
+reduceKeelung input = Prelude.map littleendianKeelung (chunksof4 input)
 
 {-| Aument a matrix of 16 elements to one of 64 elements by using `extractBytes`.
 
