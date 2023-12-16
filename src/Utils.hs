@@ -184,45 +184,26 @@ aumentDisplay = aument' displayBytes4
 aumentKeelung :: [UInt 32] -> [UInt 32]
 aumentKeelung = aument' extractBytes4Keelung
 
-{-| Given two matrices, do modulo addition on each of the elements.
+-- |Internal version of `zipWith` that works with refinements.
+zipWith' :: (a -> a -> a) -> [a] -> [a] -> [a]
+zipWith' _ [] _ = []
+zipWith' _ _ [] = []
+zipWith' f (x:xs) (y:ys) = f x y : zipWith' f xs ys
 
-This function is implemented as simple haskell (no syntactic sugar) because of liquidhaskell
-refinements in list lengths.
--}
+-- |Given two matrices, do modulo addition on each of the elements.
 {-@ modMatrix :: { i:[_] | (len i) == 16 } -> { i:[_] | (len i) == 16 } -> { o:[_] | (len o) == 16 } @-}
 modMatrix :: [Word32] -> [Word32] -> [Word32]
-modMatrix a b = [
-    a!!0 + b!!0, a!!1 + b!!1, a!!2 + b!!2, a!!3 + b!!3,
-    a!!4 + b!!4, a!!5 + b!!5, a!!6 + b!!6, a!!7 + b!!7,
-    a!!8 + b!!8, a!!9 + b!!9, a!!10 + b!!10, a!!11 + b!!11,
-    a!!12 + b!!12, a!!13 + b!!13, a!!14 + b!!14, a!!15 + b!!15]
+modMatrix = zipWith' (+)
 
-{-| Given two matrices, display the modulo addition on each of the elements.
-
-This function is implemented as simple haskell (no syntactic sugar) because of liquidhaskell
-refinements in list lengths.
--}
+-- |Given two matrices, display the modulo addition on each of the elements.
 {-@ modMatrixDisplay :: { i:[_] | (len i) == 16 } -> { i:[_] | (len i) == 16 } -> { o:[_] | (len o) == 16 } @-}
 modMatrixDisplay :: [String] -> [String] -> [String]
-modMatrixDisplay a b = 
-    [
-        a!!0 ++ " + " ++ b!!0, a!!1 ++ " + " ++ b!!1, a!!2 ++ " + " ++ b!!2, a!!3 ++ " + " ++ b!!3,
-        a!!4 ++ " + " ++ b!!4, a!!5 ++ " + " ++ b!!5, a!!6 ++ " + " ++ b!!6, a!!7 ++ " + " ++ b!!7,
-        a!!8 ++ " + " ++ b!!8, a!!9 ++ " + " ++ b!!9, a!!10 ++ " + " ++ b!!10, a!!11 ++ " + " ++ b!!11,
-        a!!12 ++ " + " ++ b!!12, a!!13 ++ " + " ++ b!!13, a!!14 ++ " + " ++ b!!14, a!!15 ++ " + " ++ b!!15]
+modMatrixDisplay = zipWith' (printf "%s + %s")
 
-{-| Given two matrices, do modulo addition on each of the elements using Keelung types.
-
-This function is implemented as simple haskell (no syntactic sugar) because of liquidhaskell
-refinements in list lengths.
--}
+-- |Given two matrices, do modulo addition on each of the elements using Keelung types.
 {-@ modMatrixKeelung :: { a:[_] | (len a) == 16 } -> { b:[_] | (len b) == 16 } -> { o:[_] | (len o) == 16 } @-}
 modMatrixKeelung :: [UInt 32] -> [UInt 32] -> [UInt 32]
-modMatrixKeelung a b = [
-    Keelung.AddU (a!!0) (b!!0), Keelung.AddU (a!!1) (b!!1), Keelung.AddU (a!!2) (b!!2), Keelung.AddU (a!!3) (b!!3),
-    Keelung.AddU (a!!4) (b!!4), Keelung.AddU (a!!5) (b!!5), Keelung.AddU (a!!6) (b!!6), Keelung.AddU (a!!7) (b!!7),
-    Keelung.AddU (a!!8) (b!!8), Keelung.AddU (a!!9) (b!!9), Keelung.AddU (a!!10) (b!!10), Keelung.AddU (a!!11) (b!!11),
-    Keelung.AddU (a!!12) (b!!12), Keelung.AddU (a!!13) (b!!13), Keelung.AddU (a!!14) (b!!14), Keelung.AddU (a!!15) (b!!15)]
+modMatrixKeelung = zipWith' Keelung.AddU
 
 -- |Transpose a 4x4 matrix type.
 {-@ transpose :: {i:[a] | len i == 16} -> {o:[a] | len o == 16 && (elts i == elts o) } @-}
