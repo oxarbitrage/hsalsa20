@@ -36,17 +36,17 @@ import Data.Word
 import Keelung hiding (input, eq)
 
 -- |The columnround expression computed.
-{-@ columnroundCompute :: { i:[_] | (len i) == 16 } -> { o:[_] | (len o) == 16 }  @-}
+{-@ columnroundCompute :: { i:[Word32] | (len i) == 16 } -> { o:[Word32] | (len o) == 16 }  @-}
 columnroundCompute :: [Word32] -> [Word32]
 columnroundCompute input
-    | length input == 16 = transpose $ rowroundCompute $ transpose input
+    | length input == 16 = transposev1 $ rowroundCompute $ transposev1 input
     | otherwise = error "input to `columnroundCompute` must be a list of 16 `Word32` numbers"
 
 -- |The columnround expression as a string.
-{-@ columnroundDisplay :: { i:[_] | (len i) == 16 } -> { o:[_] | (len o) == 16 }  @-}
+{-@ columnroundDisplay :: { i:[String] | (len i) == 16 } -> { o:[String] | (len o) == 16 }  @-}
 columnroundDisplay :: [String] -> [String]
 columnroundDisplay input
-    | length input == 16 = transpose $ rowroundDisplay $ transpose input
+    | length input == 16 = transposev2 $ rowroundDisplay $ transposev2 input
     | otherwise = error "input to `columnroundDisplay` must be a list of 16 `String` strings"
 
 -- |The Keelung columnround expression.
@@ -54,7 +54,7 @@ columnroundDisplay input
 columnroundKeelung :: [UInt 32] -> Comp [UInt 32]
 columnroundKeelung input
     | length input == 16 = do
-        let new_input = transpose input
+        let new_input = transposev3 input
         k <- rowroundKeelung new_input
-        return $ transpose k
+        return $ transposev3 k
     | otherwise = error "input to `columnroundKeelung` must be a list of 16 `UInt 32` numbers"
