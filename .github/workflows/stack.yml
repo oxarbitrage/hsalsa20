@@ -6,29 +6,24 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+
 jobs:
   build:
-    name: stack ${{ matrix.plan.resolver }} ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macOS-latest]
-        plan:
-        - { build: stack, resolver: "lts-15"  }
-        #- { build: stack, resolver: "lts-16"  }
-        #- { build: stack, resolver: "nightly" }
-
-    runs-on: ${{ matrix.os }}
+        os: [ubuntu-latest, macos-latest]
     steps:
-    - name: Install OS Packages
-      uses: mstksg/get-package@v1
+    - uses: actions/checkout@v3
+    - uses: haskell-actions/setup@v2
       with:
-        apt-get: ${{ matrix.apt-get }}
-        brew: ${{ matrix.brew }}
-    - uses: actions/checkout@v1
+        ghc-version: '9.2.5'
+        enable-stack: true
+        stack-version: 'latest'
 
-    - name: Setup stack
-      uses: mstksg/setup-stack@v1
-
+    # install z3
     - name: Setup Z3
       id: z3
       uses: cda-tum/setup-z3@v1
