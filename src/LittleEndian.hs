@@ -124,64 +124,16 @@ reduceKeelung input = Prelude.map littleendianKeelung (chunksof4v3 input)
 {-@ ignore aument @-}
 {-@ aument :: { i:[Word32] | (len i) == 16 } -> { o:[Word32] | (len o) == 64 } @-}
 aument :: [Word32] -> [Word32]
-aument input = [
-    extractBytes4 (input!!0)!!0, extractBytes4 (input!!0)!!1, extractBytes4 (input!!0)!!2, extractBytes4 (input!!0)!!3,
-    extractBytes4 (input!!1)!!0, extractBytes4 (input!!1)!!1, extractBytes4 (input!!1)!!2, extractBytes4 (input!!1)!!3,
-    extractBytes4 (input!!2)!!0, extractBytes4 (input!!2)!!1, extractBytes4 (input!!2)!!2, extractBytes4 (input!!2)!!3,
-    extractBytes4 (input!!3)!!0, extractBytes4 (input!!3)!!1, extractBytes4 (input!!3)!!2, extractBytes4 (input!!3)!!3,
-    extractBytes4 (input!!4)!!0, extractBytes4 (input!!4)!!1, extractBytes4 (input!!4)!!2, extractBytes4 (input!!4)!!3,
-    extractBytes4 (input!!5)!!0, extractBytes4 (input!!5)!!1, extractBytes4 (input!!5)!!2, extractBytes4 (input!!5)!!3,
-    extractBytes4 (input!!6)!!0, extractBytes4 (input!!6)!!1, extractBytes4 (input!!6)!!2, extractBytes4 (input!!6)!!3,
-    extractBytes4 (input!!7)!!0, extractBytes4 (input!!7)!!1, extractBytes4 (input!!7)!!2, extractBytes4 (input!!7)!!3,
-    extractBytes4 (input!!8)!!0, extractBytes4 (input!!8)!!1, extractBytes4 (input!!8)!!2, extractBytes4 (input!!8)!!3,
-    extractBytes4 (input!!9)!!0, extractBytes4 (input!!9)!!1, extractBytes4 (input!!9)!!2, extractBytes4 (input!!9)!!3,
-    extractBytes4 (input!!10)!!0, extractBytes4 (input!!10)!!1, extractBytes4 (input!!10)!!2, extractBytes4 (input!!10)!!3,
-    extractBytes4 (input!!11)!!0, extractBytes4 (input!!11)!!1, extractBytes4 (input!!11)!!2, extractBytes4 (input!!11)!!3,
-    extractBytes4 (input!!12)!!0, extractBytes4 (input!!12)!!1, extractBytes4 (input!!12)!!2, extractBytes4 (input!!12)!!3,
-    extractBytes4 (input!!13)!!0, extractBytes4 (input!!13)!!1, extractBytes4 (input!!13)!!2, extractBytes4 (input!!13)!!3,
-    extractBytes4 (input!!14)!!0, extractBytes4 (input!!14)!!1, extractBytes4 (input!!14)!!2, extractBytes4 (input!!14)!!3,
-    extractBytes4 (input!!15)!!0, extractBytes4 (input!!15)!!1, extractBytes4 (input!!15)!!2, extractBytes4 (input!!15)!!3]
+aument input = concat [extractBytes4 x | x <- input]
 
 -- | Aument a matrix of 16 elements to one of 64 elements by using `displayBytes`.
 {-@ ignore aumentDisplay @-}
 {-@ aumentDisplay :: { i:[String] | (len i) == 16 } -> { o:[String] | (len o) == 64 } @-}
 aumentDisplay :: [String] -> [String]
-aumentDisplay input = [
-    displayBytes4 (input!!0)!!0, displayBytes4 (input!!0)!!1, displayBytes4 (input!!0)!!2, displayBytes4 (input!!0)!!3,
-    displayBytes4 (input!!1)!!0, displayBytes4 (input!!1)!!1, displayBytes4 (input!!1)!!2, displayBytes4 (input!!1)!!3,
-    displayBytes4 (input!!2)!!0, displayBytes4 (input!!2)!!1, displayBytes4 (input!!2)!!2, displayBytes4 (input!!2)!!3,
-    displayBytes4 (input!!3)!!0, displayBytes4 (input!!3)!!1, displayBytes4 (input!!3)!!2, displayBytes4 (input!!3)!!3,
-    displayBytes4 (input!!4)!!0, displayBytes4 (input!!4)!!1, displayBytes4 (input!!4)!!2, displayBytes4 (input!!4)!!3,
-    displayBytes4 (input!!5)!!0, displayBytes4 (input!!5)!!1, displayBytes4 (input!!5)!!2, displayBytes4 (input!!5)!!3,
-    displayBytes4 (input!!6)!!0, displayBytes4 (input!!6)!!1, displayBytes4 (input!!6)!!2, displayBytes4 (input!!6)!!3,
-    displayBytes4 (input!!7)!!0, displayBytes4 (input!!7)!!1, displayBytes4 (input!!7)!!2, displayBytes4 (input!!7)!!3,
-    displayBytes4 (input!!8)!!0, displayBytes4 (input!!8)!!1, displayBytes4 (input!!8)!!2, displayBytes4 (input!!8)!!3,
-    displayBytes4 (input!!9)!!0, displayBytes4 (input!!9)!!1, displayBytes4 (input!!9)!!2, displayBytes4 (input!!9)!!3,
-    displayBytes4 (input!!10)!!0, displayBytes4 (input!!10)!!1, displayBytes4 (input!!10)!!2, displayBytes4 (input!!10)!!3,
-    displayBytes4 (input!!11)!!0, displayBytes4 (input!!11)!!1, displayBytes4 (input!!11)!!2, displayBytes4 (input!!11)!!3,
-    displayBytes4 (input!!12)!!0, displayBytes4 (input!!12)!!1, displayBytes4 (input!!12)!!2, displayBytes4 (input!!12)!!3,
-    displayBytes4 (input!!13)!!0, displayBytes4 (input!!13)!!1, displayBytes4 (input!!13)!!2, displayBytes4 (input!!13)!!3,
-    displayBytes4 (input!!14)!!0, displayBytes4 (input!!14)!!1, displayBytes4 (input!!14)!!2, displayBytes4 (input!!14)!!3,
-    displayBytes4 (input!!15)!!0, displayBytes4 (input!!15)!!1, displayBytes4 (input!!15)!!2, displayBytes4 (input!!15)!!3]
+aumentDisplay input = concat [displayBytes4 x | x <- input]
 
 -- |Aument a matrix of 16 elements to one of 64 elements by using `extractBytesKeelung`.
 {-@ ignore aumentKeelung @-}
 {-@ aumentKeelung ::  { i:[_] | (len i) == 16 } -> { o:[_] | (len o) == 64 } @-}
 aumentKeelung :: [UInt 32] -> [UInt 32]
-aumentKeelung input = [
-    extractBytes4Keelung (input!!0)!!0, extractBytes4Keelung (input!!0)!!1, extractBytes4Keelung (input!!0)!!2, extractBytes4Keelung (input!!0)!!3,
-    extractBytes4Keelung (input!!1)!!0, extractBytes4Keelung (input!!1)!!1, extractBytes4Keelung (input!!1)!!2, extractBytes4Keelung (input!!1)!!3,
-    extractBytes4Keelung (input!!2)!!0, extractBytes4Keelung (input!!2)!!1, extractBytes4Keelung (input!!2)!!2, extractBytes4Keelung (input!!2)!!3,
-    extractBytes4Keelung (input!!3)!!0, extractBytes4Keelung (input!!3)!!1, extractBytes4Keelung (input!!3)!!2, extractBytes4Keelung (input!!3)!!3,
-    extractBytes4Keelung (input!!4)!!0, extractBytes4Keelung (input!!4)!!1, extractBytes4Keelung (input!!4)!!2, extractBytes4Keelung (input!!4)!!3,
-    extractBytes4Keelung (input!!5)!!0, extractBytes4Keelung (input!!5)!!1, extractBytes4Keelung (input!!5)!!2, extractBytes4Keelung (input!!5)!!3,
-    extractBytes4Keelung (input!!6)!!0, extractBytes4Keelung (input!!6)!!1, extractBytes4Keelung (input!!6)!!2, extractBytes4Keelung (input!!6)!!3,
-    extractBytes4Keelung (input!!7)!!0, extractBytes4Keelung (input!!7)!!1, extractBytes4Keelung (input!!7)!!2, extractBytes4Keelung (input!!7)!!3,
-    extractBytes4Keelung (input!!8)!!0, extractBytes4Keelung (input!!8)!!1, extractBytes4Keelung (input!!8)!!2, extractBytes4Keelung (input!!8)!!3,
-    extractBytes4Keelung (input!!9)!!0, extractBytes4Keelung (input!!9)!!1, extractBytes4Keelung (input!!9)!!2, extractBytes4Keelung (input!!9)!!3,
-    extractBytes4Keelung (input!!10)!!0, extractBytes4Keelung (input!!10)!!1, extractBytes4Keelung (input!!10)!!2, extractBytes4Keelung (input!!10)!!3,
-    extractBytes4Keelung (input!!11)!!0, extractBytes4Keelung (input!!11)!!1, extractBytes4Keelung (input!!11)!!2, extractBytes4Keelung (input!!11)!!3,
-    extractBytes4Keelung (input!!12)!!0, extractBytes4Keelung (input!!12)!!1, extractBytes4Keelung (input!!12)!!2, extractBytes4Keelung (input!!12)!!3,
-    extractBytes4Keelung (input!!13)!!0, extractBytes4Keelung (input!!13)!!1, extractBytes4Keelung (input!!13)!!2, extractBytes4Keelung (input!!13)!!3,
-    extractBytes4Keelung (input!!14)!!0, extractBytes4Keelung (input!!14)!!1, extractBytes4Keelung (input!!14)!!2, extractBytes4Keelung (input!!14)!!3,
-    extractBytes4Keelung (input!!15)!!0, extractBytes4Keelung (input!!15)!!1, extractBytes4Keelung (input!!15)!!2, extractBytes4Keelung (input!!15)!!3]
+aumentKeelung input = concat [extractBytes4Keelung x | x <- input]
