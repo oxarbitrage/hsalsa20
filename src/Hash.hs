@@ -43,6 +43,7 @@ import Keelung hiding (input, eq)
 
 import Doubleround
 import Utils
+import LittleEndian
 
 -- |The core expression computed.
 {-@ coreCompute ::  Nat -> { i:[_] | (len i) == 16 } -> { o:[_] | (len o) == 16 } @-}
@@ -71,7 +72,7 @@ coreKeelung rounds input
 {-@ salsa20Compute ::  Nat -> { i:[_] | (len i) == 64 } -> { o:[_] | (len o) == 64 } @-}
 salsa20Compute :: Int -> [Word32] -> [Word32]
 salsa20Compute rounds input
-    | length input == 64 && rounds >= 0 = aument $ coreCompute rounds (Utils.reduce input)
+    | length input == 64 && rounds >= 0 = aument $ coreCompute rounds (LittleEndian.reduce input)
     | otherwise = error "input to `salsa20Compute` must be a list of 64 `Word32` numbers"
 
 -- |The salsa20 expression as a string using `coreDisplay`. Call with r = 1, which is one round of doubleround.

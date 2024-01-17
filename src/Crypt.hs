@@ -25,7 +25,7 @@ module Crypt
 where
 
 import Expansion
-import Utils
+import LittleEndian
 
 import Data.Bits
 import Data.Word

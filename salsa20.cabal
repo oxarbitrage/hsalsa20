@@ -29,6 +29,7 @@ library
       Doubleround
       Expansion
       Hash
+      LittleEndian
       Operators
       Quarterround
       Rowround

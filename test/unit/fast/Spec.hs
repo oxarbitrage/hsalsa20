@@ -6,7 +6,7 @@ import Columnround
 import Doubleround
 import Hash
 import Expansion
-import Utils
+import LittleEndian
 import Crypt
 
 -- Quarterround
