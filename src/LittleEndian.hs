@@ -121,19 +121,16 @@ reduceKeelung :: [UInt 32] -> [UInt 32]
 reduceKeelung input = Prelude.map littleendianKeelung (chunksof4v3 input)
 
 -- | Aument a matrix of 16 elements to one of 64 elements by using `extractBytes`.
-{-@ ignore aument @-}
 {-@ aument :: { i:[Word32] | (len i) == 16 } -> { o:[Word32] | (len o) == 64 } @-}
 aument :: [Word32] -> [Word32]
-aument input = concat [extractBytes4 x | x <- input]
+aument input = concat64 [extractBytes4 x | x <- input]
 
 -- | Aument a matrix of 16 elements to one of 64 elements by using `displayBytes`.
-{-@ ignore aumentDisplay @-}
 {-@ aumentDisplay :: { i:[String] | (len i) == 16 } -> { o:[String] | (len o) == 64 } @-}
 aumentDisplay :: [String] -> [String]
-aumentDisplay input = concat [displayBytes4 x | x <- input]
+aumentDisplay input = concat64 [displayBytes4 x | x <- input]
 
 -- |Aument a matrix of 16 elements to one of 64 elements by using `extractBytesKeelung`.
-{-@ ignore aumentKeelung @-}
 {-@ aumentKeelung ::  { i:[_] | (len i) == 16 } -> { o:[_] | (len o) == 64 } @-}
 aumentKeelung :: [UInt 32] -> [UInt 32]
-aumentKeelung input = concat [extractBytes4Keelung x | x <- input]
+aumentKeelung input = concat64 [extractBytes4Keelung x | x <- input]

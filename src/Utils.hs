@@ -16,7 +16,7 @@ module Utils
     (
         modMatrix, numberListToStringList, transposev1, transposev2, transposev3, modMatrixDisplay, modMatrixKeelung,
         eitherListToNumberList, eitherListToStringList,
-        elts,
+        elts, concat64,
         chunksof4v1, chunksof4v2, chunksof4v3,
     )
 where
@@ -171,9 +171,18 @@ eitherListToNumberList input
 eitherListToStringList :: [Either Word32 String] -> [String]
 eitherListToStringList = Prelude.map (fromRight "0")
 
--- Stuff needed for liquidhaskell refinement types
-
+-- |Track elements inside a list.
 {-@ measure elts @-}
 elts        :: (Ord a) => [a] -> Set a
 elts []     = empty
 elts (x:xs) = singleton x `union` elts xs
+
+{-
+A concat version where all the lenghts are known and assumed:
+- The lenght of ezch chunk in the inner list is 4.
+- The lenght of the outer list is 16.
+- The lenght of the resulting list is 64.
+-}
+{-@ assume concat64 :: {i:[{i2:[a] | len i2 == 4}] | len i == 16} -> {v:[a] | len v == 64} @-}
+concat64 :: [[a]] -> [a]
+concat64 = concat
