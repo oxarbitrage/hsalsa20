@@ -108,17 +108,17 @@ extractBytes4Keelung w = [ Keelung.shiftR w (8 * 0) Keelung..&. 0xff,
 -- | Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendian` encoding.
 {-@ reduce :: { i:[Word32] | (len i) == 64 } -> { o:[Word32] | (len o) == 16 } @-}
 reduce :: [Word32] -> [Word32]
-reduce input = Prelude.map littleendian (chunksof4v1 input)
+reduce input = Prelude.map littleendian (chunksof4 input)
 
 -- | Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendianDisplay` encoding.
 {-@ reduceDisplay :: { i:[String] | (len i) == 64 } -> { o:[String] | (len o) == 16 } @-}
 reduceDisplay :: [String] -> [String]
-reduceDisplay input = Prelude.map littleendianDisplay (chunksof4v2 input)
+reduceDisplay input = Prelude.map littleendianDisplay (chunksof4 input)
 
 -- |Reduce a matrix of 64 elements to a matrix of 16 elements by using `littleendianKeelung` encoding.
 {-@ reduceKeelung :: { i:[_] | (len i) == 64 } -> { o:[_] | (len o) == 16 } @-}
 reduceKeelung :: [UInt 32] -> [UInt 32]
-reduceKeelung input = Prelude.map littleendianKeelung (chunksof4v3 input)
+reduceKeelung input = Prelude.map littleendianKeelung (chunksof4 input)
 
 -- | Aument a matrix of 16 elements to one of 64 elements by using `extractBytes`.
 {-@ aument :: { i:[Word32] | (len i) == 16 } -> { o:[Word32] | (len o) == 64 } @-}
