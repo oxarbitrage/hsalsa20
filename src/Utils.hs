@@ -107,9 +107,9 @@ elts (x:xs) = singleton x `union` elts xs
 
 {-
 A concat version where all the lenghts are known and assumed:
-- The lenght of ezch chunk in the inner list is 4.
-- The lenght of the outer list is 16.
-- The lenght of the resulting list is 64.
+- The len of each chunk in the inner list is 4.
+- The len of the outer list is 16.
+- The len of the resulting list is 64.
 -}
 {-@ assume concat64 :: {outer:[{inner:[a] | len inner == 4}] | len outer == 16} -> {output:[a] | len output == 64} @-}
 concat64 :: [[a]] -> [a]

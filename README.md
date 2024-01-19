@@ -12,9 +12,11 @@ This codebase is primarily a personal project, initiated for the purpose of lear
 
 ## Features
 
-- Salsa20 Encryption and Decryption Demo: Explore the Salsa20 encryption and decryption application by running the `stack run` command.
+- Salsa20 Encryption and Decryption Demo: Explore the Salsa20 encryption and decryption application by running the `stack run` or `cabal run` commands.
 
 - Extensive Testing: The project includes a comprehensive suite of tests to ensure code quality. You can run the tests locally using `stack test` or `cabal test`. The CI (Continuous Integration) pipeline also runs most of these tests.
+
+- Every cipher function is refined using [LiquidHaskell](https://github.com/ucsd-progsys/liquidhaskell) formal verification tool.
 
 ## Tutorial
 
@@ -23,6 +25,10 @@ For a detailed guide on using this Salsa20 cipher, check out our [tutorial](book
 ## API Documentation
 
 Explore the API documentation for a deeper understanding of the project. Visit [here](https://oxarbitrage.github.io/salsa20-docs/) for detailed information on the project's functions and modules.
+
+## Formal verification
+
+Read more about formal verification process we are using in this library in the [formal verification page](book/formal-verification.md).
 
 ## Experimental: Keelung Code
 
