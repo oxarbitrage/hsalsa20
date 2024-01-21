@@ -11,7 +11,8 @@ The implementation is organized into the following modules:
 - 'Columnround': Implements the columnround operation, treating it as rowround expressions with the input transposed.
 - 'Doubleround': Defines the doubleround function as the composition of rowround and columnround. Also, provides a variant 'doubleroundR' for a specified number of rounds.
 - 'Hash': Implements the Salsa20 core function and the extended hash expressions.
-- 'Utils': Provides utility functions used in the Salsa20 cipher, such as little-endian encoding, matrix operations, and reduction functions.
+- 'LittleEndian': Provives little-endian encoding related code, protocol specified Salsa20 aument and reduce list functions.
+- 'Utils': Provides utility functions used in the Salsa20 cipher.
 - 'Expansion': Implements functions for Salsa20 key expansion and matrix generation.
 - 'Crypt': Provides functions for Salsa20 encryption and decryption.
 
