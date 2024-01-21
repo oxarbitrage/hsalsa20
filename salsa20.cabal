@@ -44,7 +44,6 @@ library
     , containers
     , keelung
     , liquidhaskell
-    , split
     , text
   default-language: Haskell2010
 
@@ -82,7 +81,6 @@ test-suite salsa20-display-unit-tests
     , keelung
     , liquidhaskell
     , salsa20
-    , split
     , text
   default-language: Haskell2010
 
@@ -103,7 +101,6 @@ test-suite salsa20-ecrypt128-tests
     , keelung
     , liquidhaskell
     , salsa20
-    , split
     , text
   default-language: Haskell2010
 
@@ -124,7 +121,6 @@ test-suite salsa20-ecrypt256-tests
     , keelung
     , liquidhaskell
     , salsa20
-    , split
     , text
   default-language: Haskell2010
 
@@ -141,7 +137,6 @@ test-suite salsa20-fast-unit-tests
     , keelung
     , liquidhaskell
     , salsa20
-    , split
     , text
   default-language: Haskell2010
 
@@ -159,7 +154,6 @@ test-suite salsa20-keelung-unit-tests
     , keelung
     , liquidhaskell
     , salsa20
-    , split
     , text
   default-language: Haskell2010
 
@@ -176,6 +170,5 @@ test-suite salsa20-slow-unit-test
     , keelung
     , liquidhaskell
     , salsa20
-    , split
     , text
   default-language: Haskell2010
