@@ -1,12 +1,12 @@
 {-|
 Module      : LittleEndian
-Description : .
+Description : Provides functions for encoding and decoding data in little-endian byte order.
 Copyright   : (c) Alfredo Garcia, 2024
 License     : MIT
 Stability   : experimental
 Portability : POSIX
 
-
+Provides tools for encoding vectors into words, extracting bytes, and manipulating matrices in little-endian format.
 
 -}
 {-# LANGUAGE DataKinds #-}
