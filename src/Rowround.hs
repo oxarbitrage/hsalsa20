@@ -135,13 +135,13 @@ quarterround2Keelung [_, _, _, _, a4, a5, a6, a7, _, _, _, _, _, _, _, _] = In $
 quarterround2Keelung _ = error "input to `quarterround2Keelung` must be a list of 16 `UInt 32` numbers"
 
 -- |Sort a second input for rowround.
-{-@ sort2 :: { v:[_] | (len v) == 4 } -> { v:[_] | (len v) == 4 } @-}
+{-@ sort2 :: { i:[_] | (len i) == 4 } -> { o:[_] | (len o) == 4 && (elts i == elts o) } @-}
 sort2 :: [a] -> [a]
 sort2 [y4, y5, y6, y7] = [y5, y6, y7, y4]
 sort2 _ = error "input to `sort2` must be a list of 4 objects"
 
 -- |Inverse of `sort2`, used to order rowround output.
-{-@ sort2_inv :: { v:[_] | (len v) == 4 } -> { v:[_] | (len v) == 4 } @-}
+{-@ sort2_inv :: { i:[_] | (len i) == 4 } -> { o:[_] | (len o) == 4 && (elts i == elts o) } @-}
 sort2_inv :: [a] -> [a]
 sort2_inv [z5, z6, z7, z4] = [z4, z5, z6, z7] 
 sort2_inv _ = error "input to `sort2_inv` must be a list of 4 objects"
@@ -159,13 +159,13 @@ quarterround3Keelung [_, _, _, _, _, _, _, _, a8, a9, a10, a11, _, _, _, _] = In
 quarterround3Keelung _ = error "input to `quarterround3Keelung` must be a list of 16 `UInt 32` numbers"
 
 -- |Sort a third input for rowround.
-{-@ sort3 :: { v:[_] | (len v) == 4 } -> { v:[_] | (len v) == 4 } @-}
+{-@ sort3 :: { i:[_] | (len i) == 4 } -> { o:[_] | (len o) == 4 && (elts i == elts o) } @-}
 sort3 :: [a] -> [a]
 sort3 [y8, y9, y10, y11] = [y10, y11, y8, y9] 
 sort3 _ = error "input to `sort3` must be a list of 4 objects"
 
 -- |Inverse of `sort3`, used to order rowround output.
-{-@ sort3_inv :: { v:[_] | (len v) == 4 } -> { v:[_] | (len v) == 4 } @-}
+{-@ sort3_inv :: { i:[_] | (len i) == 4 } -> { o:[_] | (len o) == 4 && (elts i == elts o) } @-}
 sort3_inv :: [a] -> [a]
 sort3_inv [z10, z11, z8, z9] = [z8, z9, z10, z11]
 sort3_inv _ = error "input to `sort3_inv` must be a list of 4 objects"
@@ -183,13 +183,13 @@ quarterround4Keelung [_, _, _, _, _, _, _, _, _, _, _, _, a12, a13, a14, a15] = 
 quarterround4Keelung _ = error "input to `quarterround4Keelung` must be a list of 16 `UInt 32` numbers"
 
 -- |Sort a fourth input for rowround.
-{-@ sort4 :: { v:[_] | (len v) == 4 } -> { v:[_] | (len v) == 4 } @-}
+{-@ sort4 :: { i:[_] | (len i) == 4 } -> { o:[_] | (len o) == 4 && (elts i == elts o) } @-}
 sort4 :: [a] -> [a]
 sort4 [y12, y13, y14, y15] = [y15, y12, y13, y14] 
 sort4 _ = error "input to `sort4` must be a list of 4 objects"
 
 -- |Inverse of `sort4`, used to order rowround output.
-{-@ sort4_inv :: { v:[_] | (len v) == 4 } -> { v:[_] | (len v) == 4 } @-}
+{-@ sort4_inv :: { i:[_] | (len i) == 4 } -> { o:[_] | (len o) == 4 && (elts i == elts o) } @-}
 sort4_inv :: [a] -> [a]
 sort4_inv [z15, z12, z13, z14] = [z12, z13, z14, z15]
 sort4_inv _ = error "input to `sort4_inv` must be a list of 4 objects"

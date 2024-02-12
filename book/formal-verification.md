@@ -39,6 +39,28 @@ transpose :: [a] -> [a]
 
 This ensures that the transposition maintains element equality between input and output lists.
 
+#### Equality of Elements in rowround sort functions
+
+The `Rowround` module employs custom sort functions to shuffle the inputs sent to the `quarterround` functions, as specified in the salsa20 specification.
+
+These sort functions simply shuffle input elements, ensuring that the same elements are returned in a different order. Similar to the approach used in the `transpose` function, we guarantee that the input and output elements remain the same. For example:
+
+```haskell
+{-@ sort2 :: { i:[_] | (len i) == 4 } -> { o:[_] | (len o) == 4 && (elts i == elts o) } @-}
+sort2 :: [a] -> [a]
+```
+
+#### Retreiving a byte inside bounds
+
+Within the `Crypt` module, we have a series of `keyByte` functions designed to extract specific bytes from a key, which is a list of bytes. These functions play a significant role in encryption and decryption processes, as outlined in the salsa20 specification.
+
+The input length of these functions is fixed at 64. To ensure safety, we apply a refinement to validate that the index argument falls within the range of valid indices, from 0 to 63:
+
+```haskell
+{-@ keybyteCompute :: { i:[_] | (len i) == 64 } -> {index: Nat | index <= 63 } -> _  @-}
+keybyteCompute :: [Word32] -> Int -> Word32
+```
+
 #### Concat64 Assumption
 
 Assumptions are used to provide properties to functions, such as in the `concat64` function:
