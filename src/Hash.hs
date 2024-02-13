@@ -83,15 +83,14 @@ salsa20Display rounds input
     | otherwise = error "input to `salsa20Display` must be a list of 64 `String` strings"
 
 -- | The salsa20 Keelung expression computed.
---{-@ salsa20Keelung ::  { i:[_] | (len i) == 64 } -> Comp { o:[_] | (len o) == 64 } @-}
-{-@ ignore salsa20Keelung @-}
-salsa20Keelung :: [UInt 32] -> Comp [UInt 32]
-salsa20Keelung input
-    | length input == 64 = do
+{-@ salsa20Keelung ::  Nat -> { i:[_] | (len i) == 64 } -> Comp { o:[_] | (len o) == 64 } @-}
+salsa20Keelung :: Int -> [UInt 32] -> Comp [UInt 32]
+salsa20Keelung rounds input
+    | length input == 64 && rounds >= 0 = do
         let new_input = reduceKeelung input
-        core <- coreKeelung 10 new_input
+        core <- coreKeelung rounds new_input
         return $ aumentKeelung core
-    | otherwise = error "input to `salsa20Compute` must be a list of 64 `Word32` numbers"
+    | otherwise = error "input to `salsa20Keelung` must be a list of 64 `UInt 32` numbers"
 
 -- |Execute `salsa20` a specified number of times, this is not part of the protocol and just used in a test case.
 {-@ ignore salsa20powerCompute @-}
