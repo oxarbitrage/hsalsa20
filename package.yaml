@@ -41,6 +41,7 @@ library:
   dependencies:
   - liquidhaskell
   - containers
+  - liquid-prelude
 executables:
   salsa20-exe:
     main:                Main.hs
