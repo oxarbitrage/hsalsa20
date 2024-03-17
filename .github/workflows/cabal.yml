@@ -29,6 +29,17 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    # install keelungc
+    - name: Install keelungc
+      run: |
+        git clone https://github.com/btq-ag/keelung-compiler
+        cd keelung-compiler
+        git fetch --all --tags
+        git checkout tags/v0.19.1
+        stack install
+    - name: Move keelungc binary to /usr/local/bin/
+      run: sudo mv $(stack path --local-bin)/keelungc /usr/local/bin/
+
     - name: Cache
       uses: actions/cache@v3
       env:
@@ -55,8 +66,5 @@ jobs:
       run: cabal test salsa20-ecrypt256-tests
     - name: Run display tests
       run: cabal test salsa20-display-unit-tests
-    # Error in ubuntu: The version of the Keelung compiler is not supported, disabling test.
-    #- name: Run keelung tests
-    #  # Error in macos: Cannot locate the Keelung compiler
-    #  if: matrix.os == 'ubuntu-latest'
-    #  run: cabal test salsa20-keelung-unit-tests
+    - name: Run keelung tests
+      run: cabal test salsa20-keelung-unit-tests

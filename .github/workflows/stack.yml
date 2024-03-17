@@ -29,6 +29,8 @@ jobs:
       uses: cda-tum/setup-z3@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    # install keelungc
     - name: Install keelungc
       run: |
         git clone https://github.com/btq-ag/keelung-compiler
@@ -36,7 +38,6 @@ jobs:
         git fetch --all --tags
         git checkout tags/v0.19.1
         stack install
-
     - name: Move keelungc binary to /usr/local/bin/
       run: sudo mv $(stack path --local-bin)/keelungc /usr/local/bin/
 
