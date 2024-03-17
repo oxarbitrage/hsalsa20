@@ -29,6 +29,16 @@ jobs:
       uses: cda-tum/setup-z3@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install keelungc
+      run: |
+        git clone https://github.com/btq-ag/keelung-compiler
+        cd keelung-compiler
+        git fetch --all --tags
+        git checkout tags/v0.19.1
+        stack install
+
+    - name: Move keelungc binary to /usr/local/bin/
+      run: sudo mv $(stack path --local-bin)/keelungc /usr/local/bin/
 
     - uses: actions/cache@v1
       name: Cache .stack-work
@@ -52,3 +62,5 @@ jobs:
       run: stack test salsa20:test:salsa20-ecrypt256-tests
     - name: Run display tests
       run: stack test salsa20:test:salsa20-display-unit-tests
+    - name: Run keelung tests
+      run: stack test salsa20:test:salsa20-keelung-unit-tests
