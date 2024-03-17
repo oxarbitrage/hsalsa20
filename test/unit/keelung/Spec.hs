@@ -1,3 +1,13 @@
+{- Keelung tests.
+
+`stack test salsa20:test:salsa20-keelung-unit-tests`
+
+or
+
+`cabal test salsa20:test:salsa20-keelung-unit-tests`
+
+Need `keelung-compiler` version `v0.19.1` installed in the local machine.
+-}
 {-# LANGUAGE DataKinds #-}
 
 import Quarterround
@@ -131,5 +141,5 @@ main = do
     -- witness creation
     -- _ <- witness gf181 (coreKeelung demoInputUInt32 2) [] []
 
-    -- just return an empty `Count` so we don't have to return the one from a specific test:
+    -- just return an empty `Count` so we don't have to return one from a specific test:
     return (Counts 0 0 0 0)
