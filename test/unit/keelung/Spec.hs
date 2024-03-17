@@ -88,9 +88,6 @@ main = do
     let douleround_constraints = length $ toR1Cs (fromRight (error "error parsing r1cs") doubleround_compiled)
     putStrLn $ if douleround_constraints == 18644 then "OK" else "FAIL!"
 
-    -- From now on expressions are too big, compiling start to fail intermitenly, so we comment out the tests for now.
-    -- https://github.com/btq-ag/keelung-compiler/issues/35
-
     doubleround2_compiled <- compile bn128 (doubleroundRKeelung 2 demoInputUInt32)
     let douleround2_constraints = length $ toR1Cs (fromRight (error "error parsing r1cs") doubleround2_compiled)
     putStrLn $ if douleround2_constraints == 36788 then "OK" else "FAIL!"
@@ -99,7 +96,6 @@ main = do
     doubleround2_interpreted <- interpret gf181 (doubleroundRKeelung 2 demoInputUInt32) [] []
     putStrLn $ if doubleround2_computed == map fromIntegral doubleround2_interpreted then "OK" else "FAIL!"
 
-    {-
     doubleround10_compiled <- compile bn128 (doubleroundRKeelung 10 demoInputUInt32)
     let douleround10_constraints = length $ toR1Cs (fromRight (error "error parsing r1cs") doubleround10_compiled)
     putStrLn $ if douleround10_constraints == 181940 then "OK" else "FAIL!"
@@ -107,7 +103,6 @@ main = do
     let doubleround10_computed = doubleroundRCompute 10 demoInputWord32
     doubleround10_interpreted <- interpret gf181 (doubleroundRKeelung 10 demoInputUInt32) [] []
     putStrLn $ if doubleround10_computed == map fromIntegral doubleround10_interpreted then "OK" else "FAIL!"
-    --}
 
     let core_computed = coreCompute 2 demoInputWord32
     core_interpreted <- interpret gf181 (coreKeelung 2 demoInputUInt32) [] []
@@ -117,16 +112,21 @@ main = do
     let core_constraints = length $ toR1Cs (fromRight (error "error parsing r1cs") core_compiled)
     putStrLn $ if core_constraints == 36804 then "OK" else "FAIL!"
 
-    let salsa20_computed = salsa20Compute 2 demoSalsa20InputWord32
-    salsa20_interpreted <- interpret gf181 (salsa20Keelung 2 demoSalsa20InputUInt32) [] []
-    putStrLn $ if salsa20_computed == map fromIntegral salsa20_interpreted then "OK" else "FAIL!"
+    let salsa20_4_computed = salsa20Compute 2 demoSalsa20InputWord32
+    salsa20_4_interpreted <- interpret gf181 (salsa20Keelung 2 demoSalsa20InputUInt32) [] []
+    putStrLn $ if salsa20_4_computed == map fromIntegral salsa20_4_interpreted then "OK" else "FAIL!"
 
-    {-
-    salsa20_compiled <- compile bn128 (salsa20Keelung 2 demoSalsa20InputUInt32)
-    let salsa20_constraints = length $ toR1Cs (fromRight (error "error parsing r1cs") salsa20_compiled)
-    print core_constraints
-    putStrLn $ if salsa20_constraints == 853440 then "OK" else "FAIL!"
-    -}
+    salsa20_4_compiled <- compile bn128 (salsa20Keelung 2 demoSalsa20InputUInt32)
+    let salsa20_4_constraints = length $ toR1Cs (fromRight (error "error parsing r1cs") salsa20_4_compiled)
+    putStrLn $ if salsa20_4_constraints == 708288 then "OK" else "FAIL!"
+
+    let salsa20_20_computed = salsa20Compute 10 demoSalsa20InputWord32
+    salsa20_20_interpreted <- interpret gf181 (salsa20Keelung 10 demoSalsa20InputUInt32) [] []
+    putStrLn $ if salsa20_20_computed == map fromIntegral salsa20_20_interpreted then "OK" else "FAIL!"
+
+    salsa20_20_compiled <- compile bn128 (salsa20Keelung 10 demoSalsa20InputUInt32)
+    let salsa20_20_constraints = length $ toR1Cs (fromRight (error "error parsing r1cs") salsa20_20_compiled)
+    putStrLn $ if salsa20_20_constraints == 853440 then "OK" else "FAIL!"
 
     -- witness creation
     -- _ <- witness gf181 (coreKeelung demoInputUInt32 2) [] []
