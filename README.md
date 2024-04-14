@@ -12,7 +12,7 @@ This codebase is primarily a personal project, initiated for the purpose of lear
 
 ## Features
 
-- Salsa20 Encryption and Decryption Demo: Explore the Salsa20 encryption and decryption application by running the `stack run` or `cabal run` commands.
+- Salsa20 Encryption and Decryption Demo: Explore the Salsa20 encryption and decryption application by running the `stack run` or `cabal run salsa20-exe` commands.
 
 - Extensive Testing: The project includes a comprehensive suite of tests to ensure code quality. You can run the tests locally using `stack test` or `cabal test`. The CI (Continuous Integration) pipeline also runs most of these tests.
 
@@ -21,6 +21,32 @@ This codebase is primarily a personal project, initiated for the purpose of lear
 ## Tutorial
 
 For a detailed guide on using this Salsa20 cipher, check out our [tutorial](book/tutorial.md). The tutorial breaks down the Salsa20 algorithm into its core components, explains the underlying concepts, and provides practical examples.
+
+## Application
+
+You can run the demo application with `stack run` command, for example:
+
+```bash
+---Salsa20 encryption and decryption
+
+Insert your secret key phrase:
+secret key here
+Insert message to be encrypted or decrypted:
+testing some sort of message
+
+Plain text: testing some sort of message
+Secret key: secret key here
+Key used: Tix73W8AQv7OKbGbxr7W7d3ZqR9YwcHYazNoUXrP0vo=
+
+---Salsa20 Encrypt
+Nonce: Gww7O2hiZ2Q=
+Ciphertext: xwlqEAOSot6wzT37HuBFLhJiacLSC90yobCoTA==
+
+---Salsa20 Decrypt
+Decrypted: testing some sort of message
+```
+
+Please refer to the [application source code](https://github.com/oxarbitrage/hsalsa20/blob/main/app/Main.hs) for more information.
 
 ## API Documentation
 
